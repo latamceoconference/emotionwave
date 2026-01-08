@@ -9,7 +9,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 
 <style>
-/* ================= COMMON ================= */
+/* ========== COMMON ========== */
 html, body {
   margin: 0;
   padding: 0;
@@ -20,37 +20,31 @@ html, body {
 }
 .hidden { display: none !important; }
 
-/* ================= GUEST ================= */
-#guest {
-  min-height: 100vh;
-  background: radial-gradient(120% 120% at 50% 0%, #1c2541, #0b132b);
-  display: flex;
-  align-items: center;           /* ✅ 정중앙 */
-  justify-content: center;       /* ✅ 정중앙 */
-  padding: 20px;
+:root {
+  --card-bg: rgba(255,255,255,0.08);
+  --card-border: rgba(255,255,255,0.18);
+  --text-sub: rgba(255,255,255,0.7);
 }
 
+/* ========== CARD ========== */
 .card {
   width: 100%;
   max-width: 420px;
-  background: rgba(255,255,255,0.08);
+  background: var(--card-bg);
   backdrop-filter: blur(16px);
-  border: 1px solid rgba(255,255,255,0.18);
+  border: 1px solid var(--card-border);
   border-radius: 24px;
   padding: 28px 24px 32px;
 }
 
-.card h1 {
-  margin: 0 0 8px;
-  text-align: center;
-  font-size: 22px;
-}
-
-.subtitle {
-  text-align: center;
-  font-size: 14px;
-  color: rgba(255,255,255,0.7);
-  margin-bottom: 16px;
+/* ========== GUEST ========== */
+#guest {
+  min-height: 100vh;
+  background: radial-gradient(120% 120% at 50% 0%, #1c2541, #0b132b);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
 }
 
 textarea {
@@ -74,7 +68,7 @@ textarea {
 button {
   border: none;
   border-radius: 16px;
-  padding: 16px;
+  padding: 14px;
   font-size: 15px;
   font-weight: 600;
   cursor: pointer;
@@ -85,19 +79,10 @@ button {
 .joy { background:#ffd166; color:#333; }
 .gratitude { background:#e9c46a; color:#333; }
 
-/* ================= SCREEN ================= */
-#screen {
-  position: fixed;
-  inset: 0;
-}
+/* ========== SCREEN ========== */
+#screen { position: fixed; inset: 0; }
+canvas { width: 100%; height: 100%; display: block; }
 
-canvas {
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-
-/* ===== LIVE MESSAGE (큰 메시지) ===== */
 #live-message {
   position: fixed;
   top: 20%;
@@ -105,7 +90,6 @@ canvas {
   text-align: center;
   pointer-events: none;
 }
-
 .live {
   display: inline-block;
   padding: 16px 26px;
@@ -114,7 +98,6 @@ canvas {
   border-radius: 28px;
   animation: fadeFloat 5s ease forwards;
 }
-
 @keyframes fadeFloat {
   0% { opacity:0; transform:translateY(20px); }
   10% { opacity:1; }
@@ -122,7 +105,6 @@ canvas {
   100% { opacity:0; transform:translateY(-20px); }
 }
 
-/* ===== MESSAGE LOG ===== */
 #message-log {
   position: fixed;
   bottom: 24px;
@@ -130,13 +112,26 @@ canvas {
   transform: translateX(-50%);
   width: 80%;
   max-width: 720px;
+}
+.log-item {
   font-size: 16px;
-  color: rgba(255,255,255,0.85);
+  padding: 4px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
 }
 
-.log-item {
-  padding: 6px 0;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
+/* ========== ADMIN ========== */
+#admin {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.admin button {
+  width: 100%;
+  margin-top: 12px;
+  background: #333;
+  color: white;
 }
 </style>
 </head>
@@ -146,13 +141,8 @@ canvas {
 <!-- ========== GUEST ========== -->
 <div id="guest" class="hidden">
   <div class="card">
-    <h1>Este momento é feito por todos</h1>
-    <div class="subtitle">
-      Escreva uma mensagem e toque em uma emoção
-    </div>
-
-    <textarea id="message" placeholder="Mensagem (opcional)"></textarea>
-
+    <h2 style="text-align:center">Este momento é feito por todos</h2>
+    <textarea id="guest-message" placeholder="Mensagem (opcional)"></textarea>
     <div class="grid">
       <button class="calm" onclick="sendEmotion('calm')">💙 Tranquilidade</button>
       <button class="moved" onclick="sendEmotion('moved')">❤️ Emoção</button>
@@ -169,34 +159,52 @@ canvas {
   <div id="message-log"></div>
 </div>
 
-<script>
-/* ================= MODE ================= */
-const modeParam = new URLSearchParams(location.search).get("mode");
-const mode = (modeParam === "screen") ? "screen" : "guest";
+<!-- ========== ADMIN ========== -->
+<div id="admin" class="hidden">
+  <div class="card admin">
+    <h2 style="text-align:center">Admin Control</h2>
+    <button onclick="toggleGuest()">하객 참여 ON / OFF</button>
+    <button onclick="toggleMessages()">메시지 표시 ON / OFF</button>
+    <button onclick="burstEnergy()">💥 에너지 폭발</button>
+    <button onclick="resetAll()">🧹 메시지 & 감정 리셋</button>
+  </div>
+</div>
 
-document.getElementById("guest").classList.add("hidden");
-document.getElementById("screen").classList.add("hidden");
+<script>
+/* ========== MODE ========== */
+const params = new URLSearchParams(location.search);
+let mode = params.get("mode");
+if (!["guest","screen","admin"].includes(mode)) mode = "guest";
+
+["guest","screen","admin"].forEach(id=>{
+  document.getElementById(id).classList.add("hidden");
+});
 document.getElementById(mode).classList.remove("hidden");
 
-/* ================= FIREBASE ================= */
+/* ========== FIREBASE ========== */
 const firebaseConfig = {
   apiKey: "AIzaSyAYhMbJkSRs2uz-ZaAAbyAUrVjArqf1kZQ",
   authDomain: "emotional-wave-wedding.firebaseapp.com",
   databaseURL: "https://emotional-wave-wedding-default-rtdb.firebaseio.com",
   projectId: "emotional-wave-wedding",
 };
-
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
+const controlRef = db.ref("control");
 
-/* ================= GUEST LOGIC ================= */
+/* ========== CONTROL STATE ========== */
+let control = { enabled:true, showMessages:true };
+controlRef.on("value", s => control = s.val() || control);
+
+/* ========== GUEST LOGIC ========== */
 let lastSent = 0;
 function sendEmotion(emotion) {
+  if (!control.enabled) return;
   const now = Date.now();
   if (now - lastSent < 700) return;
   lastSent = now;
 
-  const textarea = document.getElementById("message");
+  const textarea = document.getElementById("guest-message");
   const msg = textarea.value.trim();
 
   db.ref("emotions").push({
@@ -204,73 +212,74 @@ function sendEmotion(emotion) {
     message: msg || null,
     time: now
   });
-
   textarea.value = "";
 }
 
-/* ================= SCREEN LOGIC ================= */
+/* ========== SCREEN LOGIC ========== */
 if (mode === "screen") {
   const canvas = document.getElementById("canvas");
   const ctx = canvas.getContext("2d");
-  function resize() {
-    canvas.width = innerWidth;
-    canvas.height = innerHeight;
-  }
-  resize(); onresize = resize;
+  function resize(){ canvas.width=innerWidth; canvas.height=innerHeight; }
+  resize(); onresize=resize;
 
-  const layers = {
+  let energy=0, t=0, log=[];
+  const layers={
     calm:{c:"#4ea8de",f:0.004},
     moved:{c:"#9d4edd",f:0.006},
     joy:{c:"#ffd166",f:0.009},
     gratitude:{c:"#e9c46a",f:0.003}
   };
 
-  let energy=0, t=0;
-  const log = [];
-
-  db.ref("emotions").limitToLast(300).on("child_added", s => {
-    const d = s.val();
-    if (!d || !layers[d.emotion]) return;
-
-    energy += 1.2;
-    if (d.message) {
+  db.ref("emotions").limitToLast(300).on("child_added", s=>{
+    const d=s.val(); if(!d||!layers[d.emotion])return;
+    energy+=1.2;
+    if(d.message&&control.showMessages){
       showLive(d.message);
       addLog(d.message);
     }
   });
 
-  function showLive(text) {
-    const box = document.getElementById("live-message");
-    box.innerHTML = `<div class="live">${text}</div>`;
+  function showLive(text){
+    document.getElementById("live-message").innerHTML=
+      `<div class="live">${text}</div>`;
   }
-
-  function addLog(text) {
+  function addLog(text){
     log.unshift(text);
-    if (log.length > 10) log.pop();
-    document.getElementById("message-log").innerHTML =
-      log.map(m => `<div class="log-item">${m}</div>`).join("");
+    if(log.length>10)log.pop();
+    document.getElementById("message-log").innerHTML=
+      log.map(m=>`<div class="log-item">${m}</div>`).join("");
   }
 
-  function draw() {
+  function draw(){
     ctx.clearRect(0,0,canvas.width,canvas.height);
-    energy *= 0.985; energy = Math.max(energy,0.3);
-
-    Object.values(layers).forEach(l => {
-      ctx.strokeStyle = l.c;
-      ctx.globalAlpha = 0.35;
-      ctx.beginPath();
-      for (let x=0;x<canvas.width;x++) {
-        ctx.lineTo(x, canvas.height/2 +
-          Math.sin(x*l.f + t)*(80+energy*4));
+    energy*=0.985; energy=Math.max(energy,0.3);
+    Object.values(layers).forEach(l=>{
+      ctx.strokeStyle=l.c; ctx.globalAlpha=0.35; ctx.beginPath();
+      for(let x=0;x<canvas.width;x++){
+        ctx.lineTo(x,canvas.height/2+Math.sin(x*l.f+t)*(80+energy*4));
       }
       ctx.stroke();
     });
-
-    ctx.globalAlpha = 1;
-    t += 0.01 + energy*0.002;
+    ctx.globalAlpha=1; t+=0.01+energy*0.002;
     requestAnimationFrame(draw);
   }
   draw();
+}
+
+/* ========== ADMIN LOGIC ========== */
+function toggleGuest(){
+  controlRef.child("enabled").set(!control.enabled);
+}
+function toggleMessages(){
+  controlRef.child("showMessages").set(!control.showMessages);
+}
+function burstEnergy(){
+  db.ref("emotions").push({emotion:"joy",message:null,time:Date.now()});
+}
+function resetAll(){
+  if(confirm("정말 전체 초기화할까요?")){
+    db.ref("emotions").remove();
+  }
 }
 </script>
 
