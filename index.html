@@ -15,7 +15,7 @@ html, body {
   padding: 0;
   height: 100%;
   background: #0b132b;
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
   color: white;
 }
 .hidden { display: none !important; }
@@ -23,7 +23,6 @@ html, body {
 :root {
   --card-bg: rgba(255,255,255,0.08);
   --card-border: rgba(255,255,255,0.18);
-  --text-sub: rgba(255,255,255,0.7);
 }
 
 /* ========== CARD ========== */
@@ -85,7 +84,7 @@ canvas { width: 100%; height: 100%; display: block; }
 
 #live-message {
   position: fixed;
-  top: 20%;
+  top: 18%;
   width: 100%;
   text-align: center;
   pointer-events: none;
@@ -165,7 +164,6 @@ canvas { width: 100%; height: 100%; display: block; }
     <h2 style="text-align:center">Admin Control</h2>
     <button onclick="toggleGuest()">하객 참여 ON / OFF</button>
     <button onclick="toggleMessages()">메시지 표시 ON / OFF</button>
-    <button onclick="burstEnergy()">💥 에너지 폭발</button>
     <button onclick="resetAll()">🧹 메시지 & 감정 리셋</button>
   </div>
 </div>
@@ -200,6 +198,7 @@ controlRef.on("value", s => control = s.val() || control);
 let lastSent = 0;
 function sendEmotion(emotion) {
   if (!control.enabled) return;
+
   const now = Date.now();
   if (now - lastSent < 700) return;
   lastSent = now;
@@ -222,7 +221,10 @@ if (mode === "screen") {
   function resize(){ canvas.width=innerWidth; canvas.height=innerHeight; }
   resize(); onresize=resize;
 
-  let energy=0, t=0, log=[];
+  let energy = 0;
+  let t = 0;
+  let log = [];
+
   const layers={
     calm:{c:"#4ea8de",f:0.004},
     moved:{c:"#9d4edd",f:0.006},
@@ -231,36 +233,59 @@ if (mode === "screen") {
   };
 
   db.ref("emotions").limitToLast(300).on("child_added", s=>{
-    const d=s.val(); if(!d||!layers[d.emotion])return;
-    energy+=1.2;
-    if(d.message&&control.showMessages){
+    const d=s.val();
+    if(!d||!layers[d.emotion])return;
+
+    energy += 1.2;
+
+    if(d.message && control.showMessages){
       showLive(d.message);
       addLog(d.message);
     }
   });
 
+  // 🔄 RESET LISTENER (핵심)
+  db.ref("control/resetAt").on("value", snap => {
+    const resetTime = snap.val();
+    if (!resetTime) return;
+
+    energy = 0;
+    log = [];
+    document.getElementById("live-message").innerHTML = "";
+    document.getElementById("message-log").innerHTML = "";
+
+    console.log("SCREEN RESET", resetTime);
+  });
+
   function showLive(text){
-    document.getElementById("live-message").innerHTML=
+    document.getElementById("live-message").innerHTML =
       `<div class="live">${text}</div>`;
   }
+
   function addLog(text){
     log.unshift(text);
-    if(log.length>10)log.pop();
-    document.getElementById("message-log").innerHTML=
+    if(log.length>10) log.pop();
+    document.getElementById("message-log").innerHTML =
       log.map(m=>`<div class="log-item">${m}</div>`).join("");
   }
 
   function draw(){
     ctx.clearRect(0,0,canvas.width,canvas.height);
-    energy*=0.985; energy=Math.max(energy,0.3);
+    energy *= 0.985;
+    energy = Math.max(energy,0.3);
+
     Object.values(layers).forEach(l=>{
-      ctx.strokeStyle=l.c; ctx.globalAlpha=0.35; ctx.beginPath();
+      ctx.strokeStyle=l.c;
+      ctx.globalAlpha=0.35;
+      ctx.beginPath();
       for(let x=0;x<canvas.width;x++){
         ctx.lineTo(x,canvas.height/2+Math.sin(x*l.f+t)*(80+energy*4));
       }
       ctx.stroke();
     });
-    ctx.globalAlpha=1; t+=0.01+energy*0.002;
+
+    ctx.globalAlpha=1;
+    t += 0.01 + energy*0.002;
     requestAnimationFrame(draw);
   }
   draw();
@@ -273,13 +298,12 @@ function toggleGuest(){
 function toggleMessages(){
   controlRef.child("showMessages").set(!control.showMessages);
 }
-function burstEnergy(){
-  db.ref("emotions").push({emotion:"joy",message:null,time:Date.now()});
-}
 function resetAll(){
-  if(confirm("정말 전체 초기화할까요?")){
-    db.ref("emotions").remove();
-  }
+  if(!confirm("정말 전체 초기화할까요?")) return;
+
+  const now = Date.now();
+  db.ref("emotions").remove();
+  controlRef.child("resetAt").set(now);
 }
 </script>
 
