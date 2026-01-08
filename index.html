@@ -5,7 +5,6 @@
 <title>Emotional Wave</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 
-<!-- Firebase (compat) -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 
@@ -19,59 +18,51 @@ html, body {
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
   color: white;
 }
-.hidden { display: none; }
+.hidden { display: none !important; }
 
-/* ================= GUEST UI ================= */
-:root {
-  --card-bg: rgba(255,255,255,0.08);
-  --card-border: rgba(255,255,255,0.18);
-  --text-sub: rgba(255,255,255,0.7);
-}
-
+/* ================= GUEST ================= */
 #guest {
   min-height: 100vh;
   background: radial-gradient(120% 120% at 50% 0%, #1c2541, #0b132b);
   display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  padding-bottom: env(safe-area-inset-bottom);
+  align-items: center;           /* ✅ 정중앙 */
+  justify-content: center;       /* ✅ 정중앙 */
+  padding: 20px;
 }
 
 .card {
   width: 100%;
   max-width: 420px;
-  background: var(--card-bg);
+  background: rgba(255,255,255,0.08);
   backdrop-filter: blur(16px);
-  border: 1px solid var(--card-border);
-  border-radius: 28px 28px 0 0;
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 24px;
   padding: 28px 24px 32px;
-  box-shadow: 0 -20px 40px rgba(0,0,0,0.35);
 }
 
 .card h1 {
-  margin: 0 0 6px;
-  font-size: 22px;
+  margin: 0 0 8px;
   text-align: center;
+  font-size: 22px;
 }
 
 .subtitle {
-  font-size: 14px;
   text-align: center;
-  color: var(--text-sub);
-  margin-bottom: 18px;
+  font-size: 14px;
+  color: rgba(255,255,255,0.7);
+  margin-bottom: 16px;
 }
 
 textarea {
   width: 100%;
-  min-height: 88px;
+  min-height: 90px;
   border-radius: 14px;
-  border: 1px solid var(--card-border);
+  border: none;
   background: rgba(255,255,255,0.12);
   color: white;
   padding: 14px;
   font-size: 14px;
   margin-bottom: 16px;
-  resize: none;
 }
 
 .grid {
@@ -87,84 +78,80 @@ button {
   font-size: 15px;
   font-weight: 600;
   cursor: pointer;
-  transition: transform .08s ease, opacity .08s ease;
-}
-button:active { transform: scale(.96); opacity: .85; }
-
-.calm { background: linear-gradient(135deg,#5fa8d3,#4ea8de); }
-.moved { background: linear-gradient(135deg,#b983ff,#9d4edd); color:white; }
-.joy { background: linear-gradient(135deg,#ffe066,#ffd166); color:#333; }
-.gratitude { background: linear-gradient(135deg,#f1dca7,#e9c46a); color:#333; }
-
-.footer {
-  margin-top: 18px;
-  font-size: 12px;
-  text-align: center;
-  color: var(--text-sub);
 }
 
-/* ================= SCREEN UI ================= */
-#screen, canvas {
+.calm { background:#4ea8de; }
+.moved { background:#9d4edd; color:white; }
+.joy { background:#ffd166; color:#333; }
+.gratitude { background:#e9c46a; color:#333; }
+
+/* ================= SCREEN ================= */
+#screen {
+  position: fixed;
+  inset: 0;
+}
+
+canvas {
   width: 100%;
   height: 100%;
-}
-canvas { display: block; }
-
-.overlay {
-  position: fixed;
-  bottom: 24px;
-  width: 100%;
-  text-align: center;
-  font-size: 14px;
-  color: rgba(255,255,255,0.6);
-  pointer-events: none;
+  display: block;
 }
 
-/* ================= MESSAGE LAYER ================= */
-#message-layer {
+/* ===== LIVE MESSAGE (큰 메시지) ===== */
+#live-message {
   position: fixed;
-  top: 18%;
+  top: 20%;
   width: 100%;
   text-align: center;
   pointer-events: none;
 }
 
-.message {
+.live {
   display: inline-block;
-  max-width: 70%;
-  margin: 10px auto;
-  padding: 14px 22px;
-  font-size: 22px;
-  line-height: 1.4;
-  color: white;
-  background: rgba(0,0,0,0.35);
-  backdrop-filter: blur(10px);
-  border-radius: 26px;
+  padding: 16px 26px;
+  font-size: 26px;
+  background: rgba(0,0,0,0.4);
+  border-radius: 28px;
   animation: fadeFloat 5s ease forwards;
 }
 
 @keyframes fadeFloat {
-  0%   { opacity: 0; transform: translateY(24px); }
-  10%  { opacity: 1; transform: translateY(0); }
-  80%  { opacity: 1; }
-  100% { opacity: 0; transform: translateY(-24px); }
+  0% { opacity:0; transform:translateY(20px); }
+  10% { opacity:1; }
+  80% { opacity:1; }
+  100% { opacity:0; transform:translateY(-20px); }
+}
+
+/* ===== MESSAGE LOG ===== */
+#message-log {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  max-width: 720px;
+  font-size: 16px;
+  color: rgba(255,255,255,0.85);
+}
+
+.log-item {
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
 }
 </style>
 </head>
 
 <body>
 
-<!-- ================= GUEST ================= -->
+<!-- ========== GUEST ========== -->
 <div id="guest" class="hidden">
   <div class="card">
     <h1>Este momento é feito por todos</h1>
     <div class="subtitle">
-      Toque quantas vezes quiser.<br>
-      Cada toque muda este momento.
+      Escreva uma mensagem e toque em uma emoção
     </div>
 
-    <textarea id="message" maxlength="100"
-      placeholder="Uma mensagem curta (opcional)"></textarea>
+    <textarea id="message" placeholder="Mensagem (opcional)"></textarea>
 
     <div class="grid">
       <button class="calm" onclick="sendEmotion('calm')">💙 Tranquilidade</button>
@@ -172,29 +159,24 @@ canvas { display: block; }
       <button class="joy" onclick="sendEmotion('joy')">💛 Alegria</button>
       <button class="gratitude" onclick="sendEmotion('gratitude')">🤍 Gratidão</button>
     </div>
-
-    <div class="footer">Cada participação altera a onda 🌊</div>
   </div>
 </div>
 
-<!-- ================= SCREEN ================= -->
+<!-- ========== SCREEN ========== -->
 <div id="screen" class="hidden">
   <canvas id="canvas"></canvas>
-  <div id="message-layer"></div>
-  <div class="overlay">The emotional wave of this moment</div>
+  <div id="live-message"></div>
+  <div id="message-log"></div>
 </div>
 
 <script>
-/* ================= MODE (SAFE) ================= */
-const params = new URLSearchParams(location.search);
-let mode = params.get("mode");
-if (mode !== "guest" && mode !== "screen") mode = "guest";
+/* ================= MODE ================= */
+const modeParam = new URLSearchParams(location.search).get("mode");
+const mode = (modeParam === "screen") ? "screen" : "guest";
 
 document.getElementById("guest").classList.add("hidden");
 document.getElementById("screen").classList.add("hidden");
 document.getElementById(mode).classList.remove("hidden");
-
-console.log("MODE =", mode);
 
 /* ================= FIREBASE ================= */
 const firebaseConfig = {
@@ -202,9 +184,6 @@ const firebaseConfig = {
   authDomain: "emotional-wave-wedding.firebaseapp.com",
   databaseURL: "https://emotional-wave-wedding-default-rtdb.firebaseio.com",
   projectId: "emotional-wave-wedding",
-  storageBucket: "emotional-wave-wedding.firebasestorage.app",
-  messagingSenderId: "313104873838",
-  appId: "1:313104873838:web:7099d1ebaaabefddc3297f"
 };
 
 firebase.initializeApp(firebaseConfig);
@@ -212,109 +191,80 @@ const db = firebase.database();
 
 /* ================= GUEST LOGIC ================= */
 let lastSent = 0;
-const COOLDOWN = 700;
-
 function sendEmotion(emotion) {
   const now = Date.now();
-  if (now - lastSent < COOLDOWN) return;
+  if (now - lastSent < 700) return;
   lastSent = now;
 
-  const msg = document.getElementById("message").value.trim();
+  const textarea = document.getElementById("message");
+  const msg = textarea.value.trim();
 
   db.ref("emotions").push({
     emotion,
     message: msg || null,
     time: now
   });
+
+  textarea.value = "";
 }
 
 /* ================= SCREEN LOGIC ================= */
 if (mode === "screen") {
   const canvas = document.getElementById("canvas");
   const ctx = canvas.getContext("2d");
-
   function resize() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    canvas.width = innerWidth;
+    canvas.height = innerHeight;
   }
-  window.onresize = resize;
-  resize();
+  resize(); onresize = resize;
 
   const layers = {
-    calm:      { color:"#4ea8de", freq:0.004 },
-    moved:     { color:"#9d4edd", freq:0.006 },
-    joy:       { color:"#ffd166", freq:0.009 },
-    gratitude: { color:"#e9c46a", freq:0.003 }
+    calm:{c:"#4ea8de",f:0.004},
+    moved:{c:"#9d4edd",f:0.006},
+    joy:{c:"#ffd166",f:0.009},
+    gratitude:{c:"#e9c46a",f:0.003}
   };
 
-  let energy = 0;
-  let flash = 0;
-  let t = 0;
+  let energy=0, t=0;
+  const log = [];
 
-  /* Audio */
-  const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  const osc = audioCtx.createOscillator();
-  const gain = audioCtx.createGain();
-  osc.type = "sine";
-  osc.frequency.value = 120;
-  gain.gain.value = 0;
-  osc.connect(gain).connect(audioCtx.destination);
-  osc.start();
-
-  document.body.addEventListener("click", () => {
-    if (audioCtx.state !== "running") audioCtx.resume();
-  });
-
-  db.ref("emotions").limitToLast(300).on("child_added", snap => {
-    const d = snap.val();
+  db.ref("emotions").limitToLast(300).on("child_added", s => {
+    const d = s.val();
     if (!d || !layers[d.emotion]) return;
 
-    energy += 1.4;
-
+    energy += 1.2;
     if (d.message) {
-      energy += Math.min(d.message.length / 15, 2);
-      showMessage(d.message);
+      showLive(d.message);
+      addLog(d.message);
     }
-
-    if (energy > 25) flash = 1;
   });
 
-  function showMessage(text) {
-    const layer = document.getElementById("message-layer");
-    const el = document.createElement("div");
-    el.className = "message";
-    el.textContent = text;
-    layer.appendChild(el);
-    setTimeout(() => el.remove(), 5000);
+  function showLive(text) {
+    const box = document.getElementById("live-message");
+    box.innerHTML = `<div class="live">${text}</div>`;
+  }
+
+  function addLog(text) {
+    log.unshift(text);
+    if (log.length > 10) log.pop();
+    document.getElementById("message-log").innerHTML =
+      log.map(m => `<div class="log-item">${m}</div>`).join("");
   }
 
   function draw() {
     ctx.clearRect(0,0,canvas.width,canvas.height);
-
-    energy *= 0.985;
-    energy = Math.max(energy,0.3);
-
-    gain.gain.value = Math.min(energy/40,0.15);
-    osc.frequency.value = 100 + energy*8;
+    energy *= 0.985; energy = Math.max(energy,0.3);
 
     Object.values(layers).forEach(l => {
-      ctx.strokeStyle = l.color;
+      ctx.strokeStyle = l.c;
       ctx.globalAlpha = 0.35;
-      ctx.lineWidth = 2;
       ctx.beginPath();
       for (let x=0;x<canvas.width;x++) {
-        const y = canvas.height/2 +
-          Math.sin(x*l.freq + t) * (80 + energy*4);
-        ctx.lineTo(x,y);
+        ctx.lineTo(x, canvas.height/2 +
+          Math.sin(x*l.f + t)*(80+energy*4));
       }
       ctx.stroke();
     });
-
-    if (flash>0) {
-      ctx.fillStyle = `rgba(255,255,255,${flash})`;
-      ctx.fillRect(0,0,canvas.width,canvas.height);
-      flash *= 0.85;
-    }
 
     ctx.globalAlpha = 1;
     t += 0.01 + energy*0.002;
