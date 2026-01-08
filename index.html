@@ -119,6 +119,36 @@ canvas { display: block; }
   color: rgba(255,255,255,0.6);
   pointer-events: none;
 }
+
+/* ================= MESSAGE LAYER ================= */
+#message-layer {
+  position: fixed;
+  top: 18%;
+  width: 100%;
+  text-align: center;
+  pointer-events: none;
+}
+
+.message {
+  display: inline-block;
+  max-width: 70%;
+  margin: 10px auto;
+  padding: 14px 22px;
+  font-size: 22px;
+  line-height: 1.4;
+  color: white;
+  background: rgba(0,0,0,0.35);
+  backdrop-filter: blur(10px);
+  border-radius: 26px;
+  animation: fadeFloat 5s ease forwards;
+}
+
+@keyframes fadeFloat {
+  0%   { opacity: 0; transform: translateY(24px); }
+  10%  { opacity: 1; transform: translateY(0); }
+  80%  { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-24px); }
+}
 </style>
 </head>
 
@@ -150,14 +180,21 @@ canvas { display: block; }
 <!-- ================= SCREEN ================= -->
 <div id="screen" class="hidden">
   <canvas id="canvas"></canvas>
+  <div id="message-layer"></div>
   <div class="overlay">The emotional wave of this moment</div>
 </div>
 
 <script>
-/* ================= MODE ================= */
+/* ================= MODE (SAFE) ================= */
 const params = new URLSearchParams(location.search);
-const mode = params.get("mode") || "guest";
+let mode = params.get("mode");
+if (mode !== "guest" && mode !== "screen") mode = "guest";
+
+document.getElementById("guest").classList.add("hidden");
+document.getElementById("screen").classList.add("hidden");
 document.getElementById(mode).classList.remove("hidden");
+
+console.log("MODE =", mode);
 
 /* ================= FIREBASE ================= */
 const firebaseConfig = {
@@ -233,9 +270,23 @@ if (mode === "screen") {
     if (!d || !layers[d.emotion]) return;
 
     energy += 1.4;
-    if (d.message) energy += Math.min(d.message.length / 15, 2);
+
+    if (d.message) {
+      energy += Math.min(d.message.length / 15, 2);
+      showMessage(d.message);
+    }
+
     if (energy > 25) flash = 1;
   });
+
+  function showMessage(text) {
+    const layer = document.getElementById("message-layer");
+    const el = document.createElement("div");
+    el.className = "message";
+    el.textContent = text;
+    layer.appendChild(el);
+    setTimeout(() => el.remove(), 5000);
+  }
 
   function draw() {
     ctx.clearRect(0,0,canvas.width,canvas.height);
