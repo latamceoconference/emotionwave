@@ -1,178 +1,275 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Emotional Wave</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta charset="UTF-8" />
+<title>Emotional Wave</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 
-  <!-- Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<!-- Firebase (compat) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 
-  <style>
-    :root {
-      --bg-dark: #0b132b;
-      --bg-light: #1c2541;
-      --card-bg: rgba(255, 255, 255, 0.08);
-      --card-border: rgba(255, 255, 255, 0.18);
-      --text-main: #ffffff;
-      --text-sub: rgba(255, 255, 255, 0.7);
-    }
+<style>
+/* ================= COMMON ================= */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: #0b132b;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
+  color: white;
+}
+.hidden { display: none; }
 
-    * {
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-    }
+/* ================= GUEST UI ================= */
+:root {
+  --card-bg: rgba(255,255,255,0.08);
+  --card-border: rgba(255,255,255,0.18);
+  --text-sub: rgba(255,255,255,0.7);
+}
 
-    body {
-      margin: 0;
-      min-height: 100vh;
-      background: radial-gradient(
-        120% 120% at 50% 0%,
-        var(--bg-light) 0%,
-        var(--bg-dark) 70%
-      );
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: flex-end;
-      padding-bottom: env(safe-area-inset-bottom);
-      color: var(--text-main);
-    }
+#guest {
+  min-height: 100vh;
+  background: radial-gradient(120% 120% at 50% 0%, #1c2541, #0b132b);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: env(safe-area-inset-bottom);
+}
 
-    .card {
-      width: 100%;
-      max-width: 420px;
-      background: var(--card-bg);
-      backdrop-filter: blur(16px);
-      border: 1px solid var(--card-border);
-      border-radius: 28px 28px 0 0;
-      padding: 28px 24px 32px;
-      box-shadow: 0 -20px 40px rgba(0, 0, 0, 0.35);
-      animation: slideUp 0.6s ease;
-    }
+.card {
+  width: 100%;
+  max-width: 420px;
+  background: var(--card-bg);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--card-border);
+  border-radius: 28px 28px 0 0;
+  padding: 28px 24px 32px;
+  box-shadow: 0 -20px 40px rgba(0,0,0,0.35);
+}
 
-    h1 {
-      margin: 0 0 6px;
-      font-size: 22px;
-      font-weight: 600;
-      text-align: center;
-    }
+.card h1 {
+  margin: 0 0 6px;
+  font-size: 22px;
+  text-align: center;
+}
 
-    .subtitle {
-      font-size: 14px;
-      color: var(--text-sub);
-      text-align: center;
-      line-height: 1.4;
-      margin-bottom: 18px;
-    }
+.subtitle {
+  font-size: 14px;
+  text-align: center;
+  color: var(--text-sub);
+  margin-bottom: 18px;
+}
 
-    textarea {
-      width: 100%;
-      min-height: 88px;
-      background: rgba(255, 255, 255, 0.12);
-      border: 1px solid var(--card-border);
-      border-radius: 14px;
-      padding: 14px;
-      color: white;
-      font-size: 14px;
-      resize: none;
-      outline: none;
-      margin-bottom: 16px;
-    }
+textarea {
+  width: 100%;
+  min-height: 88px;
+  border-radius: 14px;
+  border: 1px solid var(--card-border);
+  background: rgba(255,255,255,0.12);
+  color: white;
+  padding: 14px;
+  font-size: 14px;
+  margin-bottom: 16px;
+  resize: none;
+}
 
-    .grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
 
-    button {
-      border: none;
-      border-radius: 16px;
-      padding: 16px 12px;
-      font-size: 15px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: transform 0.08s ease, opacity 0.08s ease;
-    }
+button {
+  border: none;
+  border-radius: 16px;
+  padding: 16px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform .08s ease, opacity .08s ease;
+}
+button:active { transform: scale(.96); opacity: .85; }
 
-    button:active {
-      transform: scale(0.96);
-      opacity: 0.85;
-    }
+.calm { background: linear-gradient(135deg,#5fa8d3,#4ea8de); }
+.moved { background: linear-gradient(135deg,#b983ff,#9d4edd); color:white; }
+.joy { background: linear-gradient(135deg,#ffe066,#ffd166); color:#333; }
+.gratitude { background: linear-gradient(135deg,#f1dca7,#e9c46a); color:#333; }
 
-    .calm { background: linear-gradient(135deg, #5fa8d3, #4ea8de); }
-    .moved { background: linear-gradient(135deg, #b983ff, #9d4edd); color: #fff; }
-    .joy { background: linear-gradient(135deg, #ffe066, #ffd166); color: #333; }
-    .gratitude { background: linear-gradient(135deg, #f1dca7, #e9c46a); color: #333; }
+.footer {
+  margin-top: 18px;
+  font-size: 12px;
+  text-align: center;
+  color: var(--text-sub);
+}
 
-    .footer {
-      margin-top: 18px;
-      text-align: center;
-      font-size: 12px;
-      color: var(--text-sub);
-    }
+/* ================= SCREEN UI ================= */
+#screen, canvas {
+  width: 100%;
+  height: 100%;
+}
+canvas { display: block; }
 
-    @media (orientation: landscape) and (max-height: 500px) {
-      body { align-items: center; }
-      .card { border-radius: 24px; }
-    }
-  </style>
+.overlay {
+  position: fixed;
+  bottom: 24px;
+  width: 100%;
+  text-align: center;
+  font-size: 14px;
+  color: rgba(255,255,255,0.6);
+  pointer-events: none;
+}
+</style>
 </head>
+
 <body>
 
-<div class="card">
-  <h1>Este momento é feito por todos</h1>
-  <div class="subtitle">
-    Toque quantas vezes quiser.<br>
-    Cada toque muda este momento.
-  </div>
+<!-- ================= GUEST ================= -->
+<div id="guest" class="hidden">
+  <div class="card">
+    <h1>Este momento é feito por todos</h1>
+    <div class="subtitle">
+      Toque quantas vezes quiser.<br>
+      Cada toque muda este momento.
+    </div>
 
-  <textarea id="message" maxlength="100"
-    placeholder="Uma mensagem curta (opcional)"></textarea>
+    <textarea id="message" maxlength="100"
+      placeholder="Uma mensagem curta (opcional)"></textarea>
 
-  <div class="grid">
-    <button class="calm" onclick="sendEmotion('calm')">💙 Tranquilidade</button>
-    <button class="moved" onclick="sendEmotion('moved')">❤️ Emoção</button>
-    <button class="joy" onclick="sendEmotion('joy')">💛 Alegria</button>
-    <button class="gratitude" onclick="sendEmotion('gratitude')">🤍 Gratidão</button>
-  </div>
+    <div class="grid">
+      <button class="calm" onclick="sendEmotion('calm')">💙 Tranquilidade</button>
+      <button class="moved" onclick="sendEmotion('moved')">❤️ Emoção</button>
+      <button class="joy" onclick="sendEmotion('joy')">💛 Alegria</button>
+      <button class="gratitude" onclick="sendEmotion('gratitude')">🤍 Gratidão</button>
+    </div>
 
-  <div class="footer">
-    Cada participação altera a onda 🌊
+    <div class="footer">Cada participação altera a onda 🌊</div>
   </div>
 </div>
 
+<!-- ================= SCREEN ================= -->
+<div id="screen" class="hidden">
+  <canvas id="canvas"></canvas>
+  <div class="overlay">The emotional wave of this moment</div>
+</div>
+
 <script>
-/* 🔧 Firebase 설정 */
+/* ================= MODE ================= */
+const params = new URLSearchParams(location.search);
+const mode = params.get("mode") || "guest";
+document.getElementById(mode).classList.remove("hidden");
+
+/* ================= FIREBASE ================= */
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT.firebaseapp.com",
-  databaseURL: "https://YOUR_PROJECT.firebaseio.com",
-  projectId: "YOUR_PROJECT",
+  apiKey: "AIzaSyAYhMbJkSRs2uz-ZaAAbyAUrVjArqf1kZQ",
+  authDomain: "emotional-wave-wedding.firebaseapp.com",
+  databaseURL: "https://emotional-wave-wedding-default-rtdb.firebaseio.com",
+  projectId: "emotional-wave-wedding",
+  storageBucket: "emotional-wave-wedding.firebasestorage.app",
+  messagingSenderId: "313104873838",
+  appId: "1:313104873838:web:7099d1ebaaabefddc3297f"
 };
 
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-/* ⏱ 간단한 쿨타임 (연타 허용 + 스팸 방지) */
+/* ================= GUEST LOGIC ================= */
 let lastSent = 0;
-const COOLDOWN = 800; // ms
+const COOLDOWN = 700;
 
 function sendEmotion(emotion) {
   const now = Date.now();
   if (now - lastSent < COOLDOWN) return;
-
   lastSent = now;
 
-  const message = document.getElementById("message").value.trim();
+  const msg = document.getElementById("message").value.trim();
 
   db.ref("emotions").push({
-    emotion: emotion,
-    message: message || null,
+    emotion,
+    message: msg || null,
     time: now
   });
+}
+
+/* ================= SCREEN LOGIC ================= */
+if (mode === "screen") {
+  const canvas = document.getElementById("canvas");
+  const ctx = canvas.getContext("2d");
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  window.onresize = resize;
+  resize();
+
+  const layers = {
+    calm:      { color:"#4ea8de", freq:0.004 },
+    moved:     { color:"#9d4edd", freq:0.006 },
+    joy:       { color:"#ffd166", freq:0.009 },
+    gratitude: { color:"#e9c46a", freq:0.003 }
+  };
+
+  let energy = 0;
+  let flash = 0;
+  let t = 0;
+
+  /* Audio */
+  const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.type = "sine";
+  osc.frequency.value = 120;
+  gain.gain.value = 0;
+  osc.connect(gain).connect(audioCtx.destination);
+  osc.start();
+
+  document.body.addEventListener("click", () => {
+    if (audioCtx.state !== "running") audioCtx.resume();
+  });
+
+  db.ref("emotions").limitToLast(300).on("child_added", snap => {
+    const d = snap.val();
+    if (!d || !layers[d.emotion]) return;
+
+    energy += 1.4;
+    if (d.message) energy += Math.min(d.message.length / 15, 2);
+    if (energy > 25) flash = 1;
+  });
+
+  function draw() {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    energy *= 0.985;
+    energy = Math.max(energy,0.3);
+
+    gain.gain.value = Math.min(energy/40,0.15);
+    osc.frequency.value = 100 + energy*8;
+
+    Object.values(layers).forEach(l => {
+      ctx.strokeStyle = l.color;
+      ctx.globalAlpha = 0.35;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      for (let x=0;x<canvas.width;x++) {
+        const y = canvas.height/2 +
+          Math.sin(x*l.freq + t) * (80 + energy*4);
+        ctx.lineTo(x,y);
+      }
+      ctx.stroke();
+    });
+
+    if (flash>0) {
+      ctx.fillStyle = `rgba(255,255,255,${flash})`;
+      ctx.fillRect(0,0,canvas.width,canvas.height);
+      flash *= 0.85;
+    }
+
+    ctx.globalAlpha = 1;
+    t += 0.01 + energy*0.002;
+    requestAnimationFrame(draw);
+  }
+  draw();
 }
 </script>
 
