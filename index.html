@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Emotional Wave</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+
+  <style>
+    :root {
+      --bg-dark: #0b132b;
+      --bg-light: #1c2541;
+      --card-bg: rgba(255, 255, 255, 0.08);
+      --card-border: rgba(255, 255, 255, 0.18);
+      --text-main: #ffffff;
+      --text-sub: rgba(255, 255, 255, 0.7);
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: radial-gradient(
+        120% 120% at 50% 0%,
+        var(--bg-light) 0%,
+        var(--bg-dark) 70%
+      );
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      padding-bottom: env(safe-area-inset-bottom);
+      color: var(--text-main);
+    }
+
+    .card {
+      width: 100%;
+      max-width: 420px;
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--card-border);
+      border-radius: 28px 28px 0 0;
+      padding: 28px 24px 32px;
+      box-shadow: 0 -20px 40px rgba(0, 0, 0, 0.35);
+      animation: slideUp 0.6s ease;
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      font-size: 22px;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: var(--text-sub);
+      text-align: center;
+      line-height: 1.4;
+      margin-bottom: 18px;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 88px;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 14px;
+      color: white;
+      font-size: 14px;
+      resize: none;
+      outline: none;
+      margin-bottom: 16px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    button {
+      border: none;
+      border-radius: 16px;
+      padding: 16px 12px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.08s ease, opacity 0.08s ease;
+    }
+
+    button:active {
+      transform: scale(0.96);
+      opacity: 0.85;
+    }
+
+    .calm { background: linear-gradient(135deg, #5fa8d3, #4ea8de); }
+    .moved { background: linear-gradient(135deg, #b983ff, #9d4edd); color: #fff; }
+    .joy { background: linear-gradient(135deg, #ffe066, #ffd166); color: #333; }
+    .gratitude { background: linear-gradient(135deg, #f1dca7, #e9c46a); color: #333; }
+
+    .footer {
+      margin-top: 18px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-sub);
+    }
+
+    @media (orientation: landscape) and (max-height: 500px) {
+      body { align-items: center; }
+      .card { border-radius: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <h1>Este momento é feito por todos</h1>
+  <div class="subtitle">
+    Toque quantas vezes quiser.<br>
+    Cada toque muda este momento.
+  </div>
+
+  <textarea id="message" maxlength="100"
+    placeholder="Uma mensagem curta (opcional)"></textarea>
+
+  <div class="grid">
+    <button class="calm" onclick="sendEmotion('calm')">💙 Tranquilidade</button>
+    <button class="moved" onclick="sendEmotion('moved')">❤️ Emoção</button>
+    <button class="joy" onclick="sendEmotion('joy')">💛 Alegria</button>
+    <button class="gratitude" onclick="sendEmotion('gratitude')">🤍 Gratidão</button>
+  </div>
+
+  <div class="footer">
+    Cada participação altera a onda 🌊
+  </div>
+</div>
+
+<script>
+/* 🔧 Firebase 설정 */
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT.firebaseapp.com",
+  databaseURL: "https://YOUR_PROJECT.firebaseio.com",
+  projectId: "YOUR_PROJECT",
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+/* ⏱ 간단한 쿨타임 (연타 허용 + 스팸 방지) */
+let lastSent = 0;
+const COOLDOWN = 800; // ms
+
+function sendEmotion(emotion) {
+  const now = Date.now();
+  if (now - lastSent < COOLDOWN) return;
+
+  lastSent = now;
+
+  const message = document.getElementById("message").value.trim();
+
+  db.ref("emotions").push({
+    emotion: emotion,
+    message: message || null,
+    time: now
+  });
+}
+</script>
+
+</body>
+</html>
