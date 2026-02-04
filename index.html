@@ -1215,6 +1215,9 @@
                 </div>
                 <div class="hr"></div>
                 <div id="guestbookList" class="row" aria-label="방명록 목록"></div>
+                <div class="cta-row" id="guestbookMoreWrap" style="margin-top: 12px; display: none">
+                  <button class="btn" id="btnGuestbookMore" type="button">Ver mais</button>
+                </div>
               </div>
             </div>
 
@@ -1338,7 +1341,7 @@
         },
 
         // 갤러리 자동 탐색 (1~11, 01~11, jpg/jpeg 모두 지원)
-        galleryAutoMax: 11,
+        galleryAutoMax: 12,
         // 특정 파일만 고정으로 쓰고 싶으면 아래처럼 직접 배열을 넣으면 됩니다.
         // galleryFiles: ["assets/gallery/01.jpg", "assets/gallery/02.jpg"],
 
@@ -1446,6 +1449,8 @@
             submit: "Enviar",
             empty: "Ainda não há mensagens. Seja o(a) primeiro(a)!",
             anonymous: "Anônimo",
+            more: "Ver mais",
+            less: "Mostrar menos",
           },
           dlg: {
             photo: { title: "Foto", hint: "Feche e selecione outra foto para ver mais.", alt: "Imagem ampliada" },
@@ -1542,6 +1547,8 @@
             submit: "메시지 남기기",
             empty: "아직 메시지가 없습니다. 첫 메시지를 남겨 주세요.",
             anonymous: "익명",
+            more: "더보기",
+            less: "접기",
           },
           dlg: {
             photo: { title: "사진", hint: "사진을 넘기려면 바깥을 닫고 다른 사진을 선택해 주세요.", alt: "확대 이미지" },
@@ -1861,6 +1868,10 @@
           localStorage.removeItem(LS_KEYS.guestbook);
         },
       };
+
+      // Guestbook view state
+      let guestbookExpanded = false;
+      let guestbookFullList = [];
 
       // ================== INIT CONTENT ==================
       function bindContent() {
@@ -2207,6 +2218,11 @@ END:VCALENDAR`;
           renderGuestbook();
         });
 
+        $("#btnGuestbookMore")?.addEventListener("click", () => {
+          guestbookExpanded = !guestbookExpanded;
+          renderGuestbookList();
+        });
+
         // Poll
         $("#btnClearLocal")?.addEventListener("click", () => {
           pollApi.clear();
@@ -2283,34 +2299,57 @@ END:VCALENDAR`;
       // ================== RENDER: Guestbook ==================
       function renderGuestbook() {
         guestbookApi.onList((list) => {
-          const root = $("#guestbookList");
-          if (!root) return;
-          root.innerHTML = "";
-          const items = (list || []).slice(0, 12);
-          if (items.length === 0) {
-            const empty = document.createElement("div");
-            empty.className = "muted";
-            empty.style.fontSize = "13px";
-            empty.textContent = t("guestbook.empty");
-            root.appendChild(empty);
-            return;
+          guestbookFullList = Array.isArray(list) ? list : [];
+          // 리스트가 갱신되면 기본은 접힌 상태로 유지 (원하면 이 줄 삭제)
+          // guestbookExpanded = false;
+          renderGuestbookList();
+        });
+      }
+
+      function renderGuestbookList() {
+        const root = $("#guestbookList");
+        if (!root) return;
+        root.innerHTML = "";
+
+        const full = guestbookFullList || [];
+        const initialCount = 3;
+        const visible = guestbookExpanded ? full : full.slice(0, initialCount);
+
+        const moreWrap = $("#guestbookMoreWrap");
+        const moreBtn = $("#btnGuestbookMore");
+        if (moreWrap && moreBtn) {
+          if (full.length > initialCount) {
+            moreWrap.style.display = "";
+            moreBtn.textContent = guestbookExpanded ? t("guestbook.less") : t("guestbook.more");
+          } else {
+            moreWrap.style.display = "none";
           }
-          items.forEach((it) => {
-            const card = document.createElement("div");
-            card.className = "card";
-            card.style.boxShadow = "none";
-            card.style.background = "rgba(255,255,255,.68)";
-            const when = new Date(it.time || Date.now());
-            const stamp = `${when.getFullYear()}.${String(when.getMonth() + 1).padStart(2, "0")}.${String(when.getDate()).padStart(2, "0")}`;
-            card.innerHTML = `
-              <div style="display:flex;justify-content:space-between;gap:10px;align-items:baseline">
-                <strong style="font-size:14px">${escapeHtml(it.name || t("guestbook.anonymous"))}</strong>
-                <span class="muted" style="font-size:12px">${stamp}</span>
-              </div>
-              <div style="margin-top:8px;font-size:14px;line-height:1.7">${escapeHtml(it.message || "")}</div>
-            `;
-            root.appendChild(card);
-          });
+        }
+
+        if (visible.length === 0) {
+          const empty = document.createElement("div");
+          empty.className = "muted";
+          empty.style.fontSize = "13px";
+          empty.textContent = t("guestbook.empty");
+          root.appendChild(empty);
+          return;
+        }
+
+        visible.forEach((it) => {
+          const card = document.createElement("div");
+          card.className = "card";
+          card.style.boxShadow = "none";
+          card.style.background = "rgba(255,255,255,.68)";
+          const when = new Date(it.time || Date.now());
+          const stamp = `${when.getFullYear()}.${String(when.getMonth() + 1).padStart(2, "0")}.${String(when.getDate()).padStart(2, "0")}`;
+          card.innerHTML = `
+            <div style="display:flex;justify-content:space-between;gap:10px;align-items:baseline">
+              <strong style="font-size:14px">${escapeHtml(it.name || t("guestbook.anonymous"))}</strong>
+              <span class="muted" style="font-size:12px">${stamp}</span>
+            </div>
+            <div style="margin-top:8px;font-size:14px;line-height:1.7">${escapeHtml(it.message || "")}</div>
+          `;
+          root.appendChild(card);
         });
       }
 
