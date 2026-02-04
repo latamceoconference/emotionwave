@@ -891,6 +891,25 @@
           justify-content: flex-end;
           margin-top: 6px;
         }
+
+        /* Hero media pills: prevent clipping on small screens */
+        .hero-media {
+          min-height: 380px;
+        }
+        .hero-media-inner {
+          flex-direction: column;
+          align-items: stretch;
+          justify-content: flex-end;
+          padding: 14px;
+          padding-bottom: calc(14px + env(safe-area-inset-bottom));
+          gap: 10px;
+        }
+        .pill {
+          width: 100%;
+          justify-content: space-between;
+          padding: 10px 12px;
+          font-size: 12px;
+        }
       }
     </style>
   </head>
@@ -1342,18 +1361,19 @@
         brideName: "Larissa Vilas Boas de Araujo",
         dateText: "2026. 05. 30 (sáb) 16:30",
         dateISO: "2026-05-30T16:30:00-03:00", // 캘린더용 (브라질 기준 예시)
-        placeText: "Rancho do Celso",
-        placeShort: "Rancho do Celso",
-        addressText: "Rancho do Celso",
+        placeText: "Rancho do Celso - Rifaina/SP",
+        placeShort: "Rancho do Celso - Rifaina/SP",
+        addressText: "Rancho do Celso - Rifaina/SP",
         naviLink: "https://goo.gl/maps/Eir3bNDdSjEec3YJA?g_st=aw",
         mapEmbedUrl:
           "https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3747.480863602356!2d-47.428118924769045!3d-20.07217598134847!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMjDCsDA0JzE5LjgiUyA0N8KwMjUnMzIuMCJX!5e0!3m2!1sko!2sbr!4v1770246189302!5m2!1sko!2sbr", // 구글 지도 퍼가기(Embed) iframe의 src
-        phone: { groom: "010-0000-0000", bride: "010-0000-0000" },
+        // 연락처(브라질): WhatsApp/전화 링크가 잘 되려면 국가코드 포함 추천 (+55 ...)
+        phone: { groom: "+55 11 98145-1081", bride: "+55 11 98811-2997" },
         gift: {
-          groomHolder: "Titular (noivo)",
-          groomBank: "Banco 000-000-000000",
-          brideHolder: "Titular (noiva)",
-          brideBank: "Banco 000-000-000000",
+          groomHolder: "Haseung Song (Nubank)",
+          groomBank: "70399339183",
+          brideHolder: "Larissa Vilas Boas de Araujo (Nubank)",
+          brideBank: "32346800864",
         },
 
         // Firebase 공유 모드 (선택): README대로 세팅 후 값 입력
@@ -1370,25 +1390,10 @@
           },
         },
 
-        // 갤러리 파일명(없으면 자동으로 스킵)
-        galleryFiles: [
-          "assets/gallery/01.jpg",
-          "assets/gallery/02.jpg",
-          "assets/gallery/03.jpg",
-          "assets/gallery/04.jpg",
-          "assets/gallery/05.jpg",
-          "assets/gallery/06.jpg",
-          // 폴더 구조를 아직 안 옮겼을 때(루트에 있는 파일)도 자동 인식
-          "01.jpg",
-          "02.jpg",
-          "03.jpg",
-          "04.jpg",
-          "05.jpg",
-          "06.jpg",
-          "07.jpg",
-          "08.jpg",
-          "09.jpg",
-        ],
+        // 갤러리 자동 탐색 (1~11, 01~11, jpg/jpeg 모두 지원)
+        galleryAutoMax: 11,
+        // 특정 파일만 고정으로 쓰고 싶으면 아래처럼 직접 배열을 넣으면 됩니다.
+        // galleryFiles: ["assets/gallery/01.jpg", "assets/gallery/02.jpg"],
 
         // 히어로 이미지 후보 (먼저 존재하는 파일을 사용)
         heroImageCandidates: ["assets/hero.jpg", "hero.jpg", "01.jpg", "02.jpg"],
@@ -1795,6 +1800,8 @@
         }
       }
 
+      const ASSET_CACHE_BUSTER = String(Date.now());
+
       function escapeHtml(str) {
         return String(str || "").replace(/[&<>"']/g, (m) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m]));
       }
@@ -1983,40 +1990,49 @@
 
       // ================== INIT CONTENT ==================
       function bindContent() {
-        $("#brandTitle").textContent = `${WEDDING.groomName} · ${WEDDING.brideName}`;
-        $("#brandDate").textContent = (WEDDING.dateText || "").replaceAll("년", ".").replaceAll("월", ".").replaceAll("일", "").slice(0, 12);
+        const setText = (sel, val) => {
+          const el = $(sel);
+          if (el) el.textContent = val;
+        };
+        const setHtml = (sel, html) => {
+          const el = $(sel);
+          if (el) el.innerHTML = html;
+        };
+        const setHref = (sel, href) => {
+          const el = $(sel);
+          if (el) el.setAttribute("href", href || "#");
+        };
 
-        $("#groomName").textContent = WEDDING.groomName;
-        $("#brideName").textContent = WEDDING.brideName;
-        $("#heroMeta").innerHTML = `${escapeHtml(WEDDING.dateText)}<br />${escapeHtml(WEDDING.placeText)}`;
+        setText("#brandTitle", `${WEDDING.groomName} · ${WEDDING.brideName}`);
+        setText("#brandDate", (WEDDING.dateText || "").replaceAll("년", ".").replaceAll("월", ".").replaceAll("일", "").slice(0, 12));
 
-        $("#pillDate").textContent = extractDateShort(WEDDING.dateText);
-        $("#pillPlace").textContent = WEDDING.placeShort || WEDDING.placeText;
+        setText("#groomName", WEDDING.groomName);
+        setText("#brideName", WEDDING.brideName);
+        setHtml("#heroMeta", `${escapeHtml(WEDDING.dateText)}<br />${escapeHtml(WEDDING.placeText)}`);
 
-        $("#infoDate").textContent = WEDDING.dateText;
-        $("#infoPlace").textContent = WEDDING.placeText;
-        const infoMap = $("#infoMapLink");
-        if (infoMap) infoMap.setAttribute("href", WEDDING.naviLink || "#");
+        setText("#pillDate", extractDateShort(WEDDING.dateText));
+        setText("#pillPlace", WEDDING.placeShort || WEDDING.placeText);
 
-        $("#groomPhone").textContent = WEDDING.phone.groom;
-        $("#bridePhone").textContent = WEDDING.phone.bride;
-        $("#groomContactName").textContent = WEDDING.groomName;
-        $("#brideContactName").textContent = WEDDING.brideName;
+        setText("#infoDate", WEDDING.dateText);
+        setText("#infoPlace", WEDDING.placeText);
+        setHref("#infoMapLink", WEDDING.naviLink);
 
-        const groomTel = toTelHref(WEDDING.phone.groom);
-        const brideTel = toTelHref(WEDDING.phone.bride);
-        $("#groomTel").setAttribute("href", groomTel || "#");
-        $("#brideTel").setAttribute("href", brideTel || "#");
+        setText("#groomPhone", WEDDING.phone.groom);
+        setText("#bridePhone", WEDDING.phone.bride);
+        setText("#groomContactName", WEDDING.groomName);
+        setText("#brideContactName", WEDDING.brideName);
 
-        const groomWa = toWhatsappLink(WEDDING.phone.groom, currentCountry);
-        const brideWa = toWhatsappLink(WEDDING.phone.bride, currentCountry);
-        $("#groomWhatsapp").setAttribute("href", groomWa || "#");
-        $("#brideWhatsapp").setAttribute("href", brideWa || "#");
+        setHref("#groomTel", toTelHref(WEDDING.phone.groom));
+        setHref("#brideTel", toTelHref(WEDDING.phone.bride));
 
-        $("#btnNavi").setAttribute("href", WEDDING.naviLink || "#");
+        setHref("#groomWhatsapp", toWhatsappLink(WEDDING.phone.groom, currentCountry));
+        setHref("#brideWhatsapp", toWhatsappLink(WEDDING.phone.bride, currentCountry));
+
+        setHref("#btnNavi", WEDDING.naviLink);
         const mapLink = String(WEDDING.naviLink || "").trim();
         const embed = resolveMapEmbedUrl(mapLink, String(WEDDING.mapEmbedUrl || "").trim(), WEDDING.placeText, WEDDING.addressText);
-        $("#mapFrame").setAttribute("src", embed || "about:blank");
+        const mapFrame = $("#mapFrame");
+        if (mapFrame) mapFrame.setAttribute("src", embed || "about:blank");
         const mapA = $("#mapLinkText");
         if (mapA) {
           mapA.setAttribute("href", mapLink || "#");
@@ -2024,10 +2040,10 @@
         }
 
         // Gift
-        $("#groomHolder").textContent = WEDDING.gift.groomHolder;
-        $("#groomBank").textContent = WEDDING.gift.groomBank;
-        $("#brideHolder").textContent = WEDDING.gift.brideHolder;
-        $("#brideBank").textContent = WEDDING.gift.brideBank;
+        setText("#groomHolder", WEDDING.gift.groomHolder);
+        setText("#groomBank", WEDDING.gift.groomBank);
+        setText("#brideHolder", WEDDING.gift.brideHolder);
+        setText("#brideBank", WEDDING.gift.brideBank);
       }
 
       function digitsOnly(str) {
@@ -2120,7 +2136,11 @@
         if (!grid) return;
         grid.innerHTML = "";
 
-        const candidates = WEDDING.galleryFiles || [];
+        const candidates =
+          Array.isArray(WEDDING.galleryFiles) && WEDDING.galleryFiles.length > 0
+            ? WEDDING.galleryFiles
+            : generateGalleryCandidates(Number(WEDDING.galleryAutoMax || 11));
+
         const exists = await Promise.all(candidates.map((src) => imgExists(src).then((ok) => ({ src, ok }))));
         const files = Array.from(new Set(exists.filter((x) => x.ok).map((x) => x.src)));
 
@@ -2154,8 +2174,29 @@
           const img = new Image();
           img.onload = () => resolve(true);
           img.onerror = () => resolve(false);
-          img.src = src + (src.includes("?") ? "&" : "?") + "v=" + Date.now();
+          img.src = src + (src.includes("?") ? "&" : "?") + "v=" + encodeURIComponent(ASSET_CACHE_BUSTER);
         });
+      }
+
+      function generateGalleryCandidates(maxIndex) {
+        const end = Number.isFinite(maxIndex) && maxIndex > 0 ? Math.floor(maxIndex) : 11;
+        const exts = ["jpg", "jpeg", "JPG", "JPEG"];
+        const dirs = ["assets/gallery/", ""];
+        const out = [];
+
+        for (let i = 1; i <= end; i++) {
+          const n1 = String(i).padStart(2, "0");
+          const n2 = String(i);
+          const names = [n1, n2];
+          for (const name of names) {
+            for (const ext of exts) {
+              for (const dir of dirs) {
+                out.push(`${dir}${name}.${ext}`);
+              }
+            }
+          }
+        }
+        return Array.from(new Set(out));
       }
 
       async function setHeroImage() {
