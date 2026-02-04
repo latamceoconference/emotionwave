@@ -6,13 +6,10 @@
     <meta name="format-detection" content="telephone=no,date=no,address=no,email=no" />
 
     <title>Convite de Casamento</title>
-    <meta
-      name="description"
-      content="Com alegria, convidamos você para o nosso casamento. Informações, localização, RSVP e mensagens."
-    />
+    <meta name="description" content="Com alegria, convidamos você para o nosso casamento. Informações, localização e mensagens." />
 
     <meta property="og:title" content="Convite de Casamento" />
-    <meta property="og:description" content="Informações, localização, RSVP e mensagens" />
+    <meta property="og:description" content="Informações, localização e mensagens" />
     <meta property="og:type" content="website" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -976,7 +973,6 @@
                   Rancho do Celso
                 </p>
                 <div class="cta-row">
-                  <button class="btn primary" id="btnRSVP" type="button" data-i18n="hero.rsvp">Confirmar presença</button>
                   <button class="btn" id="btnCalendar" type="button" data-i18n="hero.calendar">Adicionar ao calendário</button>
                   <a class="btn ghost" href="#activity" data-i18n="hero.join">Participar</a>
                   <a class="btn ghost" href="#location" data-i18n="hero.directions">Rotas</a>
@@ -1222,14 +1218,7 @@
               </div>
             </div>
 
-            <div class="card">
-              <h3 class="section-title" style="font-size: 18px; margin-top: 0" data-i18n="rsvp.title">RSVP</h3>
-              <p class="section-sub" style="margin-top: 0" data-i18n="rsvp.sub">Para prepararmos tudo com carinho, confirme sua presença.</p>
-              <div class="cta-row">
-                <button class="btn primary" id="btnRSVP2" type="button" data-i18n="rsvp.open">Preencher RSVP</button>
-                <button class="btn" id="btnMyRSVP" type="button" data-i18n="rsvp.mine">Ver meu RSVP</button>
-              </div>
-            </div>
+            <!-- (removed) RSVP card -->
           </div>
         </div>
       </section>
@@ -1290,58 +1279,6 @@
         </div>
       </section>
     </main>
-
-    <!-- ====== RSVP Dialog ====== -->
-    <dialog id="dlgRSVP" aria-label="RSVP">
-      <div class="dlg-head">
-        <h3 data-i18n="dlg.rsvp.title">RSVP</h3>
-        <button class="icon-btn" type="button" data-close="dlgRSVP" aria-label="Fechar" data-i18n="common.close">Fechar</button>
-      </div>
-      <div class="dlg-body">
-        <div class="row">
-          <div>
-            <div class="label" data-i18n="dlg.rsvp.name.label">Nome</div>
-            <input id="rsvpName" type="text" maxlength="16" placeholder="Seu nome" data-i18n-placeholder="dlg.rsvp.name.ph" />
-          </div>
-          <div class="row2">
-            <div>
-              <div class="label" data-i18n="dlg.rsvp.attend.label">Presença</div>
-              <select class="select" id="rsvpAttend">
-                <option value="yes" data-i18n="dlg.rsvp.attend.yes">Sim</option>
-                <option value="no" data-i18n="dlg.rsvp.attend.no">Não</option>
-              </select>
-            </div>
-            <div>
-              <div class="label" data-i18n="dlg.rsvp.count.label">Pessoas</div>
-              <select class="select" id="rsvpCount">
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-              </select>
-            </div>
-          </div>
-          <div>
-            <div class="label" data-i18n="dlg.rsvp.memo.label">Observação (opcional)</div>
-            <input
-              id="rsvpMemo"
-              type="text"
-              maxlength="60"
-              placeholder="Ex) vegetariano, bebê, chegada tarde..."
-              data-i18n-placeholder="dlg.rsvp.memo.ph"
-            />
-          </div>
-          <div class="dlg-actions">
-            <button class="btn primary" id="btnRSVPSave" type="button" data-i18n="common.save">Salvar</button>
-            <button class="btn" id="btnRSVPView" type="button" data-i18n="rsvp.mine">Ver meu RSVP</button>
-          </div>
-          <div class="muted" style="font-size: 12px; line-height: 1.6">
-            <span data-i18n="dlg.rsvp.privacy">Os dados do RSVP serão usados apenas para organização do evento.</span>
-          </div>
-        </div>
-      </div>
-    </dialog>
 
     <!-- ====== Lightbox ====== -->
     <dialog id="dlgLightbox" aria-label="Imagem">
@@ -1436,13 +1373,13 @@
         pt: {
           meta: {
             title: "Convite de Casamento",
-            description: "Com alegria, convidamos você para o nosso casamento. Informações, localização, RSVP e mensagens.",
+            description: "Com alegria, convidamos você para o nosso casamento. Informações, localização e mensagens.",
             ogTitle: "Convite de Casamento",
-            ogDescription: "Informações, localização, RSVP e mensagens",
+            ogDescription: "Informações, localização e mensagens",
           },
           screen: { overlay: "Uma onda de felicitações, feita por todos" },
           nav: { info: "Informações", location: "Como chegar", gallery: "Galeria", activity: "Participar", gift: "Presentes" },
-          hero: { kicker: "INVITATION", rsvp: "Confirmar presença", calendar: "Adicionar ao calendário", join: "Participar", directions: "Rotas" },
+          hero: { kicker: "INVITATION", calendar: "Adicionar ao calendário", join: "Participar", directions: "Rotas" },
           data: {
             local: "Evento ao ar livre – sapato confortável recomendado",
             shared: "Dados: compartilhado (Firebase)",
@@ -1510,27 +1447,7 @@
             empty: "Ainda não há mensagens. Seja o(a) primeiro(a)!",
             anonymous: "Anônimo",
           },
-          rsvp: {
-            title: "RSVP",
-            sub: "Para prepararmos tudo com carinho, confirme sua presença.",
-            open: "Preencher RSVP",
-            mine: "Ver meu RSVP",
-            attendYes: "Sim",
-            attendNo: "Não",
-          },
           dlg: {
-            rsvp: {
-              title: "RSVP",
-              nameLabel: "Nome",
-              namePh: "Seu nome",
-              attendLabel: "Presença",
-              attendYes: "Sim",
-              attendNo: "Não",
-              countLabel: "Pessoas",
-              memoLabel: "Observação (opcional)",
-              memoPh: "Ex) vegetariano, bebê, chegada tarde...",
-              privacy: "Os dados do RSVP serão usados apenas para organização do evento.",
-            },
             photo: { title: "Foto", hint: "Feche e selecione outra foto para ver mais.", alt: "Imagem ampliada" },
           },
           gift: { groomSide: "Lado do noivo", brideSide: "Lado da noiva", holder: "Titular", account: "Conta" },
@@ -1546,10 +1463,6 @@
             cleared: "Limpo",
             voted: "Votado",
             joined: "Participação enviada",
-            saved: "Salvo",
-            needName: "Digite seu nome",
-            noSaved: "Nenhum RSVP salvo",
-            myRsvp: "{name}: {attend} · {count} pessoa(s)",
           },
           gallery: { needFiles: "Adicione fotos em assets/gallery/", open: "Abrir foto", alt: "Foto da galeria" },
           aria: { whatsapp: "Abrir conversa no WhatsApp" },
@@ -1557,13 +1470,13 @@
         ko: {
           meta: {
             title: "결혼식에 초대합니다",
-            description: "소중한 분들을 결혼식에 초대합니다. 일정, 오시는 길, RSVP, 축하 메시지와 참여형 액티비티를 확인하세요.",
+            description: "소중한 분들을 결혼식에 초대합니다. 일정, 오시는 길, 축하 메시지와 참여형 액티비티를 확인하세요.",
             ogTitle: "결혼식에 초대합니다",
-            ogDescription: "일정, 오시는 길, RSVP, 축하 메시지",
+            ogDescription: "일정, 오시는 길, 축하 메시지",
           },
           screen: { overlay: "함께 만드는 축하의 파도" },
           nav: { info: "안내", location: "오시는 길", gallery: "갤러리", activity: "참여", gift: "마음 전하실 곳" },
-          hero: { kicker: "INVITATION", rsvp: "참석 응답", calendar: "캘린더 추가", join: "축하 참여하기", directions: "길찾기" },
+          hero: { kicker: "INVITATION", calendar: "캘린더 추가", join: "축하 참여하기", directions: "길찾기" },
           data: {
             local: "야외 행사입니다 — 편한 신발을 추천드려요",
             shared: "데이터 저장: 공유(Firebase)",
@@ -1630,27 +1543,7 @@
             empty: "아직 메시지가 없습니다. 첫 메시지를 남겨 주세요.",
             anonymous: "익명",
           },
-          rsvp: {
-            title: "참석 응답(RSVP)",
-            sub: "좌석/식사 준비를 위해 참석 여부를 알려주시면 감사하겠습니다.",
-            open: "참석 응답 작성",
-            mine: "내 응답 확인",
-            attendYes: "참석",
-            attendNo: "불참",
-          },
           dlg: {
-            rsvp: {
-              title: "참석 응답(RSVP)",
-              nameLabel: "이름",
-              namePh: "성함",
-              attendLabel: "참석 여부",
-              attendYes: "참석",
-              attendNo: "불참",
-              countLabel: "인원",
-              memoLabel: "메모 (선택)",
-              memoPh: "예) 채식, 아기 동반, 늦게 도착 등",
-              privacy: "개인정보(이름/참석 여부/인원/메모)는 RSVP 목적 외에는 사용하지 않습니다.",
-            },
             photo: { title: "사진", hint: "사진을 넘기려면 바깥을 닫고 다른 사진을 선택해 주세요.", alt: "확대 이미지" },
           },
           gift: { groomSide: "신랑 측", brideSide: "신부 측", holder: "예금주", account: "계좌" },
@@ -1666,10 +1559,6 @@
             cleared: "초기화했습니다",
             voted: "투표했습니다",
             joined: "참여했습니다",
-            saved: "저장했습니다",
-            needName: "이름을 입력해 주세요",
-            noSaved: "저장된 응답이 없습니다",
-            myRsvp: "{name}: {attend} · {count}명",
           },
           gallery: { needFiles: "assets/gallery/에 사진을 넣어주세요", open: "사진 확대", alt: "갤러리 사진" },
           aria: { whatsapp: "WhatsApp으로 바로 연락하기" },
@@ -1822,7 +1711,6 @@
       const LS_KEYS = {
         emotions: "wedding.emotions.v1",
         guestbook: "wedding.guestbook.v1",
-        rsvp: "wedding.rsvp.v1",
         poll: "wedding.poll.v1",
       };
 
@@ -1954,31 +1842,6 @@
         },
       };
 
-      const rsvpApi = {
-        async saveMine({ name, attend, count, memo }) {
-          const item = {
-            name: (name || "").trim().slice(0, 16),
-            attend,
-            count: Number(count || 1),
-            memo: (memo || "").trim().slice(0, 60) || null,
-            time: nowTs(),
-          };
-          if (!item.name) return { ok: false, reason: "name" };
-          if (!["yes", "no"].includes(item.attend)) return { ok: false, reason: "attend" };
-
-          if (dataMode === "shared" && db) {
-            await db.ref("wedding/rsvp").push(item);
-            lsSet(LS_KEYS.rsvp, item);
-          } else {
-            lsSet(LS_KEYS.rsvp, item);
-          }
-          return { ok: true, item };
-        },
-        getMine() {
-          return lsGet(LS_KEYS.rsvp, null);
-        },
-      };
-
       const pollApi = {
         get() {
           const base = {};
@@ -1996,7 +1859,6 @@
           localStorage.removeItem(LS_KEYS.poll);
           localStorage.removeItem(LS_KEYS.emotions);
           localStorage.removeItem(LS_KEYS.guestbook);
-          localStorage.removeItem(LS_KEYS.rsvp);
         },
       };
 
@@ -2302,10 +2164,6 @@ END:VCALENDAR`;
 
         $("#btnCalendar")?.addEventListener("click", downloadICS);
 
-        const openRSVP = () => openDialog("dlgRSVP");
-        $("#btnRSVP")?.addEventListener("click", openRSVP);
-        $("#btnRSVP2")?.addEventListener("click", openRSVP);
-
         $$("[data-close]").forEach((btn) => {
           btn.addEventListener("click", () => closeDialog(btn.getAttribute("data-close")));
         });
@@ -2337,30 +2195,6 @@ END:VCALENDAR`;
           });
         });
 
-        // RSVP
-        $("#btnRSVPSave")?.addEventListener("click", async () => {
-          const name = $("#rsvpName").value;
-          const attend = $("#rsvpAttend").value;
-          const count = $("#rsvpCount").value;
-          const memo = $("#rsvpMemo").value;
-          const res = await rsvpApi.saveMine({ name, attend, count, memo });
-          if (!res.ok) {
-            toast(res.reason === "name" ? t("toast.needName") : t("toast.checkInput"));
-            return;
-          }
-          toast(t("toast.saved"));
-          closeDialog("dlgRSVP");
-        });
-
-        const showMy = () => {
-          const mine = rsvpApi.getMine();
-          if (!mine) return toast(t("toast.noSaved"));
-          const attendText = mine.attend === "yes" ? t("rsvp.attendYes") : t("rsvp.attendNo");
-          toast(t("toast.myRsvp", { name: mine.name, attend: attendText, count: mine.count }));
-        };
-        $("#btnRSVPView")?.addEventListener("click", showMy);
-        $("#btnMyRSVP")?.addEventListener("click", showMy);
-
         // Guestbook
         $("#btnGbSubmit")?.addEventListener("click", async () => {
           const ok = await guestbookApi.add({
@@ -2388,7 +2222,6 @@ END:VCALENDAR`;
             local: {
               emotions: lsGet(LS_KEYS.emotions, []),
               guestbook: lsGet(LS_KEYS.guestbook, []),
-              rsvpMine: lsGet(LS_KEYS.rsvp, null),
               poll: pollApi.get(),
             },
           };
