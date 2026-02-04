@@ -212,7 +212,7 @@
         margin: 12px 0 8px;
         font-family: "Playfair Display", serif;
         font-weight: 500;
-        font-size: 42px;
+        font-size: clamp(30px, 4.4vw, 44px);
         line-height: 1.12;
         letter-spacing: 0.02em;
       }
@@ -731,6 +731,62 @@
           scroll-behavior: auto !important;
         }
       }
+
+      /* ====== Mobile polish ====== */
+      html {
+        scroll-behavior: smooth;
+      }
+      @media (max-width: 560px) {
+        .topbar-inner {
+          align-items: flex-start;
+        }
+        .brand .title {
+          font-size: 16px;
+        }
+        .topbar-right {
+          width: 100%;
+          justify-content: space-between;
+        }
+        .nav {
+          flex-wrap: nowrap;
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+          scrollbar-width: none;
+          gap: 6px;
+          padding-bottom: 2px;
+          max-width: calc(100vw - 170px);
+        }
+        .nav::-webkit-scrollbar {
+          display: none;
+        }
+        .nav a {
+          white-space: nowrap;
+          padding: 7px 9px;
+          font-size: 12px;
+        }
+        .hero-copy {
+          padding: 22px 18px 18px;
+        }
+        .meta {
+          font-size: 14px;
+        }
+        .cta-row {
+          gap: 8px;
+        }
+        .cta-row .btn {
+          flex: 1;
+          justify-content: center;
+        }
+        .pill {
+          padding: 9px 10px;
+        }
+        .map {
+          height: 260px;
+        }
+        .gallery {
+          gap: 8px;
+        }
+      }
     </style>
   </head>
 
@@ -796,11 +852,11 @@
               <div class="hero-media-inner">
                 <div class="pill">
                   <strong data-i18n="pill.ceremony">Cerimônia</strong>
-                  <span id="pillDate">2026. 00. 00</span>
+                  <span id="pillDate">2026. 05. 30</span>
                 </div>
                 <div class="pill">
                   <strong data-i18n="pill.place">Local</strong>
-                  <span id="pillPlace">Nome do local</span>
+                  <span id="pillPlace">Rancho do Celso</span>
                 </div>
               </div>
             </div>
@@ -1121,15 +1177,15 @@
     <script>
       // ================== CONFIG (여기만 수정하면 됩니다) ==================
       const WEDDING = {
-        groomName: "Nome do noivo",
-        brideName: "Nome da noiva",
-        dateText: "2026. 00. 00 (sáb) 00:00",
-        dateISO: "2026-00-00T00:00:00+09:00", // 캘린더용 (예: 2026-05-02T14:00:00+09:00)
-        placeText: "Nome do local",
-        placeShort: "Nome do local",
-        addressText: "Insira o endereço",
-        naviLink: "https://example.com", // link do mapa (Naver/Kakao/Google)
-        mapEmbedUrl: "about:blank", // URL de incorporação (embed)
+        groomName: "Haseung Song",
+        brideName: "Larissa vilas boas de araujo",
+        dateText: "2026. 05. 30 (sáb) 16:30",
+        dateISO: "2026-05-30T16:30:00-03:00", // 캘린더용 (브라질 기준 예시)
+        placeText: "Rancho do Celso",
+        placeShort: "Rancho do Celso",
+        addressText: "Rancho do Celso",
+        naviLink: "https://goo.gl/maps/Eir3bNDdSjEec3YJA?g_st=aw",
+        mapEmbedUrl: "https://www.google.com/maps?q=Rancho%20do%20Celso&output=embed",
         phone: { groom: "010-0000-0000", bride: "010-0000-0000" },
         gift: {
           groomHolder: "Titular (noivo)",
@@ -1734,7 +1790,7 @@
         $("#brideName").textContent = WEDDING.brideName;
         $("#heroMeta").innerHTML = `${escapeHtml(WEDDING.dateText)}<br />${escapeHtml(WEDDING.placeText)}`;
 
-        $("#pillDate").textContent = (WEDDING.dateText || "").split(" ").slice(0, 1).join(" ");
+        $("#pillDate").textContent = extractDateShort(WEDDING.dateText);
         $("#pillPlace").textContent = WEDDING.placeShort || WEDDING.placeText;
 
         $("#infoDate").textContent = WEDDING.dateText;
@@ -1752,6 +1808,27 @@
         $("#groomBank").textContent = WEDDING.gift.groomBank;
         $("#brideHolder").textContent = WEDDING.gift.brideHolder;
         $("#brideBank").textContent = WEDDING.gift.brideBank;
+      }
+
+      function extractDateShort(text) {
+        const s = String(text || "");
+        // KO: 2026년 5월 30일
+        const mKo = s.match(/(\d{4})\s*년\s*(\d{1,2})\s*월\s*(\d{1,2})\s*일/);
+        if (mKo) {
+          const yyyy = mKo[1];
+          const mm = String(mKo[2]).padStart(2, "0");
+          const dd = String(mKo[3]).padStart(2, "0");
+          return `${yyyy}. ${mm}. ${dd}`;
+        }
+        // General: 2026. 05. 30 ...
+        const mGen = s.match(/(\d{4})\D+(\d{1,2})\D+(\d{1,2})/);
+        if (mGen) {
+          const yyyy = mGen[1];
+          const mm = String(mGen[2]).padStart(2, "0");
+          const dd = String(mGen[3]).padStart(2, "0");
+          return `${yyyy}. ${mm}. ${dd}`;
+        }
+        return s.slice(0, 12).trim();
       }
 
       // ================== GALLERY ==================
