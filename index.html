@@ -799,6 +799,15 @@
         scroll-behavior: smooth;
       }
       @media (max-width: 560px) {
+        /* Cards: unified left alignment on small phones */
+        .card {
+          text-align: left;
+        }
+        .card .section-title,
+        .card .section-sub {
+          text-align: left;
+        }
+
         .topbar-inner {
           flex-wrap: wrap;
           align-items: flex-start;
@@ -842,11 +851,11 @@
         }
         .hero-copy {
           padding: 22px 18px 18px;
-          text-align: center;
+          text-align: left;
         }
         .kicker {
-          justify-content: center;
-          width: 100%;
+          justify-content: flex-start;
+          width: auto;
         }
         .names .and {
           display: block;
@@ -860,11 +869,11 @@
         }
         .meta {
           font-size: 14px;
-          text-align: center;
+          text-align: left;
         }
         .cta-row {
           gap: 8px;
-          justify-content: center;
+          justify-content: flex-start;
         }
         .cta-row .btn {
           flex: 1;
@@ -885,6 +894,11 @@
         .contact-line {
           flex-wrap: wrap;
           align-items: flex-start;
+        }
+        .contact-main {
+          flex: 1 1 auto;
+          justify-content: flex-start;
+          text-align: left;
         }
         .contact-actions {
           width: 100%;
@@ -1214,10 +1228,6 @@
               <div class="cta-row">
                 <button class="btn primary" id="btnRSVP2" type="button" data-i18n="rsvp.open">Preencher RSVP</button>
                 <button class="btn" id="btnMyRSVP" type="button" data-i18n="rsvp.mine">Ver meu RSVP</button>
-              </div>
-              <div class="hr"></div>
-              <div class="muted" id="rsvpHint">
-                No modo local, salva apenas neste dispositivo. No modo compartilhado (Firebase), soma respostas de todos.
               </div>
             </div>
           </div>
