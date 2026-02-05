@@ -548,37 +548,6 @@
         transform: scale(1.06);
       }
 
-      /* ====== Activity: Wave ====== */
-      .wave-wrap {
-        position: relative;
-        border-radius: 18px;
-        border: 1px solid rgba(31, 29, 26, 0.1);
-        overflow: hidden;
-        background: radial-gradient(900px 420px at 20% 20%, rgba(200, 164, 107, 0.2), transparent 60%),
-          radial-gradient(760px 380px at 90% 40%, rgba(141, 106, 61, 0.14), transparent 62%),
-          linear-gradient(180deg, rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.35));
-      }
-      #waveCanvas {
-        width: 100%;
-        height: 260px;
-        display: block;
-      }
-      .wave-controls {
-        display: flex;
-        gap: 10px;
-        flex-wrap: wrap;
-        padding: 14px;
-        align-items: center;
-        border-top: 1px solid rgba(31, 29, 26, 0.1);
-        background: rgba(255, 255, 255, 0.72);
-      }
-      .wave-controls .field {
-        flex: 1;
-        min-width: 200px;
-        display: flex;
-        gap: 10px;
-        align-items: center;
-      }
       input[type="text"],
       textarea {
         width: 100%;
@@ -604,97 +573,6 @@
       textarea:focus {
         border-color: rgba(200, 164, 107, 0.75);
         box-shadow: 0 0 0 4px rgba(200, 164, 107, 0.18);
-      }
-      .chips {
-        display: flex;
-        gap: 8px;
-        flex-wrap: wrap;
-      }
-      .chip {
-        border-radius: 999px;
-        padding: 10px 12px;
-        font-size: 13px;
-        font-weight: 700;
-        border: 1px solid rgba(31, 29, 26, 0.14);
-        background: rgba(255, 255, 255, 0.94);
-        cursor: pointer;
-        transition: transform 0.06s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-        display: inline-flex;
-        gap: 8px;
-        align-items: center;
-      }
-      .chip:active {
-        transform: scale(0.98);
-      }
-      .chip:hover {
-        box-shadow: 0 10px 28px rgba(31, 29, 26, 0.1);
-        border-color: rgba(31, 29, 26, 0.22);
-      }
-      .chip .dot {
-        width: 10px;
-        height: 10px;
-        border-radius: 999px;
-        display: inline-block;
-      }
-      .chip[data-emotion="calm"] .dot {
-        background: #4ea8de;
-      }
-      .chip[data-emotion="moved"] .dot {
-        background: #9d4edd;
-      }
-      .chip[data-emotion="joy"] .dot {
-        background: #ffd166;
-      }
-      .chip[data-emotion="gratitude"] .dot {
-        background: #e9c46a;
-      }
-      .note {
-        font-size: 12px;
-        color: var(--sub);
-        line-height: 1.6;
-        padding: 0 14px 14px;
-      }
-
-      /* ====== Poll ====== */
-      .poll {
-        display: grid;
-        gap: 10px;
-      }
-      .poll-item {
-        border: 1px solid rgba(31, 29, 26, 0.12);
-        border-radius: 16px;
-        background: rgba(255, 255, 255, 0.75);
-        padding: 12px 12px;
-        text-align: left;
-        cursor: pointer;
-      }
-      .poll-head {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 10px;
-      }
-      .poll-head strong {
-        font-size: 14px;
-      }
-      .poll-head span {
-        font-size: 12px;
-        color: var(--sub);
-      }
-      .bar {
-        height: 10px;
-        border-radius: 999px;
-        background: rgba(31, 29, 26, 0.06);
-        overflow: hidden;
-        margin-top: 10px;
-      }
-      .bar > i {
-        display: block;
-        height: 100%;
-        width: 0%;
-        background: linear-gradient(90deg, rgba(200, 164, 107, 0.85), rgba(141, 106, 61, 0.8));
-        border-radius: 999px;
-        transition: width 0.35s ease;
       }
 
       /* ====== Dialog ====== */
@@ -786,66 +664,8 @@
         transform: translateX(-50%) translateY(-6px);
       }
 
-      /* ====== Screen mode ====== */
       .hidden {
         display: none !important;
-      }
-      #screen {
-        width: 100%;
-        height: 100vh;
-        background: radial-gradient(120% 120% at 50% 0%, #1c2541, #0b132b);
-        color: #fff;
-      }
-      #screen canvas {
-        width: 100%;
-        height: 100%;
-        display: block;
-      }
-      #screen .overlay {
-        position: fixed;
-        bottom: 24px;
-        width: 100%;
-        text-align: center;
-        font-size: 14px;
-        color: rgba(255, 255, 255, 0.65);
-        pointer-events: none;
-      }
-      #message-layer {
-        position: fixed;
-        top: 18%;
-        width: 100%;
-        text-align: center;
-        pointer-events: none;
-      }
-      .message {
-        display: inline-block;
-        max-width: min(70%, 900px);
-        margin: 10px auto;
-        padding: 14px 22px;
-        font-size: 22px;
-        line-height: 1.4;
-        color: #fff;
-        background: rgba(0, 0, 0, 0.35);
-        backdrop-filter: blur(10px);
-        border-radius: 26px;
-        animation: fadeFloat 5s ease forwards;
-      }
-      @keyframes fadeFloat {
-        0% {
-          opacity: 0;
-          transform: translateY(24px);
-        }
-        10% {
-          opacity: 1;
-          transform: translateY(0);
-        }
-        80% {
-          opacity: 1;
-        }
-        100% {
-          opacity: 0;
-          transform: translateY(-24px);
-        }
       }
       @media (prefers-reduced-motion: reduce) {
         * {
@@ -1007,13 +827,6 @@
   </head>
 
   <body>
-    <!-- ====== Screen(행사장 디스플레이) 모드: ?mode=screen ====== -->
-    <div id="screen" class="hidden" aria-hidden="true">
-      <canvas id="canvas"></canvas>
-      <div id="message-layer" aria-live="polite"></div>
-      <div class="overlay" data-i18n="screen.overlay">Uma onda de felicitações, feita por todos</div>
-    </div>
-
     <!-- ====== Invitation ====== -->
     <header class="topbar" id="top">
       <div class="wrap topbar-inner">
@@ -1250,74 +1063,26 @@
 
       <section id="activity">
         <div class="wrap">
-          <h2 class="section-title" data-i18n="section.activity.title">Um momento feito por todos</h2>
-          <p class="section-sub" data-i18n="section.activity.sub">
-            Confirme presença, deixe uma mensagem e participe da “onda de felicitações”.
-          </p>
-
-          <div class="grid2">
-            <div class="card">
-              <h3 class="section-title" style="font-size: 18px; margin-top: 0" data-i18n="wave.title">Onda de felicitações</h3>
-              <div class="wave-wrap" role="region" aria-label="축하 파도 참여">
-                <canvas id="waveCanvas" width="1200" height="520"></canvas>
-                <div class="wave-controls">
-                  <div class="field">
-                    <input
-                      id="waveMessage"
-                      type="text"
-                      maxlength="60"
-                      placeholder="Uma mensagem curta (opcional)"
-                      data-i18n-placeholder="wave.placeholder"
-                    />
-                  </div>
-                  <div class="chips" aria-label="감정 선택">
-                    <button class="chip" type="button" data-emotion="calm"><span class="dot" aria-hidden="true"></span><span data-i18n="emotion.calm">Calma</span></button>
-                    <button class="chip" type="button" data-emotion="moved"><span class="dot" aria-hidden="true"></span><span data-i18n="emotion.moved">Emoção</span></button>
-                    <button class="chip" type="button" data-emotion="joy"><span class="dot" aria-hidden="true"></span><span data-i18n="emotion.joy">Alegria</span></button>
-                    <button class="chip" type="button" data-emotion="gratitude"><span class="dot" aria-hidden="true"></span><span data-i18n="emotion.gratitude">Gratidão</span></button>
-                  </div>
-                </div>
-                <div class="note" id="waveNote">
-                  Modo local. Para juntar participação de todos, ative o modo compartilhado (Firebase). (Veja o README)
-                </div>
+          <div class="card">
+            <h3 class="section-title" style="font-size: 18px; margin-top: 0" data-i18n="guestbook.title">Mensagem</h3>
+            <div class="row">
+              <div>
+                <div class="label sr-only" data-i18n="guestbook.nameLabel">Nome</div>
+                <input id="gbName" type="text" maxlength="16" placeholder="Seu nome (opcional)" data-i18n-placeholder="guestbook.namePh" />
+              </div>
+              <div>
+                <div class="label sr-only" data-i18n="guestbook.msgLabel">Mensagem</div>
+                <textarea id="gbMessage" maxlength="200" placeholder="Deixe sua mensagem" data-i18n-placeholder="guestbook.msgPh"></textarea>
+              </div>
+              <div class="cta-row">
+                <button class="btn primary" id="btnGbSubmit" type="button" data-i18n="guestbook.submit">Enviar</button>
+              </div>
+              <div class="hr"></div>
+              <div id="guestbookList" class="row" aria-label="방명록 목록"></div>
+              <div class="cta-row" id="guestbookMoreWrap" style="margin-top: 12px; display: none">
+                <button class="btn" id="btnGuestbookMore" type="button">Ver mais</button>
               </div>
             </div>
-
-            <div class="card">
-              <h3 class="section-title" style="font-size: 18px; margin-top: 0" data-i18n="poll.title">Votação de palavras</h3>
-              <p class="section-sub" style="margin-top: 0" data-i18n="poll.sub">Escolha uma. O resultado atualiza automaticamente.</p>
-              <div class="poll" id="poll"></div>
-              <div class="cta-row" style="margin-top: 12px">
-                <button class="btn" id="btnExport" type="button" data-i18n="poll.export">Exportar meus dados</button>
-                <button class="btn ghost" id="btnClearLocal" type="button" data-i18n="poll.clear">Limpar dados deste dispositivo</button>
-              </div>
-            </div>
-          </div>
-
-          <div class="grid2">
-            <div class="card">
-              <h3 class="section-title" style="font-size: 18px; margin-top: 0" data-i18n="guestbook.title">Mensagem</h3>
-              <div class="row">
-                <div>
-                  <div class="label sr-only" data-i18n="guestbook.nameLabel">Nome</div>
-                  <input id="gbName" type="text" maxlength="16" placeholder="Seu nome (opcional)" data-i18n-placeholder="guestbook.namePh" />
-                </div>
-                <div>
-                  <div class="label sr-only" data-i18n="guestbook.msgLabel">Mensagem</div>
-                  <textarea id="gbMessage" maxlength="200" placeholder="Deixe sua mensagem" data-i18n-placeholder="guestbook.msgPh"></textarea>
-                </div>
-                <div class="cta-row">
-                  <button class="btn primary" id="btnGbSubmit" type="button" data-i18n="guestbook.submit">Enviar</button>
-                </div>
-                <div class="hr"></div>
-                <div id="guestbookList" class="row" aria-label="방명록 목록"></div>
-                <div class="cta-row" id="guestbookMoreWrap" style="margin-top: 12px; display: none">
-                  <button class="btn" id="btnGuestbookMore" type="button">Ver mais</button>
-                </div>
-              </div>
-            </div>
-
-            <!-- (removed) RSVP card -->
           </div>
         </div>
       </section>
@@ -1371,8 +1136,7 @@
         <div class="wrap">
           <div class="card" style="text-align: center">
             <div class="muted" style="font-size: 13px; line-height: 1.8" data-i18n-html="section.footer.note">
-              Esta página é um único `index.html`, pronta para GitHub Pages.<br />
-              Modo tela: adicione `?mode=screen` no final da URL.
+              Esta página é um único `index.html`, pronta para GitHub Pages.
             </div>
           </div>
         </div>
@@ -1445,20 +1209,8 @@
         heroImageCandidates: ["assets/hero.jpg", "hero.jpg", "01.jpg", "02.jpg"],
       };
 
-      // ================== MODE ==================
+      // ================== URL PARAMS ==================
       const params = new URLSearchParams(location.search);
-      const mode = params.get("mode") === "screen" ? "screen" : "invitation";
-
-      const screenEl = document.getElementById("screen");
-      if (mode === "screen") {
-        screenEl.classList.remove("hidden");
-        screenEl.removeAttribute("aria-hidden");
-        document.querySelector("header.topbar")?.classList.add("hidden");
-        document.querySelector("main")?.classList.add("hidden");
-      } else {
-        screenEl.classList.add("hidden");
-        screenEl.setAttribute("aria-hidden", "true");
-      }
 
       // ================== UTIL ==================
       const $ = (sel, root = document) => root.querySelector(sel);
@@ -1502,7 +1254,7 @@
               title: "Presentes",
               sub: "Sua presença já é muito especial para nós. Caso deseje nos presentear, uma contribuição via PIX será recebida com carinho.",
             },
-            footer: { note: "Esta página é um único `index.html`, pronta para GitHub Pages.<br />Modo tela: adicione `?mode=screen` no final da URL." },
+            footer: { note: "Esta página é um único `index.html`, pronta para GitHub Pages." },
           },
           info: {
             dateLabel: "Data",
@@ -1604,7 +1356,7 @@
               title: "마음 전하실 곳",
               sub: "함께해 주시는 것만으로도 큰 기쁨입니다.<br />혹시 마음을 전하고 싶으시다면, PIX로 따뜻한 마음을 전해주셔도 감사히 받겠습니다.",
             },
-            footer: { note: "이 페이지는 단일 `index.html`로 구성되어 GitHub Pages에 바로 올릴 수 있습니다.<br />화면용 모드: URL 뒤에 `?mode=screen`" },
+            footer: { note: "이 페이지는 단일 `index.html`로 구성되어 GitHub Pages에 바로 올릴 수 있습니다." },
           },
           info: {
             dateLabel: "일시",
@@ -1751,9 +1503,8 @@
         // country 변경 시 WhatsApp/전화/지도 링크 등 동적 링크도 갱신
         bindContent();
         setDataModeUI();
-        renderPoll();
         renderGuestbook();
-        if (mode !== "screen") buildGallery();
+        buildGallery();
       }
 
       function toast(text) {
@@ -1820,19 +1571,8 @@
 
       // ================== DATA PROVIDER ==================
       const LS_KEYS = {
-        emotions: "wedding.emotions.v1",
         guestbook: "wedding.guestbook.v1",
-        poll: "wedding.poll.v1",
       };
-
-      const EMOTIONS = {
-        calm: { label: "차분함", color: "#4ea8de", freq: 0.004 },
-        moved: { label: "감동", color: "#9d4edd", freq: 0.006 },
-        joy: { label: "기쁨", color: "#ffd166", freq: 0.009 },
-        gratitude: { label: "감사", color: "#e9c46a", freq: 0.003 },
-      };
-
-      const POLL_OPTIONS = ["warm", "bright", "calm", "fun"];
 
       let db = null;
       let dataMode = "local";
@@ -1859,16 +1599,10 @@
 
       function setDataModeUI() {
         const badge = $("#dataModeBadge");
-        const note = $("#waveNote");
-        const hint = $("#rsvpHint");
         if (dataMode === "shared") {
           badge && (badge.textContent = t("data.shared"));
-          note && (note.textContent = t("data.noteShared"));
-          hint && (hint.textContent = t("data.hintShared"));
         } else {
           badge && (badge.textContent = t("data.local"));
-          note && (note.textContent = t("data.noteLocal"));
-          hint && (hint.textContent = t("data.hintLocal"));
         }
       }
 
@@ -1882,38 +1616,6 @@
       function lsSet(key, value) {
         localStorage.setItem(key, JSON.stringify(value));
       }
-
-      const emotionApi = {
-        async push({ emotion, message }) {
-          const item = { emotion, message: message || null, time: nowTs() };
-          if (dataMode === "shared" && db) {
-            await db.ref("wedding/emotions").push(item);
-          } else {
-            const list = lsGet(LS_KEYS.emotions, []);
-            list.push(item);
-            lsSet(LS_KEYS.emotions, list.slice(-400));
-          }
-        },
-        onAdded(cb) {
-          if (dataMode === "shared" && db) {
-            db.ref("wedding/emotions")
-              .limitToLast(300)
-              .on("child_added", (snap) => {
-                const d = snap.val();
-                if (d) cb(d);
-              });
-          } else {
-            let lastLen = 0;
-            setInterval(() => {
-              const list = lsGet(LS_KEYS.emotions, []);
-              if (list.length > lastLen) {
-                list.slice(lastLen).forEach(cb);
-                lastLen = list.length;
-              }
-            }, 700);
-          }
-        },
-      };
 
       const guestbookApi = {
         async add({ name, message }) {
@@ -1950,26 +1652,6 @@
           } else {
             cb(lsGet(LS_KEYS.guestbook, []));
           }
-        },
-      };
-
-      const pollApi = {
-        get() {
-          const base = {};
-          POLL_OPTIONS.forEach((id) => (base[id] = 0));
-          const saved = lsGet(LS_KEYS.poll, base);
-          return { ...base, ...(saved || {}) };
-        },
-        vote(id) {
-          const cur = pollApi.get();
-          cur[id] = (cur[id] || 0) + 1;
-          lsSet(LS_KEYS.poll, cur);
-          return cur;
-        },
-        clear() {
-          localStorage.removeItem(LS_KEYS.poll);
-          localStorage.removeItem(LS_KEYS.emotions);
-          localStorage.removeItem(LS_KEYS.guestbook);
         },
       };
 
@@ -2327,77 +2009,7 @@ END:VCALENDAR`;
           renderGuestbookList();
         });
 
-        // Poll
-        $("#btnClearLocal")?.addEventListener("click", () => {
-          pollApi.clear();
-          toast(t("toast.cleared"));
-          renderPoll();
-          renderGuestbook();
-        });
-
-        $("#btnExport")?.addEventListener("click", async () => {
-          const payload = {
-            mode: dataMode,
-            exportedAt: new Date().toISOString(),
-            local: {
-              emotions: lsGet(LS_KEYS.emotions, []),
-              guestbook: lsGet(LS_KEYS.guestbook, []),
-              poll: pollApi.get(),
-            },
-          };
-          await copyText(JSON.stringify(payload, null, 2));
-        });
-
-        // Emotions buttons
-        let lastSent = 0;
-        const COOLDOWN = 650;
-        $$(".chip").forEach((btn) => {
-          btn.addEventListener("click", async () => {
-            const now = nowTs();
-            if (now - lastSent < COOLDOWN) return;
-            lastSent = now;
-
-            const emotion = btn.getAttribute("data-emotion");
-            const msg = ($("#waveMessage").value || "").trim();
-            if (!EMOTIONS[emotion]) return;
-            $("#waveMessage").value = "";
-            await emotionApi.push({ emotion, message: msg });
-            toast(t("toast.joined"));
-            bumpLocalWave(emotion, msg);
-          });
-        });
-      }
-
-      // ================== RENDER: Poll ==================
-      function renderPoll() {
-        const el = $("#poll");
-        if (!el) return;
-        const counts = pollApi.get();
-        const total = Object.values(counts).reduce((a, b) => a + (b || 0), 0) || 0;
-        el.innerHTML = "";
-
-        POLL_OPTIONS.forEach((id) => {
-          const label = t(`poll.option.${id}`);
-          const c = counts[id] || 0;
-          const pct = total === 0 ? 0 : Math.round((c / total) * 100);
-          const item = document.createElement("button");
-          item.type = "button";
-          item.className = "poll-item";
-          item.setAttribute("aria-label", t("poll.ariaVote", { label }));
-          item.innerHTML = `
-            <div class="poll-head">
-              <strong>${escapeHtml(label)}</strong>
-              <span>${escapeHtml(t("poll.votes", { count: c, pct }))}</span>
-            </div>
-            <div class="bar"><i style="width:${pct}%"></i></div>
-          `;
-          item.addEventListener("click", () => {
-            pollApi.vote(id);
-            renderPoll();
-            toast(t("toast.voted"));
-          });
-          el.appendChild(item);
-        });
+        // (removed) Poll & Emotions UI
       }
 
       // ================== RENDER: Guestbook ==================
@@ -2457,186 +2069,15 @@ END:VCALENDAR`;
         });
       }
 
-      // ================== Wave Canvas (invitation) ==================
-      const wave = { canvas: null, ctx: null, t: 0, energy: 0.25, flash: 0, lastEmotion: "calm" };
-
-      function initWaveCanvas() {
-        wave.canvas = $("#waveCanvas");
-        if (!wave.canvas) return;
-        wave.ctx = wave.canvas.getContext("2d");
-
-        const resize = () => {
-          const rect = wave.canvas.getBoundingClientRect();
-          const dpr = Math.min(window.devicePixelRatio || 1, 2);
-          wave.canvas.width = Math.floor(rect.width * dpr);
-          wave.canvas.height = Math.floor(rect.height * dpr);
-          wave.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-        };
-        window.addEventListener("resize", resize, { passive: true });
-        resize();
-        drawWave();
-      }
-
-      function bumpLocalWave(emotion, message) {
-        wave.lastEmotion = emotion;
-        wave.energy = Math.min(wave.energy + 1.2 + Math.min((message || "").length / 18, 1.6), 18);
-        if (wave.energy > 16) wave.flash = 1;
-      }
-
-      function drawWave() {
-        if (!wave.ctx || !wave.canvas) return;
-        const rect = wave.canvas.getBoundingClientRect();
-        const w = rect.width;
-        const h = rect.height;
-        const ctx = wave.ctx;
-        ctx.clearRect(0, 0, w, h);
-
-        wave.energy *= 0.985;
-        wave.energy = Math.max(wave.energy, 0.22);
-        wave.t += 0.012 + wave.energy * 0.002;
-
-        const bg = ctx.createLinearGradient(0, 0, 0, h);
-        bg.addColorStop(0, "rgba(255,255,255,0.00)");
-        bg.addColorStop(1, "rgba(255,255,255,0.45)");
-        ctx.fillStyle = bg;
-        ctx.fillRect(0, 0, w, h);
-
-        const layers = Object.entries(EMOTIONS);
-        layers.forEach(([key, l], idx) => {
-          ctx.strokeStyle = l.color;
-          ctx.globalAlpha = key === wave.lastEmotion ? 0.35 : 0.2;
-          ctx.lineWidth = key === wave.lastEmotion ? 2.6 : 2.0;
-          ctx.beginPath();
-          for (let x = 0; x <= w; x += 2) {
-            const y = h / 2 + Math.sin(x * l.freq + wave.t + idx) * (26 + wave.energy * 3.2) + Math.sin(x * 0.012 + wave.t * 0.7) * 7;
-            if (x === 0) ctx.moveTo(x, y);
-            else ctx.lineTo(x, y);
-          }
-          ctx.stroke();
-        });
-
-        if (wave.flash > 0) {
-          ctx.globalAlpha = 1;
-          ctx.fillStyle = `rgba(255,255,255,${wave.flash})`;
-          ctx.fillRect(0, 0, w, h);
-          wave.flash *= 0.84;
-        }
-        ctx.globalAlpha = 1;
-        requestAnimationFrame(drawWave);
-      }
-
-      // ================== Screen mode (venue display) ==================
-      function initScreenMode() {
-        const canvas = document.getElementById("canvas");
-        if (!canvas) return;
-        const ctx = canvas.getContext("2d");
-
-        function resize() {
-          canvas.width = window.innerWidth;
-          canvas.height = window.innerHeight;
-        }
-        window.addEventListener("resize", resize, { passive: true });
-        resize();
-
-        let energy = 0;
-        let flash = 0;
-        let t = 0;
-
-        let audioCtx = null,
-          osc = null,
-          gain = null;
-        const canAudio = !!(window.AudioContext || window.webkitAudioContext);
-        const enableAudio = () => {
-          if (!canAudio || audioCtx) return;
-          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-          osc = audioCtx.createOscillator();
-          gain = audioCtx.createGain();
-          osc.type = "sine";
-          osc.frequency.value = 120;
-          gain.gain.value = 0;
-          osc.connect(gain).connect(audioCtx.destination);
-          osc.start();
-        };
-        document.body.addEventListener(
-          "click",
-          () => {
-            enableAudio();
-            if (audioCtx?.state && audioCtx.state !== "running") audioCtx.resume();
-          },
-          { once: true }
-        );
-
-        emotionApi.onAdded((d) => {
-          if (!d || !EMOTIONS[d.emotion]) return;
-          energy += 1.35;
-          if (d.message) {
-            energy += Math.min(String(d.message).length / 15, 2);
-            showMessage(String(d.message));
-          }
-          if (energy > 25) flash = 1;
-        });
-
-        function showMessage(text) {
-          const layer = document.getElementById("message-layer");
-          const el = document.createElement("div");
-          el.className = "message";
-          el.textContent = text;
-          layer.appendChild(el);
-          setTimeout(() => el.remove(), 5000);
-        }
-
-        function draw() {
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-          energy *= 0.985;
-          energy = Math.max(energy, 0.3);
-
-          if (gain && osc) {
-            gain.gain.value = Math.min(energy / 40, 0.15);
-            osc.frequency.value = 100 + energy * 8;
-          }
-
-          Object.values(EMOTIONS).forEach((l) => {
-            ctx.strokeStyle = l.color;
-            ctx.globalAlpha = 0.35;
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            for (let x = 0; x < canvas.width; x++) {
-              const y = canvas.height / 2 + Math.sin(x * l.freq + t) * (80 + energy * 4);
-              ctx.lineTo(x, y);
-            }
-            ctx.stroke();
-          });
-
-          if (flash > 0) {
-            ctx.fillStyle = `rgba(255,255,255,${flash})`;
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            flash *= 0.85;
-          }
-
-          ctx.globalAlpha = 1;
-          t += 0.01 + energy * 0.002;
-          requestAnimationFrame(draw);
-        }
-        draw();
-      }
-
       // ================== BOOT ==================
       initCountry(resolveInitialCountry());
       initFirebaseIfEnabled();
       setDataModeUI();
       bindContent();
       bindUI();
-      renderPoll();
       renderGuestbook();
-
-      if (mode === "screen") {
-        initScreenMode();
-      } else {
-        setHeroImage();
-        initWaveCanvas();
-        buildGallery();
-      }
+      setHeroImage();
+      buildGallery();
     </script>
   </body>
 </html>
