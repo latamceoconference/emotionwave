@@ -629,6 +629,10 @@
         cursor: pointer;
         padding: 0;
       }
+      :root[data-theme="dark"] .gitem {
+        border-color: rgba(255, 255, 255, 0.12);
+        background: linear-gradient(135deg, rgba(10, 26, 30, 0.78), rgba(10, 26, 30, 0.56));
+      }
       .gitem img {
         width: 100%;
         height: 100%;
@@ -637,6 +641,9 @@
         transform: scale(1.01);
         transition: transform 0.35s ease, filter 0.35s ease;
         filter: saturate(1.02) contrast(1.03);
+      }
+      :root[data-theme="dark"] .gitem img {
+        filter: saturate(1.06) contrast(1.08) brightness(0.98);
       }
       .gitem:hover img {
         transform: scale(1.06);
@@ -1396,6 +1403,9 @@
 
           <div class="card">
             <div class="gallery" id="galleryGrid" aria-label="Galeria"></div>
+            <div class="cta-row" id="galleryMoreWrap" style="margin-top: 12px; display: none">
+              <button class="btn" id="btnGalleryMore" type="button">Ver todas</button>
+            </div>
           </div>
         </div>
       </section>
@@ -1781,7 +1791,11 @@
             less: "Mostrar menos",
           },
           dlg: {
-            photo: { title: "Foto", hint: "Deslize para mudar · Pinça para zoom · Duplo toque para ajustar", alt: "Imagem ampliada" },
+            photo: {
+              title: "Foto",
+              hint: "Deslize para mudar · Pinça para zoom · Duplo toque para ajustar · Deslize para baixo para fechar",
+              alt: "Imagem ampliada",
+            },
           },
           gift: { groomSide: "Lado do noivo", brideSide: "Lado da noiva", holder: "Titular", account: "Conta" },
           common: { copy: "Copiar", close: "Fechar", save: "Salvar" },
@@ -1803,7 +1817,7 @@
             langPt: "Português",
             langKo: "한국어",
           },
-          gallery: { needFiles: "Adicione fotos em assets/gallery/", open: "Abrir foto", alt: "Foto da galeria" },
+          gallery: { needFiles: "Adicione fotos em assets/gallery/", open: "Abrir foto", alt: "Foto da galeria", more: "Ver todas ({count})", less: "Mostrar menos" },
           aria: { whatsapp: "Abrir conversa no WhatsApp", close: "Fechar", prev: "Anterior", next: "Próxima", like: "Curtir" },
         },
         ko: {
@@ -1902,7 +1916,7 @@
             less: "접기",
           },
           dlg: {
-            photo: { title: "사진", hint: "스와이프로 넘기기 · 핀치로 확대 · 더블탭으로 맞춤", alt: "확대 이미지" },
+            photo: { title: "사진", hint: "스와이프로 넘기기 · 핀치로 확대 · 더블탭으로 맞춤 · 아래로 스와이프 닫기", alt: "확대 이미지" },
           },
           gift: { groomSide: "신랑 측", brideSide: "신부 측", holder: "예금주", account: "계좌" },
           common: { copy: "복사", close: "닫기", save: "저장" },
@@ -1924,7 +1938,7 @@
             langPt: "Português",
             langKo: "한국어",
           },
-          gallery: { needFiles: "assets/gallery/에 사진을 넣어주세요", open: "사진 확대", alt: "갤러리 사진" },
+          gallery: { needFiles: "assets/gallery/에 사진을 넣어주세요", open: "사진 확대", alt: "갤러리 사진", more: "전체 보기 ({count})", less: "접기" },
           aria: { whatsapp: "WhatsApp으로 바로 연락하기", close: "닫기", prev: "이전 사진", next: "다음 사진", like: "하트" },
         },
       };
@@ -2479,6 +2493,8 @@
 
       // ================== GALLERY ==================
       let galleryFilesResolved = [];
+      let galleryExpanded = false;
+      const GALLERY_PREVIEW_COUNT = 6;
       let lightboxIndex = 0;
       let lbScale = 1;
       let lbTx = 0;
@@ -2508,20 +2524,50 @@
             el.title = t("gallery.needFiles");
             grid.appendChild(el);
           }
+          const moreWrap = $("#galleryMoreWrap");
+          if (moreWrap) moreWrap.style.display = "none";
           return;
         }
 
-        files.forEach((src, idx) => {
+        renderGalleryGrid(files);
+        updateGalleryMoreUI();
+      }
+
+      function renderGalleryGrid(files) {
+        const grid = $("#galleryGrid");
+        if (!grid) return;
+        grid.innerHTML = "";
+
+        const full = Array.isArray(files) ? files : [];
+        const visible = galleryExpanded ? full : full.slice(0, GALLERY_PREVIEW_COUNT);
+
+        visible.forEach((src, idx) => {
           const item = document.createElement("button");
           item.type = "button";
           item.className = "gitem";
           item.setAttribute("aria-label", t("gallery.open"));
           item.innerHTML = `<img src="${escapeHtml(src)}" alt="${escapeHtml(t("gallery.alt"))}" loading="lazy" />`;
           item.addEventListener("click", () => {
-            openLightboxAt(idx);
+            // idx is within visible list → map to full index
+            const fullIdx = full.indexOf(src);
+            openLightboxAt(fullIdx >= 0 ? fullIdx : idx);
           });
           grid.appendChild(item);
         });
+      }
+
+      function updateGalleryMoreUI() {
+        const full = Array.isArray(galleryFilesResolved) ? galleryFilesResolved : [];
+        const wrap = $("#galleryMoreWrap");
+        const btn = $("#btnGalleryMore");
+        if (!wrap || !btn) return;
+        if (full.length <= GALLERY_PREVIEW_COUNT) {
+          wrap.style.display = "none";
+          return;
+        }
+        wrap.style.display = "";
+        const hiddenCount = Math.max(0, full.length - GALLERY_PREVIEW_COUNT);
+        btn.textContent = galleryExpanded ? t("gallery.less") : t("gallery.more", { count: hiddenCount });
       }
 
       function openLightboxAt(idx) {
@@ -2629,6 +2675,15 @@
             lbTx = (lbStart.tx || 0) + dx;
             lbTy = (lbStart.ty || 0) + dy;
             applyLightboxTransform();
+            return;
+          }
+
+          // Swipe down to close (when not zoomed)
+          if (dy > 80 && Math.abs(dy) > Math.abs(dx) * 1.2) {
+            lbStart = null;
+            lbPointers = new Map();
+            haptic(10);
+            closeDialog("dlgLightbox");
             return;
           }
 
@@ -2872,6 +2927,14 @@ END:VCALENDAR`;
         $("#quickPixBride")?.addEventListener("click", () => {
           haptic(8);
           copyText(String(WEDDING.gift.brideBank || ""));
+        });
+
+        // Gallery show more
+        $("#btnGalleryMore")?.addEventListener("click", () => {
+          haptic(8);
+          galleryExpanded = !galleryExpanded;
+          renderGalleryGrid(galleryFilesResolved);
+          updateGalleryMoreUI();
         });
 
         $$("[data-copy]").forEach((btn) => {
