@@ -149,6 +149,9 @@
         border-radius: 999px;
         border: 1px solid transparent;
       }
+      .nav a .nav-short {
+        display: none;
+      }
       .nav a:hover {
         border-color: rgba(16, 32, 36, 0.12);
         background: rgba(255, 255, 255, 0.65);
@@ -588,6 +591,11 @@
         outline: none;
         transition: border-color 0.2s ease, box-shadow 0.2s ease;
       }
+      input::placeholder,
+      textarea::placeholder {
+        color: rgba(16, 32, 36, 0.42);
+        opacity: 1;
+      }
       textarea {
         min-height: 96px;
         resize: none;
@@ -885,7 +893,7 @@
         }
         .nav {
           flex-wrap: nowrap;
-          overflow-x: auto;
+          overflow-x: hidden;
           -webkit-overflow-scrolling: touch;
           scrollbar-width: none;
           gap: 6px;
@@ -899,8 +907,14 @@
         }
         .nav a {
           white-space: nowrap;
-          padding: 7px 9px;
+          padding: 7px 8px;
           font-size: 12px;
+        }
+        .nav a .nav-full {
+          display: none;
+        }
+        .nav a .nav-short {
+          display: inline;
         }
         .hero-copy {
           padding: 22px 18px 18px;
@@ -1009,11 +1023,26 @@
         </div>
         <div class="topbar-right">
           <nav class="nav" aria-label="Navegação">
-            <a href="#info" data-i18n="nav.info">Informações</a>
-            <a href="#location" data-i18n="nav.location">Como chegar</a>
-            <a href="#gallery" data-i18n="nav.gallery">Galeria</a>
-            <a href="#activity" data-i18n="nav.activity">Participar</a>
-            <a href="#gift" data-i18n="nav.gift">Presentes</a>
+            <a href="#info">
+              <span class="nav-full" data-i18n="nav.info">Informações</span>
+              <span class="nav-short" data-i18n="navShort.info">Info</span>
+            </a>
+            <a href="#location">
+              <span class="nav-full" data-i18n="nav.location">Como chegar</span>
+              <span class="nav-short" data-i18n="navShort.location">Mapa</span>
+            </a>
+            <a href="#gallery">
+              <span class="nav-full" data-i18n="nav.gallery">Galeria</span>
+              <span class="nav-short" data-i18n="navShort.gallery">Fotos</span>
+            </a>
+            <a href="#activity">
+              <span class="nav-full" data-i18n="nav.activity">Participar</span>
+              <span class="nav-short" data-i18n="navShort.activity">Ativ.</span>
+            </a>
+            <a href="#gift">
+              <span class="nav-full" data-i18n="nav.gift">Presentes</span>
+              <span class="nav-short" data-i18n="navShort.gift">PIX</span>
+            </a>
           </nav>
           <div class="lang-switch" role="group" aria-label="Idioma / País">
             <button class="lang-btn" type="button" data-country="BR">BR</button>
@@ -1270,12 +1299,12 @@
               <h3 class="section-title" style="font-size: 18px; margin-top: 0" data-i18n="guestbook.title">Mensagem</h3>
               <div class="row">
                 <div>
-                  <div class="label" data-i18n="guestbook.name.label">Nome</div>
-                  <input id="gbName" type="text" maxlength="16" placeholder="Seu nome (opcional)" data-i18n-placeholder="guestbook.name.ph" />
+                  <div class="label sr-only" data-i18n="guestbook.nameLabel">Nome</div>
+                  <input id="gbName" type="text" maxlength="16" placeholder="Seu nome (opcional)" data-i18n-placeholder="guestbook.namePh" />
                 </div>
                 <div>
-                  <div class="label" data-i18n="guestbook.msg.label">Mensagem</div>
-                  <textarea id="gbMessage" maxlength="200" placeholder="Deixe sua mensagem" data-i18n-placeholder="guestbook.msg.ph"></textarea>
+                  <div class="label sr-only" data-i18n="guestbook.msgLabel">Mensagem</div>
+                  <textarea id="gbMessage" maxlength="200" placeholder="Deixe sua mensagem" data-i18n-placeholder="guestbook.msgPh"></textarea>
                 </div>
                 <div class="cta-row">
                   <button class="btn primary" id="btnGbSubmit" type="button" data-i18n="guestbook.submit">Enviar</button>
@@ -1449,6 +1478,7 @@
           },
           screen: { overlay: "Uma onda de felicitações, feita por todos" },
           nav: { info: "Informações", location: "Como chegar", gallery: "Galeria", activity: "Participar", gift: "Presentes" },
+          navShort: { info: "Info", location: "Mapa", gallery: "Fotos", activity: "Ativ.", gift: "PIX" },
           hero: { kicker: "INVITATION", calendar: "Adicionar ao calendário", join: "Participar", directions: "Rotas" },
           data: {
             local: "Evento ao ar livre – sapato confortável recomendado",
@@ -1551,6 +1581,7 @@
           },
           screen: { overlay: "함께 만드는 축하의 파도" },
           nav: { info: "안내", location: "오시는 길", gallery: "갤러리", activity: "참여", gift: "마음 전하실 곳" },
+          navShort: { info: "안내", location: "지도", gallery: "사진", activity: "참여", gift: "PIX" },
           hero: { kicker: "INVITATION", calendar: "캘린더 추가", join: "축하 참여하기", directions: "길찾기" },
           data: {
             local: "야외 행사입니다 — 편한 신발을 추천드려요",
