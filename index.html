@@ -1090,7 +1090,7 @@
       <section id="gift">
         <div class="wrap">
           <h2 class="section-title" data-i18n="section.gift.title">Presentes</h2>
-          <p class="section-sub" data-i18n="section.gift.sub">Use o botão “Copiar” para copiar os dados com segurança.</p>
+          <p class="section-sub" data-i18n-html="section.gift.sub">Use o botão “Copiar” para copiar os dados com segurança.</p>
 
           <div class="grid2">
             <div class="card">
@@ -1188,15 +1188,16 @@
 
         // Firebase 공유 모드 (선택): README대로 세팅 후 값 입력
         firebase: {
-          enabled: false,
+          enabled: true,
           config: {
-            apiKey: "",
-            authDomain: "",
-            databaseURL: "",
-            projectId: "",
-            storageBucket: "",
-            messagingSenderId: "",
-            appId: "",
+            // (auto) 이전 버전에서 사용하던 Firebase 프로젝트 설정
+            apiKey: "AIzaSyAYhMbJkSRs2uz-ZaAAbyAUrVjArqf1kZQ",
+            authDomain: "emotional-wave-wedding.firebaseapp.com",
+            databaseURL: "https://emotional-wave-wedding-default-rtdb.firebaseio.com",
+            projectId: "emotional-wave-wedding",
+            storageBucket: "emotional-wave-wedding.firebasestorage.app",
+            messagingSenderId: "313104873838",
+            appId: "1:313104873838:web:7099d1ebaaabefddc3297f",
           },
         },
 
