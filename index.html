@@ -133,6 +133,10 @@
         background: rgba(247, 252, 253, 0.78);
         border-bottom: 1px solid rgba(16, 32, 36, 0.08);
       }
+      :root[data-theme="dark"] .topbar {
+        background: rgba(5, 19, 24, 0.72);
+        border-bottom-color: rgba(255, 255, 255, 0.1);
+      }
       .topbar-inner {
         display: flex;
         align-items: center;
@@ -182,6 +186,10 @@
         background: rgba(255, 255, 255, 0.65);
         color: var(--ink);
       }
+      :root[data-theme="dark"] .nav a:hover {
+        border-color: rgba(255, 255, 255, 0.14);
+        background: rgba(10, 26, 30, 0.62);
+      }
 
       .topbar-right {
         display: flex;
@@ -200,6 +208,10 @@
         border: 1px solid rgba(16, 32, 36, 0.12);
         background: rgba(255, 255, 255, 0.7);
       }
+      :root[data-theme="dark"] .lang-switch {
+        border-color: rgba(255, 255, 255, 0.14);
+        background: rgba(10, 26, 30, 0.6);
+      }
       .lang-btn {
         border: 1px solid transparent;
         background: transparent;
@@ -215,6 +227,10 @@
         border-color: rgba(31, 29, 26, 0.12);
         background: rgba(255, 255, 255, 0.8);
         color: var(--ink);
+      }
+      :root[data-theme="dark"] .lang-btn:hover {
+        border-color: rgba(255, 255, 255, 0.14);
+        background: rgba(10, 26, 30, 0.7);
       }
       .lang-btn.active {
         background: linear-gradient(180deg, rgba(125, 184, 196, 0.34), rgba(125, 184, 196, 0.14));
@@ -244,6 +260,9 @@
         box-shadow: var(--shadow);
         overflow: hidden;
       }
+      :root[data-theme="dark"] .hero-card {
+        border-color: rgba(255, 255, 255, 0.12);
+      }
       .hero-copy {
         padding: 28px 24px 24px;
       }
@@ -263,6 +282,9 @@
         background: rgba(31, 29, 26, 0.22);
         display: inline-block;
       }
+      :root[data-theme="dark"] .kicker::before {
+        background: rgba(255, 255, 255, 0.22);
+      }
       .names {
         margin: 12px 0 8px;
         font-family: "Playfair Display", serif;
@@ -279,6 +301,9 @@
         color: rgba(31, 29, 26, 0.55);
         margin: 0 10px;
         transform: translateY(-2px);
+      }
+      :root[data-theme="dark"] .names .and {
+        color: rgba(255, 255, 255, 0.58);
       }
       .meta {
         color: var(--sub);
@@ -322,6 +347,18 @@
         box-shadow: var(--shadow2);
         border-color: rgba(16, 32, 36, 0.22);
         background: rgba(255, 255, 255, 0.95);
+      }
+      :root[data-theme="dark"] .btn {
+        border-color: rgba(255, 255, 255, 0.14);
+        background: rgba(10, 26, 30, 0.72);
+      }
+      :root[data-theme="dark"] .btn:hover {
+        border-color: rgba(255, 255, 255, 0.22);
+        background: rgba(10, 26, 30, 0.82);
+      }
+      :root[data-theme="dark"] .btn.primary {
+        border-color: rgba(125, 184, 196, 0.55);
+        background: linear-gradient(180deg, rgba(125, 184, 196, 0.22), rgba(10, 26, 30, 0.82));
       }
       .btn:focus-visible,
       .lang-btn:focus-visible,
@@ -413,6 +450,9 @@
         margin: 0 0 12px;
         color: rgba(16, 32, 36, 0.92);
       }
+      :root[data-theme="dark"] .section-title {
+        color: var(--ink);
+      }
       .section-sub {
         margin: -4px 0 14px;
         color: var(--sub);
@@ -437,6 +477,9 @@
         box-shadow: var(--shadow);
         padding: 18px 16px;
         backdrop-filter: blur(14px);
+      }
+      :root[data-theme="dark"] .card {
+        border-color: rgba(255, 255, 255, 0.12);
       }
 
       @media (hover: hover) and (pointer: fine) {
@@ -522,6 +565,9 @@
         background: rgba(16, 32, 36, 0.1);
         margin: 14px 0;
       }
+      :root[data-theme="dark"] .hr {
+        background: rgba(255, 255, 255, 0.12);
+      }
       .badge {
         display: inline-flex;
         gap: 8px;
@@ -533,6 +579,10 @@
         font-size: 12px;
         color: var(--sub);
         white-space: nowrap;
+      }
+      :root[data-theme="dark"] .badge {
+        border-color: rgba(255, 255, 255, 0.14);
+        background: rgba(10, 26, 30, 0.7);
       }
       .muted {
         color: var(--sub);
@@ -546,6 +596,10 @@
         border: 1px solid rgba(31, 29, 26, 0.1);
         overflow: hidden;
         background: linear-gradient(135deg, rgba(200, 164, 107, 0.08), rgba(141, 106, 61, 0.06));
+      }
+      :root[data-theme="dark"] .map {
+        border-color: rgba(255, 255, 255, 0.12);
+        background: linear-gradient(135deg, rgba(125, 184, 196, 0.12), rgba(200, 164, 107, 0.08));
       }
       .map iframe {
         width: 100%;
@@ -600,10 +654,19 @@
         outline: none;
         transition: border-color 0.2s ease, box-shadow 0.2s ease;
       }
+      :root[data-theme="dark"] input[type="text"],
+      :root[data-theme="dark"] textarea {
+        border-color: rgba(255, 255, 255, 0.14);
+        background: rgba(10, 26, 30, 0.72);
+      }
       input::placeholder,
       textarea::placeholder {
         color: rgba(16, 32, 36, 0.42);
         opacity: 1;
+      }
+      :root[data-theme="dark"] input::placeholder,
+      :root[data-theme="dark"] textarea::placeholder {
+        color: rgba(255, 255, 255, 0.42);
       }
       textarea {
         min-height: 96px;
@@ -625,8 +688,16 @@
         background: rgba(255, 255, 255, 0.92);
         backdrop-filter: blur(14px);
       }
+      :root[data-theme="dark"] dialog {
+        border-color: rgba(255, 255, 255, 0.14);
+        background: rgba(10, 26, 30, 0.78);
+        box-shadow: 0 34px 110px rgba(0, 0, 0, 0.55);
+      }
       dialog::backdrop {
         background: rgba(15, 14, 12, 0.35);
+      }
+      :root[data-theme="dark"] dialog::backdrop {
+        background: rgba(0, 0, 0, 0.55);
       }
       .dlg-head {
         padding: 16px 16px 12px;
@@ -635,6 +706,9 @@
         justify-content: space-between;
         align-items: center;
         gap: 10px;
+      }
+      :root[data-theme="dark"] .dlg-head {
+        border-bottom-color: rgba(255, 255, 255, 0.12);
       }
       .dlg-head h3 {
         margin: 0;
@@ -646,6 +720,13 @@
         border-radius: 12px;
         padding: 8px 10px;
         cursor: pointer;
+      }
+      .icon-btn:active {
+        transform: scale(0.98);
+      }
+      :root[data-theme="dark"] .icon-btn {
+        border-color: rgba(255, 255, 255, 0.14);
+        background: rgba(10, 26, 30, 0.7);
       }
       .dlg-body {
         padding: 14px 16px 16px;
@@ -699,6 +780,11 @@
         pointer-events: none;
         transition: opacity 0.2s ease, transform 0.2s ease;
       }
+      :root[data-theme="dark"] .toast {
+        background: rgba(10, 26, 30, 0.86);
+        border-color: rgba(255, 255, 255, 0.14);
+        box-shadow: 0 24px 70px rgba(0, 0, 0, 0.45);
+      }
       .toast.show {
         opacity: 1;
         transform: translateX(-50%) translateY(-6px);
@@ -712,6 +798,13 @@
         display: grid;
         place-items: center;
         padding: 18px;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.35s ease;
+      }
+      .intro.show {
+        opacity: 1;
+        pointer-events: auto;
       }
       .intro-bg {
         position: absolute;
@@ -784,10 +877,12 @@
         background: rgba(247, 252, 253, 0.82);
         border-top: 1px solid rgba(16, 32, 36, 0.1);
         backdrop-filter: blur(18px);
+        box-shadow: 0 -18px 50px rgba(16, 32, 36, 0.08);
       }
       :root[data-theme="dark"] .actionbar {
         background: rgba(5, 19, 24, 0.78);
         border-top-color: rgba(255, 255, 255, 0.12);
+        box-shadow: 0 -22px 70px rgba(0, 0, 0, 0.35);
       }
       .actionbar-inner {
         max-width: var(--max);
@@ -808,6 +903,9 @@
         padding: 8px 6px;
         color: var(--ink);
         text-decoration: none;
+      }
+      .ab-btn:active {
+        transform: scale(0.98);
       }
       :root[data-theme="dark"] .ab-btn {
         border-color: rgba(255, 255, 255, 0.14);
@@ -1392,17 +1490,26 @@
           <span class="dlg-sub" id="lightboxCounter">1 / 1</span>
         </div>
         <div class="dlg-head-right">
-          <button class="icon-btn lightbox-navbtn" id="btnLightboxPrev" type="button" aria-label="Prev">
+          <button class="icon-btn lightbox-navbtn" id="btnLightboxPrev" type="button" data-i18n-aria="aria.prev" aria-label="Prev">
             <svg class="ab-ico" viewBox="0 0 24 24" aria-hidden="true">
               <path d="M15.5 19.5 8.5 12l7-7.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
           </button>
-          <button class="icon-btn lightbox-navbtn" id="btnLightboxNext" type="button" aria-label="Next">
+          <button class="icon-btn lightbox-navbtn" id="btnLightboxNext" type="button" data-i18n-aria="aria.next" aria-label="Next">
             <svg class="ab-ico" viewBox="0 0 24 24" aria-hidden="true">
               <path d="M8.5 4.5 15.5 12l-7 7.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
           </button>
-          <button class="icon-btn" type="button" data-close="dlgLightbox" aria-label="Fechar" data-i18n="common.close">Fechar</button>
+          <button
+            class="icon-btn"
+            type="button"
+            data-close="dlgLightbox"
+            aria-label="Fechar"
+            data-i18n-aria="aria.close"
+            data-i18n="common.close"
+          >
+            Fechar
+          </button>
         </div>
       </div>
       <div class="dlg-body">
@@ -1485,7 +1592,9 @@
     <dialog id="dlgQuickContact" aria-label="Contact">
       <div class="dlg-head">
         <h3 data-i18n="quick.contactTitle">WhatsApp</h3>
-        <button class="icon-btn" type="button" data-close="dlgQuickContact" data-i18n="common.close">Fechar</button>
+        <button class="icon-btn" type="button" data-close="dlgQuickContact" data-i18n="common.close" data-i18n-aria="aria.close" aria-label="Fechar">
+          Fechar
+        </button>
       </div>
       <div class="dlg-body">
         <div class="row2">
@@ -1498,7 +1607,9 @@
     <dialog id="dlgQuickPix" aria-label="PIX">
       <div class="dlg-head">
         <h3 data-i18n="quick.pixTitle">PIX</h3>
-        <button class="icon-btn" type="button" data-close="dlgQuickPix" data-i18n="common.close">Fechar</button>
+        <button class="icon-btn" type="button" data-close="dlgQuickPix" data-i18n="common.close" data-i18n-aria="aria.close" aria-label="Fechar">
+          Fechar
+        </button>
       </div>
       <div class="dlg-body">
         <div class="row2">
@@ -1693,7 +1804,7 @@
             langKo: "한국어",
           },
           gallery: { needFiles: "Adicione fotos em assets/gallery/", open: "Abrir foto", alt: "Foto da galeria" },
-          aria: { whatsapp: "Abrir conversa no WhatsApp" },
+          aria: { whatsapp: "Abrir conversa no WhatsApp", close: "Fechar", prev: "Anterior", next: "Próxima", like: "Curtir" },
         },
         ko: {
           meta: {
@@ -1814,7 +1925,7 @@
             langKo: "한국어",
           },
           gallery: { needFiles: "assets/gallery/에 사진을 넣어주세요", open: "사진 확대", alt: "갤러리 사진" },
-          aria: { whatsapp: "WhatsApp으로 바로 연락하기" },
+          aria: { whatsapp: "WhatsApp으로 바로 연락하기", close: "닫기", prev: "이전 사진", next: "다음 사진", like: "하트" },
         },
       };
 
@@ -1925,13 +2036,17 @@
         el.classList.remove("hidden");
         el.setAttribute("aria-hidden", "false");
         document.body.style.overflow = "hidden";
+        requestAnimationFrame(() => el.classList.add("show"));
       }
 
       function hideIntro(markSeen = true) {
         const el = $("#introOverlay");
         if (!el) return;
-        el.classList.add("hidden");
-        el.setAttribute("aria-hidden", "true");
+        el.classList.remove("show");
+        setTimeout(() => {
+          el.classList.add("hidden");
+          el.setAttribute("aria-hidden", "true");
+        }, 220);
         document.body.style.overflow = "";
         if (markSeen) localStorage.setItem(INTRO_SEEN_KEY, "1");
       }
@@ -2268,6 +2383,14 @@
         return s.replace(/\s+/g, " ").trim().toLowerCase().slice(0, 200);
       }
 
+      function haptic(ms = 12) {
+        try {
+          if (navigator.vibrate) navigator.vibrate(ms);
+        } catch {
+          // ignore
+        }
+      }
+
       function digitsOnly(str) {
         return String(str || "").replace(/[^\d+]/g, "").replace(/\+/g, "");
       }
@@ -2409,8 +2532,7 @@
         const src = galleryFilesResolved[lightboxIndex];
         const img = $("#lightboxImg");
         if (img) img.src = src;
-        const counter = $("#lightboxCounter");
-        if (counter) counter.textContent = `${lightboxIndex + 1} / ${total}`;
+        updateLightboxCounter();
         resetLightboxTransform();
         openDialog("dlgLightbox");
         preloadGalleryAround(lightboxIndex);
@@ -2423,10 +2545,17 @@
         const src = galleryFilesResolved[lightboxIndex];
         const img = $("#lightboxImg");
         if (img) img.src = src;
-        const counter = $("#lightboxCounter");
-        if (counter) counter.textContent = `${lightboxIndex + 1} / ${total}`;
+        updateLightboxCounter();
         resetLightboxTransform();
         preloadGalleryAround(lightboxIndex);
+      }
+
+      function updateLightboxCounter() {
+        const total = Array.isArray(galleryFilesResolved) ? galleryFilesResolved.length : 0;
+        const counter = $("#lightboxCounter");
+        if (!counter || !total) return;
+        const pct = Math.round((lbScale || 1) * 100);
+        counter.textContent = `${lightboxIndex + 1} / ${total}${pct !== 100 ? ` · ${pct}%` : ""}`;
       }
 
       function preloadGalleryAround(idx) {
@@ -2445,6 +2574,7 @@
         const pan = $("#lightboxPan");
         if (!pan) return;
         pan.style.transform = `translate3d(${lbTx}px, ${lbTy}px, 0) scale(${lbScale})`;
+        updateLightboxCounter();
       }
 
       function resetLightboxTransform() {
@@ -2667,8 +2797,14 @@ END:VCALENDAR`;
         });
 
         // Lightbox controls + gestures
-        $("#btnLightboxPrev")?.addEventListener("click", () => moveLightbox(-1));
-        $("#btnLightboxNext")?.addEventListener("click", () => moveLightbox(1));
+        $("#btnLightboxPrev")?.addEventListener("click", () => {
+          haptic(8);
+          moveLightbox(-1);
+        });
+        $("#btnLightboxNext")?.addEventListener("click", () => {
+          haptic(8);
+          moveLightbox(1);
+        });
         bindLightboxGestures();
         document.addEventListener("keydown", (e) => {
           const dlg = $("#dlgLightbox");
@@ -2678,9 +2814,16 @@ END:VCALENDAR`;
           if (e.key === "ArrowRight") moveLightbox(1);
         });
 
-        $("#btnCopyAddr")?.addEventListener("click", () => copyText(WEDDING.addressText));
-        $("#btnCopyMapLink")?.addEventListener("click", () => copyText(WEDDING.naviLink || ""));
+        $("#btnCopyAddr")?.addEventListener("click", () => {
+          haptic(8);
+          copyText(WEDDING.addressText);
+        });
+        $("#btnCopyMapLink")?.addEventListener("click", () => {
+          haptic(8);
+          copyText(WEDDING.naviLink || "");
+        });
         $("#btnShareMap")?.addEventListener("click", async () => {
+          haptic(10);
           const url = String(WEDDING.naviLink || "").trim();
           if (!url) return;
           const title = currentLang === "ko" ? "구글 지도" : "Google Maps";
@@ -2698,24 +2841,42 @@ END:VCALENDAR`;
 
         // Bottom action bar (mobile)
         $("#abMap")?.addEventListener("click", () => {
+          haptic(10);
           const dest = encodeURIComponent(String(WEDDING.placeText || WEDDING.addressText || "").trim());
           const url = dest ? `https://www.google.com/maps/dir/?api=1&destination=${dest}` : String(WEDDING.naviLink || "");
           if (url) window.open(url, "_blank", "noreferrer");
         });
-        $("#abWhatsapp")?.addEventListener("click", () => openDialog("dlgQuickContact"));
-        $("#abPix")?.addEventListener("click", () => openDialog("dlgQuickPix"));
+        $("#abWhatsapp")?.addEventListener("click", () => {
+          haptic(10);
+          openDialog("dlgQuickContact");
+        });
+        $("#abPix")?.addEventListener("click", () => {
+          haptic(10);
+          openDialog("dlgQuickPix");
+        });
         $("#abLang")?.addEventListener("click", () => {
+          haptic(10);
           const next = currentCountry === "KR" ? "BR" : "KR";
           setCountry(next);
           toast(next === "KR" ? t("toast.langKo") : t("toast.langPt"));
         });
-        $("#abTheme")?.addEventListener("click", toggleTheme);
+        $("#abTheme")?.addEventListener("click", () => {
+          haptic(10);
+          toggleTheme();
+        });
 
-        $("#quickPixGroom")?.addEventListener("click", () => copyText(String(WEDDING.gift.groomBank || "")));
-        $("#quickPixBride")?.addEventListener("click", () => copyText(String(WEDDING.gift.brideBank || "")));
+        $("#quickPixGroom")?.addEventListener("click", () => {
+          haptic(8);
+          copyText(String(WEDDING.gift.groomBank || ""));
+        });
+        $("#quickPixBride")?.addEventListener("click", () => {
+          haptic(8);
+          copyText(String(WEDDING.gift.brideBank || ""));
+        });
 
         $$("[data-copy]").forEach((btn) => {
           btn.addEventListener("click", () => {
+            haptic(8);
             const sel = btn.getAttribute("data-copy");
             const el = sel ? document.querySelector(sel) : null;
             const text = (el?.textContent || "").trim();
@@ -2725,6 +2886,7 @@ END:VCALENDAR`;
 
         // Guestbook
         $("#btnGbSubmit")?.addEventListener("click", async () => {
+          haptic(10);
           const name = $("#gbName").value;
           const message = $("#gbMessage").value;
           const msgNorm = normalizeMessage(message);
@@ -2775,6 +2937,7 @@ END:VCALENDAR`;
         const full = guestbookFullList || [];
         const initialCount = 3;
         const visible = guestbookExpanded ? full : full.slice(0, initialCount);
+        const isDark = document.documentElement.getAttribute("data-theme") === "dark";
 
         const moreWrap = $("#guestbookMoreWrap");
         const moreBtn = $("#btnGuestbookMore");
@@ -2805,6 +2968,7 @@ END:VCALENDAR`;
           const stamp = `${when.getFullYear()}.${String(when.getMonth() + 1).padStart(2, "0")}.${String(when.getDate()).padStart(2, "0")}`;
           const id = guestbookItemId(it);
           const liked = isGuestbookLiked(id);
+          const baseFill = isDark ? "rgba(255, 255, 255, 0.26)" : "rgba(16, 32, 36, 0.22)";
           card.innerHTML = `
             <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start">
               <div style="min-width:0">
@@ -2815,13 +2979,13 @@ END:VCALENDAR`;
                 class="icon-btn"
                 type="button"
                 data-like="${escapeHtml(id)}"
-                aria-label="Like"
+                aria-label="${escapeHtml(t("aria.like"))}"
                 style="padding:8px 10px;min-height:40px;${liked ? "border-color: rgba(200, 164, 107, 0.55); box-shadow: 0 0 0 3px rgba(200, 164, 107, 0.16);" : ""}"
               >
                 <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" style="display:block">
                   <path
                     d="M12 21s-7-4.6-9.3-9.1C1.3 8.7 3.2 6 6.2 6c1.7 0 3 .8 3.8 1.8C10.8 6.8 12.1 6 13.8 6c3 0 4.9 2.7 3.5 5.9C19 16.4 12 21 12 21z"
-                    fill="${liked ? "rgba(200, 164, 107, 0.92)" : "rgba(16, 32, 36, 0.22)"}"
+                    fill="${liked ? "rgba(200, 164, 107, 0.92)" : baseFill}"
                   />
                 </svg>
               </button>
@@ -2829,8 +2993,17 @@ END:VCALENDAR`;
             <div style="margin-top:8px;font-size:14px;line-height:1.7">${escapeHtml(it.message || "")}</div>
           `;
           root.appendChild(card);
-          card.querySelector("[data-like]")?.addEventListener("click", () => {
+          card.querySelector("[data-like]")?.addEventListener("click", (e) => {
+            haptic(8);
             toggleGuestbookLike(id);
+            try {
+              e.currentTarget?.animate?.([{ transform: "scale(1)" }, { transform: "scale(1.06)" }, { transform: "scale(1)" }], {
+                duration: 180,
+                easing: "ease-out",
+              });
+            } catch {
+              // ignore
+            }
             renderGuestbookList();
           });
         });
