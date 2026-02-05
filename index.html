@@ -47,6 +47,21 @@
         --max: 980px;
       }
 
+      /* ====== Theme (Light/Dark) ====== */
+      :root[data-theme="dark"] {
+        --bg0: #07181c;
+        --bg1: #051318;
+        --bg2: #06171b;
+        --ink: rgba(255, 255, 255, 0.92);
+        --sub: rgba(255, 255, 255, 0.72);
+        --line: rgba(255, 255, 255, 0.14);
+        --card: rgba(10, 26, 30, 0.66);
+        --card-strong: rgba(10, 26, 30, 0.78);
+        --shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
+        --shadow2: 0 12px 28px rgba(0, 0, 0, 0.28);
+        --focus: rgba(125, 184, 196, 0.45);
+      }
+
       * {
         box-sizing: border-box;
       }
@@ -65,6 +80,12 @@
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
       }
+      :root[data-theme="dark"] body {
+        background: radial-gradient(1100px 640px at 10% -10%, rgba(125, 184, 196, 0.28), transparent 62%),
+          radial-gradient(980px 560px at 90% 0%, rgba(125, 184, 196, 0.14), transparent 64%),
+          radial-gradient(900px 560px at 60% 110%, rgba(200, 164, 107, 0.11), transparent 64%),
+          linear-gradient(180deg, var(--bg1), var(--bg0) 55%, var(--bg2));
+      }
 
       /* Subtle premium grain */
       body::before {
@@ -76,6 +97,10 @@
         background-size: 3px 3px;
         opacity: 0.08;
         mix-blend-mode: multiply;
+      }
+      :root[data-theme="dark"] body::before {
+        opacity: 0.12;
+        mix-blend-mode: screen;
       }
 
       a {
@@ -336,6 +361,15 @@
         filter: saturate(1.08) contrast(1.08);
         pointer-events: none;
       }
+
+      /* Subtle cinematic motion (disabled for reduced motion) */
+      .hero-media::after {
+        transform: scale(1.08);
+        transition: transform 1.2s ease;
+      }
+      .hero.is-inview .hero-media::after {
+        transform: scale(1.02);
+      }
       .hero-media-inner {
         position: absolute;
         inset: 0;
@@ -360,6 +394,11 @@
       }
       .pill strong {
         color: var(--ink);
+      }
+      .personal {
+        margin: 10px 0 0;
+        font-size: 13px;
+        color: var(--sub);
       }
 
       /* ====== Section ====== */
@@ -532,6 +571,7 @@
         border: 1px solid rgba(31, 29, 26, 0.1);
         background: linear-gradient(135deg, rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.35));
         min-height: 130px;
+        aspect-ratio: 1 / 1;
         cursor: pointer;
         padding: 0;
       }
@@ -662,6 +702,191 @@
       .toast.show {
         opacity: 1;
         transform: translateX(-50%) translateY(-6px);
+      }
+
+      /* ====== Intro overlay (cinematic) ====== */
+      .intro {
+        position: fixed;
+        inset: 0;
+        z-index: 1000;
+        display: grid;
+        place-items: center;
+        padding: 18px;
+      }
+      .intro-bg {
+        position: absolute;
+        inset: -20px;
+        background-image: var(--hero-image, url("assets/hero.jpg"));
+        background-size: cover;
+        background-position: center;
+        filter: blur(18px) saturate(1.08) contrast(1.06);
+        transform: scale(1.08);
+        opacity: 0.9;
+      }
+      .intro-bg::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, rgba(7, 24, 28, 0.22), rgba(7, 24, 28, 0.55));
+      }
+      .intro-card {
+        position: relative;
+        width: min(520px, 100%);
+        border-radius: 28px;
+        border: 1px solid rgba(255, 255, 255, 0.22);
+        background: rgba(255, 255, 255, 0.16);
+        box-shadow: 0 30px 100px rgba(0, 0, 0, 0.35);
+        backdrop-filter: blur(18px);
+        padding: 20px 18px;
+        color: rgba(255, 255, 255, 0.92);
+        text-align: left;
+      }
+      .intro-kicker {
+        font-size: 12px;
+        letter-spacing: 0.14em;
+        opacity: 0.9;
+        font-weight: 700;
+      }
+      .intro-names {
+        margin-top: 10px;
+        font-family: "Playfair Display", serif;
+        font-size: clamp(22px, 5vw, 34px);
+        line-height: 1.15;
+      }
+      .intro-meta {
+        margin-top: 10px;
+        font-size: 13px;
+        opacity: 0.9;
+      }
+      .intro-actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 14px;
+      }
+      .intro-actions .btn {
+        min-height: 44px;
+      }
+      .intro-scroll {
+        margin-top: 10px;
+        font-size: 12px;
+        opacity: 0.82;
+      }
+
+      /* ====== Bottom action bar (mobile-first) ====== */
+      .actionbar {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 60;
+        padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+        background: rgba(247, 252, 253, 0.82);
+        border-top: 1px solid rgba(16, 32, 36, 0.1);
+        backdrop-filter: blur(18px);
+      }
+      :root[data-theme="dark"] .actionbar {
+        background: rgba(5, 19, 24, 0.78);
+        border-top-color: rgba(255, 255, 255, 0.12);
+      }
+      .actionbar-inner {
+        max-width: var(--max);
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 8px;
+      }
+      .ab-btn {
+        display: grid;
+        gap: 4px;
+        place-items: center;
+        border-radius: 16px;
+        border: 1px solid rgba(16, 32, 36, 0.12);
+        background: rgba(255, 255, 255, 0.7);
+        min-height: 52px;
+        cursor: pointer;
+        padding: 8px 6px;
+        color: var(--ink);
+        text-decoration: none;
+      }
+      :root[data-theme="dark"] .ab-btn {
+        border-color: rgba(255, 255, 255, 0.14);
+        background: rgba(10, 26, 30, 0.7);
+      }
+      .ab-ico {
+        width: 22px;
+        height: 22px;
+        opacity: 0.92;
+      }
+      .ab-txt {
+        font-size: 11px;
+        color: var(--sub);
+        white-space: nowrap;
+      }
+      @media (hover: hover) and (pointer: fine) {
+        .ab-btn:hover {
+          transform: translateY(-1px);
+          box-shadow: var(--shadow2);
+        }
+      }
+      @media (min-width: 861px) {
+        .actionbar {
+          display: none;
+        }
+      }
+      @media (max-width: 860px) {
+        body {
+          padding-bottom: 86px;
+        }
+      }
+
+      /* ====== Lightbox (swipe/zoom) ====== */
+      .lightbox-stage {
+        width: 100%;
+        border-radius: 16px;
+        border: 1px solid rgba(31, 29, 26, 0.1);
+        background: rgba(255, 255, 255, 0.72);
+        overflow: hidden;
+        position: relative;
+        touch-action: none;
+      }
+      :root[data-theme="dark"] .lightbox-stage {
+        border-color: rgba(255, 255, 255, 0.14);
+        background: rgba(10, 26, 30, 0.72);
+      }
+      .lightbox-pan {
+        width: 100%;
+        height: 100%;
+        transform: translate3d(0, 0, 0) scale(1);
+        transform-origin: center;
+        will-change: transform;
+      }
+      .lightbox-stage img {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+      .dlg-sub {
+        font-size: 12px;
+        color: var(--sub);
+      }
+      .dlg-head-left {
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+        min-width: 0;
+      }
+      .dlg-head-right {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+      .lightbox-navbtn {
+        width: 40px;
+        height: 40px;
+        display: grid;
+        place-items: center;
+        border-radius: 12px;
       }
 
       .hidden {
@@ -827,6 +1052,21 @@
   </head>
 
   <body>
+    <!-- ====== Cinematic Intro ====== -->
+    <div id="introOverlay" class="intro hidden" aria-hidden="true">
+      <div class="intro-bg" aria-hidden="true"></div>
+      <div class="intro-card" role="dialog" aria-modal="true" aria-label="Intro">
+        <div class="intro-kicker" data-i18n="intro.kicker">WEDDING INVITATION</div>
+        <div class="intro-names" id="introNames">Haseung Song · Larissa Vilas Boas de Araujo</div>
+        <div class="intro-meta" id="introMeta">2026. 05. 30 · Rancho do Celso - Rifaina/SP</div>
+        <div class="intro-actions">
+          <button class="btn primary" id="btnIntroEnter" type="button" data-i18n="intro.enter">Entrar</button>
+          <button class="btn ghost" id="btnIntroSkip" type="button" data-i18n="intro.skip">Pular</button>
+        </div>
+        <div class="intro-scroll muted" data-i18n="intro.scroll">Role para continuar</div>
+      </div>
+    </div>
+
     <!-- ====== Invitation ====== -->
     <header class="topbar" id="top">
       <div class="wrap topbar-inner">
@@ -881,6 +1121,7 @@
                   2026. 05. 30 (sáb) 16:30<br />
                   Rancho do Celso
                 </p>
+                <p class="personal" id="personalGreeting" aria-live="polite"></p>
                 <div class="cta-row">
                   <button class="btn" id="btnCalendar" type="button" data-i18n="hero.calendar">Adicionar ao calendário</button>
                   <a class="btn ghost" href="#activity" data-i18n="hero.join">Participar</a>
@@ -1146,16 +1387,30 @@
     <!-- ====== Lightbox ====== -->
     <dialog id="dlgLightbox" aria-label="Imagem">
       <div class="dlg-head">
-        <h3 data-i18n="dlg.photo.title">Foto</h3>
-        <button class="icon-btn" type="button" data-close="dlgLightbox" aria-label="Fechar" data-i18n="common.close">Fechar</button>
+        <div class="dlg-head-left">
+          <h3 data-i18n="dlg.photo.title">Foto</h3>
+          <span class="dlg-sub" id="lightboxCounter">1 / 1</span>
+        </div>
+        <div class="dlg-head-right">
+          <button class="icon-btn lightbox-navbtn" id="btnLightboxPrev" type="button" aria-label="Prev">
+            <svg class="ab-ico" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M15.5 19.5 8.5 12l7-7.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
+          <button class="icon-btn lightbox-navbtn" id="btnLightboxNext" type="button" aria-label="Next">
+            <svg class="ab-ico" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M8.5 4.5 15.5 12l-7 7.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
+          <button class="icon-btn" type="button" data-close="dlgLightbox" aria-label="Fechar" data-i18n="common.close">Fechar</button>
+        </div>
       </div>
       <div class="dlg-body">
-        <img
-          id="lightboxImg"
-          alt="Imagem ampliada"
-          data-i18n-alt="dlg.photo.alt"
-          style="width: 100%; border-radius: 16px; border: 1px solid rgba(31, 29, 26, 0.1)"
-        />
+        <div class="lightbox-stage" id="lightboxStage">
+          <div class="lightbox-pan" id="lightboxPan">
+            <img id="lightboxImg" alt="Imagem ampliada" data-i18n-alt="dlg.photo.alt" />
+          </div>
+        </div>
         <div class="muted" style="font-size: 12px; margin-top: 10px">
           <span data-i18n="dlg.photo.hint">Feche e selecione outra foto para ver mais.</span>
         </div>
@@ -1163,6 +1418,95 @@
     </dialog>
 
     <div class="toast" id="toast" role="status" aria-live="polite">Concluído</div>
+
+    <!-- ====== Quick actions (Mobile) ====== -->
+    <div class="actionbar" id="actionBar" role="navigation" aria-label="Quick actions">
+      <div class="actionbar-inner">
+        <button class="ab-btn" id="abMap" type="button">
+          <svg class="ab-ico" viewBox="0 0 24 24" aria-hidden="true">
+            <path
+              d="M12 21s7-5.3 7-11a7 7 0 1 0-14 0c0 5.7 7 11 7 11z"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <circle cx="12" cy="10" r="2.5" fill="none" stroke="currentColor" stroke-width="2" />
+          </svg>
+          <span class="ab-txt" data-i18n="quick.map">Mapa</span>
+        </button>
+
+        <button class="ab-btn" id="abWhatsapp" type="button">
+          <svg class="ab-ico" viewBox="0 0 32 32" aria-hidden="true">
+            <path
+              d="M19.11 17.29c-.27-.14-1.6-.79-1.85-.88-.25-.09-.43-.14-.61.14-.18.27-.7.88-.86 1.06-.16.18-.31.2-.58.07-.27-.14-1.12-.41-2.13-1.31-.79-.71-1.33-1.58-1.48-1.85-.16-.27-.02-.42.12-.55.12-.12.27-.31.41-.46.14-.16.18-.27.27-.45.09-.18.05-.34-.02-.48-.07-.14-.61-1.48-.84-2.03-.22-.53-.45-.46-.61-.47h-.52c-.18 0-.48.07-.73.34-.25.27-.95.93-.95 2.26s.98 2.62 1.12 2.8c.14.18 1.93 2.95 4.68 4.13.65.28 1.15.45 1.55.58.65.21 1.24.18 1.71.11.52-.08 1.6-.66 1.83-1.3.23-.64.23-1.18.16-1.3-.07-.12-.25-.2-.52-.34z"
+              fill="currentColor"
+            />
+            <path
+              d="M26.67 5.33C23.83 2.5 20.06 1 16.04 1 7.9 1 1.3 7.6 1.3 15.74c0 2.6.68 5.14 1.97 7.38L1 31l8.08-2.22c2.17 1.19 4.62 1.81 7.1 1.81h.01c8.14 0 14.74-6.6 14.74-14.74 0-3.99-1.55-7.75-4.26-10.52zm-10.62 22.7h-.01c-2.22 0-4.4-.6-6.29-1.73l-.45-.27-4.79 1.32 1.28-4.67-.29-.48a12.17 12.17 0 0 1-1.85-6.46c0-6.71 5.46-12.17 12.18-12.17 3.25 0 6.31 1.26 8.59 3.54 2.28 2.29 3.54 5.34 3.54 8.6 0 6.71-5.46 12.17-12.11 12.32z"
+              fill="currentColor"
+            />
+          </svg>
+          <span class="ab-txt" data-i18n="quick.whatsapp">WhatsApp</span>
+        </button>
+
+        <button class="ab-btn" id="abPix" type="button">
+          <svg class="ab-ico" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 7h16M6 11h12M8 15h8M10 19h4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+          </svg>
+          <span class="ab-txt" data-i18n="quick.pix">PIX</span>
+        </button>
+
+        <button class="ab-btn" id="abLang" type="button">
+          <svg class="ab-ico" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 5h8M8 5v14M6 9h4M14 19l6-14M14 12h6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+          </svg>
+          <span class="ab-txt" data-i18n="quick.lang">언어</span>
+        </button>
+
+        <button class="ab-btn" id="abTheme" type="button">
+          <svg class="ab-ico" viewBox="0 0 24 24" aria-hidden="true">
+            <path
+              d="M21 12.3A8.5 8.5 0 0 1 11.7 3 6.8 6.8 0 1 0 21 12.3z"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          <span class="ab-txt" data-i18n="quick.theme">테마</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ====== Quick sheets ====== -->
+    <dialog id="dlgQuickContact" aria-label="Contact">
+      <div class="dlg-head">
+        <h3 data-i18n="quick.contactTitle">WhatsApp</h3>
+        <button class="icon-btn" type="button" data-close="dlgQuickContact" data-i18n="common.close">Fechar</button>
+      </div>
+      <div class="dlg-body">
+        <div class="row2">
+          <a class="btn" id="quickWhatsappGroom" href="#" target="_blank" rel="noreferrer"><span data-i18n="quick.groom">Noivo</span></a>
+          <a class="btn" id="quickWhatsappBride" href="#" target="_blank" rel="noreferrer"><span data-i18n="quick.bride">Noiva</span></a>
+        </div>
+      </div>
+    </dialog>
+
+    <dialog id="dlgQuickPix" aria-label="PIX">
+      <div class="dlg-head">
+        <h3 data-i18n="quick.pixTitle">PIX</h3>
+        <button class="icon-btn" type="button" data-close="dlgQuickPix" data-i18n="common.close">Fechar</button>
+      </div>
+      <div class="dlg-body">
+        <div class="row2">
+          <button class="btn" id="quickPixGroom" type="button"><span data-i18n="quick.groom">Noivo</span></button>
+          <button class="btn" id="quickPixBride" type="button"><span data-i18n="quick.bride">Noiva</span></button>
+        </div>
+      </div>
+    </dialog>
 
     <script>
       // ================== CONFIG (여기만 수정하면 됩니다) ==================
@@ -1213,6 +1557,13 @@
       // ================== URL PARAMS ==================
       const params = new URLSearchParams(location.search);
 
+      // ================== LOCAL STORAGE KEYS ==================
+      const THEME_STORAGE_KEY = "wedding.theme.v1";
+      const INTRO_SEEN_KEY = "wedding.intro.seen.v1";
+      const GB_LAST_TS_KEY = "wedding.guestbook.lastTs.v1";
+      const GB_LAST_MSG_KEY = "wedding.guestbook.lastMsg.v1";
+      const GB_LIKES_KEY = "wedding.guestbook.likes.v1";
+
       // ================== UTIL ==================
       const $ = (sel, root = document) => root.querySelector(sel);
       const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
@@ -1233,6 +1584,19 @@
           nav: { info: "Informações", location: "Como chegar", gallery: "Galeria", activity: "Participar", gift: "Presentes" },
           navShort: { info: "Info", location: "Mapa", gallery: "Fotos", activity: "Ativ.", gift: "PIX" },
           hero: { kicker: "INVITATION", calendar: "Adicionar ao calendário", join: "Participar", directions: "Rotas" },
+          intro: { kicker: "WEDDING INVITATION", enter: "Entrar", skip: "Pular", scroll: "Role para continuar" },
+          personal: { greeting: "{name}, que alegria ter você aqui." },
+          quick: {
+            map: "Mapa",
+            whatsapp: "WhatsApp",
+            pix: "PIX",
+            lang: "Idioma",
+            theme: "Tema",
+            contactTitle: "WhatsApp",
+            pixTitle: "PIX",
+            groom: "Noivo",
+            bride: "Noiva",
+          },
           data: {
             local: "Evento ao ar livre – sapato confortável recomendado",
             shared: "Dados: compartilhado (Firebase)",
@@ -1306,7 +1670,7 @@
             less: "Mostrar menos",
           },
           dlg: {
-            photo: { title: "Foto", hint: "Feche e selecione outra foto para ver mais.", alt: "Imagem ampliada" },
+            photo: { title: "Foto", hint: "Deslize para mudar · Pinça para zoom · Duplo toque para ajustar", alt: "Imagem ampliada" },
           },
           gift: { groomSide: "Lado do noivo", brideSide: "Lado da noiva", holder: "Titular", account: "Conta" },
           common: { copy: "Copiar", close: "Fechar", save: "Salvar" },
@@ -1321,6 +1685,12 @@
             cleared: "Limpo",
             voted: "Votado",
             joined: "Participação enviada",
+            cooldown: "Aguarde {sec}s e tente novamente",
+            duplicate: "Mensagem repetida. Você pode escrever algo diferente.",
+            themeLight: "Tema claro",
+            themeDark: "Tema escuro",
+            langPt: "Português",
+            langKo: "한국어",
           },
           gallery: { needFiles: "Adicione fotos em assets/gallery/", open: "Abrir foto", alt: "Foto da galeria" },
           aria: { whatsapp: "Abrir conversa no WhatsApp" },
@@ -1336,6 +1706,19 @@
           nav: { info: "안내", location: "오시는 길", gallery: "갤러리", activity: "참여", gift: "마음 전하실 곳" },
           navShort: { info: "안내", location: "지도", gallery: "사진", activity: "참여", gift: "PIX" },
           hero: { kicker: "INVITATION", calendar: "캘린더 추가", join: "축하 참여하기", directions: "길찾기" },
+          intro: { kicker: "WEDDING INVITATION", enter: "입장하기", skip: "건너뛰기", scroll: "스크롤해서 계속" },
+          personal: { greeting: "{name}님, 와주셔서 정말 감사해요." },
+          quick: {
+            map: "지도",
+            whatsapp: "왓츠앱",
+            pix: "PIX",
+            lang: "언어",
+            theme: "테마",
+            contactTitle: "WhatsApp",
+            pixTitle: "PIX",
+            groom: "신랑",
+            bride: "신부",
+          },
           data: {
             local: "야외 행사입니다 — 편한 신발을 추천드려요",
             shared: "데이터 저장: 공유(Firebase)",
@@ -1408,7 +1791,7 @@
             less: "접기",
           },
           dlg: {
-            photo: { title: "사진", hint: "사진을 넘기려면 바깥을 닫고 다른 사진을 선택해 주세요.", alt: "확대 이미지" },
+            photo: { title: "사진", hint: "스와이프로 넘기기 · 핀치로 확대 · 더블탭으로 맞춤", alt: "확대 이미지" },
           },
           gift: { groomSide: "신랑 측", brideSide: "신부 측", holder: "예금주", account: "계좌" },
           common: { copy: "복사", close: "닫기", save: "저장" },
@@ -1423,6 +1806,12 @@
             cleared: "초기화했습니다",
             voted: "투표했습니다",
             joined: "참여했습니다",
+            cooldown: "{sec}초 후에 다시 시도해 주세요",
+            duplicate: "같은 메시지는 연속으로 남길 수 없어요",
+            themeLight: "라이트 모드",
+            themeDark: "다크 모드",
+            langPt: "Português",
+            langKo: "한국어",
           },
           gallery: { needFiles: "assets/gallery/에 사진을 넣어주세요", open: "사진 확대", alt: "갤러리 사진" },
           aria: { whatsapp: "WhatsApp으로 바로 연락하기" },
@@ -1475,6 +1864,108 @@
           const c = (b.getAttribute("data-country") || "").toUpperCase();
           b.classList.toggle("active", c === currentCountry);
         });
+      }
+
+      // ================== THEME ==================
+      let themeMode = "system"; // light | dark | system
+      let themeMql = null;
+
+      function resolveInitialTheme() {
+        const q = String(params.get("theme") || "").toLowerCase();
+        if (q === "light" || q === "dark" || q === "system") return q;
+        const saved = String(localStorage.getItem(THEME_STORAGE_KEY) || "").toLowerCase();
+        if (saved === "light" || saved === "dark" || saved === "system") return saved;
+        return "system";
+      }
+
+      function applyTheme(mode) {
+        const root = document.documentElement;
+        const pick =
+          mode === "system"
+            ? window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches
+              ? "dark"
+              : "light"
+            : mode;
+        root.setAttribute("data-theme", pick);
+      }
+
+      function initTheme(mode) {
+        themeMode = mode || "system";
+        localStorage.setItem(THEME_STORAGE_KEY, themeMode);
+        if (!themeMql && window.matchMedia) {
+          themeMql = window.matchMedia("(prefers-color-scheme: dark)");
+          themeMql.addEventListener?.("change", () => {
+            if (themeMode === "system") applyTheme("system");
+          });
+        }
+        applyTheme(themeMode);
+      }
+
+      function toggleTheme() {
+        const cur = document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light";
+        const next = cur === "dark" ? "light" : "dark";
+        initTheme(next);
+        toast(next === "dark" ? t("toast.themeDark") : t("toast.themeLight"));
+      }
+
+      // ================== INTRO / HERO MOTION ==================
+      function prefersReducedMotion() {
+        return !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+      }
+
+      function shouldShowIntro() {
+        if (String(params.get("intro") || "") === "0") return false;
+        if (prefersReducedMotion()) return false;
+        return String(localStorage.getItem(INTRO_SEEN_KEY) || "") !== "1";
+      }
+
+      function showIntro() {
+        const el = $("#introOverlay");
+        if (!el) return;
+        el.classList.remove("hidden");
+        el.setAttribute("aria-hidden", "false");
+        document.body.style.overflow = "hidden";
+      }
+
+      function hideIntro(markSeen = true) {
+        const el = $("#introOverlay");
+        if (!el) return;
+        el.classList.add("hidden");
+        el.setAttribute("aria-hidden", "true");
+        document.body.style.overflow = "";
+        if (markSeen) localStorage.setItem(INTRO_SEEN_KEY, "1");
+      }
+
+      function initIntro() {
+        if (!shouldShowIntro()) return;
+        showIntro();
+        $("#btnIntroEnter")?.addEventListener("click", () => {
+          hideIntro(true);
+          document.querySelector(".hero")?.scrollIntoView({ behavior: "smooth", block: "start" });
+        });
+        $("#btnIntroSkip")?.addEventListener("click", () => hideIntro(true));
+        $("#introOverlay")?.addEventListener("click", (e) => {
+          if (e.target && (e.target.id === "introOverlay" || e.target.classList?.contains("intro-bg"))) hideIntro(true);
+        });
+        window.addEventListener(
+          "keydown",
+          (e) => {
+            if (e.key === "Escape") hideIntro(true);
+          },
+          { once: true }
+        );
+      }
+
+      function initHeroMotion() {
+        const hero = document.querySelector(".hero");
+        if (!hero || prefersReducedMotion() || !("IntersectionObserver" in window)) return;
+        const io = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((en) => hero.classList.toggle("is-inview", en.isIntersecting));
+          },
+          { threshold: 0.25 }
+        );
+        io.observe(hero);
       }
 
       function resolveInitialCountry() {
@@ -1620,7 +2111,11 @@
 
       const guestbookApi = {
         async add({ name, message }) {
+          const tmpId =
+            (window.crypto && typeof window.crypto.randomUUID === "function" && window.crypto.randomUUID()) ||
+            `${nowTs()}-${Math.random().toString(16).slice(2)}`;
           const item = {
+            id: tmpId,
             name: (name || "").trim().slice(0, 16) || t("guestbook.anonymous"),
             message: (message || "").trim().slice(0, 200),
             time: nowTs(),
@@ -1628,7 +2123,9 @@
           if (!item.message) return false;
 
           if (dataMode === "shared" && db) {
-            await db.ref("wedding/guestbook").push(item);
+            const ref = db.ref("wedding/guestbook").push();
+            const id = ref.key || tmpId;
+            await ref.set({ ...item, id });
           } else {
             const list = lsGet(LS_KEYS.guestbook, []);
             list.unshift(item);
@@ -1660,6 +2157,32 @@
       let guestbookExpanded = false;
       let guestbookFullList = [];
 
+      function getGuestbookLikes() {
+        return lsGet(GB_LIKES_KEY, {});
+      }
+      function isGuestbookLiked(id) {
+        const m = getGuestbookLikes();
+        return !!(id && m && m[id]);
+      }
+      function toggleGuestbookLike(id) {
+        if (!id) return;
+        const m = getGuestbookLikes();
+        if (m[id]) delete m[id];
+        else m[id] = 1;
+        lsSet(GB_LIKES_KEY, m);
+      }
+      function hashShort(str) {
+        const s = String(str || "");
+        let h = 0;
+        for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0;
+        return Math.abs(h).toString(36).slice(0, 6);
+      }
+      function guestbookItemId(it) {
+        const id = String(it?.id || "").trim();
+        if (id) return id;
+        return `t${it?.time || 0}-${hashShort(`${it?.time || 0}|${it?.name || ""}|${it?.message || ""}`)}`;
+      }
+
       // ================== INIT CONTENT ==================
       function bindContent() {
         const setText = (sel, val) => {
@@ -1681,6 +2204,11 @@
         setText("#groomName", WEDDING.groomName);
         setText("#brideName", WEDDING.brideName);
         setHtml("#heroMeta", `${escapeHtml(WEDDING.dateText)}<br />${escapeHtml(WEDDING.placeText)}`);
+        setText("#introNames", `${WEDDING.groomName} · ${WEDDING.brideName}`);
+        setText("#introMeta", `${extractDateShort(WEDDING.dateText)} · ${WEDDING.placeText}`);
+
+        const nm = sanitizeName(params.get("name"));
+        setText("#personalGreeting", nm ? t("personal.greeting", { name: nm }) : "");
 
         setText("#pillDate", extractDateShort(WEDDING.dateText));
         setText("#pillPlace", WEDDING.placeShort || WEDDING.placeText);
@@ -1697,8 +2225,11 @@
         setHref("#groomTel", toTelHref(WEDDING.phone.groom));
         setHref("#brideTel", toTelHref(WEDDING.phone.bride));
 
-        setHref("#groomWhatsapp", toWhatsappLink(WEDDING.phone.groom, currentCountry));
-        setHref("#brideWhatsapp", toWhatsappLink(WEDDING.phone.bride, currentCountry));
+        const waText = getWhatsappPrefillText();
+        setHref("#groomWhatsapp", toWhatsappLink(WEDDING.phone.groom, currentCountry, waText));
+        setHref("#brideWhatsapp", toWhatsappLink(WEDDING.phone.bride, currentCountry, waText));
+        setHref("#quickWhatsappGroom", toWhatsappLink(WEDDING.phone.groom, currentCountry, waText));
+        setHref("#quickWhatsappBride", toWhatsappLink(WEDDING.phone.bride, currentCountry, waText));
 
         setHref("#btnNavi", WEDDING.naviLink);
         const mapLink = String(WEDDING.naviLink || "").trim();
@@ -1718,6 +2249,25 @@
         setText("#brideBank", WEDDING.gift.brideBank);
       }
 
+      function sanitizeName(input) {
+        const raw = String(input || "").trim();
+        if (!raw) return "";
+        // allow letters/numbers/space/·.- and Hangul
+        const cleaned = raw.replace(/[^\p{L}\p{N}\s·.\-]/gu, "").replace(/\s+/g, " ").trim();
+        return cleaned.slice(0, 24);
+      }
+
+      function getWhatsappPrefillText() {
+        if (currentLang === "ko") return `안녕하세요. ${WEDDING.groomName} · ${WEDDING.brideName} 결혼식 관련 문의드립니다.`;
+        return `Olá! Sobre o casamento de ${WEDDING.groomName} e ${WEDDING.brideName}.`;
+      }
+
+      function normalizeMessage(message) {
+        const s = String(message || "").trim();
+        if (!s) return "";
+        return s.replace(/\s+/g, " ").trim().toLowerCase().slice(0, 200);
+      }
+
       function digitsOnly(str) {
         return String(str || "").replace(/[^\d+]/g, "").replace(/\+/g, "");
       }
@@ -1729,23 +2279,25 @@
         return `tel:${normalized}`;
       }
 
-      function toWhatsappLink(phone, country) {
+      function toWhatsappLink(phone, country, text) {
         const d = digitsOnly(phone);
         if (!d) return "";
+        const qText = String(text || "").trim();
 
         // already has country code
-        if (d.startsWith("55") || d.startsWith("82")) return `https://wa.me/${d}`;
+        const base = d.startsWith("55") || d.startsWith("82") ? d : null;
 
         const c = String(country || "").toUpperCase();
         if (c === "KR") {
           // 010xxxxxxxx -> 82 + 10xxxxxxxx
           const n = d.startsWith("0") ? d.slice(1) : d;
-          return `https://wa.me/82${n}`;
+          const num = base || `82${n}`;
+          return qText ? `https://wa.me/${num}?text=${encodeURIComponent(qText)}` : `https://wa.me/${num}`;
         }
         // default BR
         // assume local (10~11 digits) -> prefix 55
-        if (d.length >= 10 && d.length <= 11) return `https://wa.me/55${d}`;
-        return `https://wa.me/${d}`;
+        const num = base || (d.length >= 10 && d.length <= 11 ? `55${d}` : d);
+        return qText ? `https://wa.me/${num}?text=${encodeURIComponent(qText)}` : `https://wa.me/${num}`;
       }
 
       function shortenUrlForDisplay(url) {
@@ -1803,6 +2355,14 @@
       }
 
       // ================== GALLERY ==================
+      let galleryFilesResolved = [];
+      let lightboxIndex = 0;
+      let lbScale = 1;
+      let lbTx = 0;
+      let lbTy = 0;
+      let lbPointers = new Map();
+      let lbStart = null;
+
       async function buildGallery() {
         const grid = $("#galleryGrid");
         if (!grid) return;
@@ -1815,6 +2375,7 @@
 
         const exists = await Promise.all(candidates.map((src) => imgExists(src).then((ok) => ({ src, ok }))));
         const files = Array.from(new Set(exists.filter((x) => x.ok).map((x) => x.src)));
+        galleryFilesResolved = files;
 
         if (files.length === 0) {
           for (let i = 0; i < 6; i++) {
@@ -1827,18 +2388,157 @@
           return;
         }
 
-        files.forEach((src) => {
+        files.forEach((src, idx) => {
           const item = document.createElement("button");
           item.type = "button";
           item.className = "gitem";
           item.setAttribute("aria-label", t("gallery.open"));
           item.innerHTML = `<img src="${escapeHtml(src)}" alt="${escapeHtml(t("gallery.alt"))}" loading="lazy" />`;
           item.addEventListener("click", () => {
-            $("#lightboxImg").src = src;
-            openDialog("dlgLightbox");
+            openLightboxAt(idx);
           });
           grid.appendChild(item);
         });
+      }
+
+      function openLightboxAt(idx) {
+        const total = Array.isArray(galleryFilesResolved) ? galleryFilesResolved.length : 0;
+        if (!total) return;
+        const next = Math.max(0, Math.min(total - 1, Number(idx || 0)));
+        lightboxIndex = next;
+        const src = galleryFilesResolved[lightboxIndex];
+        const img = $("#lightboxImg");
+        if (img) img.src = src;
+        const counter = $("#lightboxCounter");
+        if (counter) counter.textContent = `${lightboxIndex + 1} / ${total}`;
+        resetLightboxTransform();
+        openDialog("dlgLightbox");
+        preloadGalleryAround(lightboxIndex);
+      }
+
+      function moveLightbox(delta) {
+        const total = Array.isArray(galleryFilesResolved) ? galleryFilesResolved.length : 0;
+        if (!total) return;
+        lightboxIndex = (lightboxIndex + delta + total) % total;
+        const src = galleryFilesResolved[lightboxIndex];
+        const img = $("#lightboxImg");
+        if (img) img.src = src;
+        const counter = $("#lightboxCounter");
+        if (counter) counter.textContent = `${lightboxIndex + 1} / ${total}`;
+        resetLightboxTransform();
+        preloadGalleryAround(lightboxIndex);
+      }
+
+      function preloadGalleryAround(idx) {
+        const total = Array.isArray(galleryFilesResolved) ? galleryFilesResolved.length : 0;
+        if (!total) return;
+        const around = [idx - 1, idx + 1].map((i) => (i + total) % total);
+        around.forEach((i) => {
+          const src = galleryFilesResolved[i];
+          if (!src) return;
+          const im = new Image();
+          im.src = src;
+        });
+      }
+
+      function applyLightboxTransform() {
+        const pan = $("#lightboxPan");
+        if (!pan) return;
+        pan.style.transform = `translate3d(${lbTx}px, ${lbTy}px, 0) scale(${lbScale})`;
+      }
+
+      function resetLightboxTransform() {
+        lbScale = 1;
+        lbTx = 0;
+        lbTy = 0;
+        lbPointers = new Map();
+        lbStart = null;
+        applyLightboxTransform();
+      }
+
+      function bindLightboxGestures() {
+        const stage = $("#lightboxStage");
+        if (!stage) return;
+
+        const onDown = (e) => {
+          stage.setPointerCapture?.(e.pointerId);
+          lbPointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+          if (lbPointers.size === 1) {
+            lbStart = { x: e.clientX, y: e.clientY, tx: lbTx, ty: lbTy, scale: lbScale, t0: Date.now() };
+          } else if (lbPointers.size === 2) {
+            const pts = Array.from(lbPointers.values());
+            const dx = pts[0].x - pts[1].x;
+            const dy = pts[0].y - pts[1].y;
+            const dist = Math.hypot(dx, dy) || 1;
+            lbStart = { dist, scale: lbScale, tx: lbTx, ty: lbTy };
+          }
+        };
+
+        const onMove = (e) => {
+          if (!lbPointers.has(e.pointerId)) return;
+          lbPointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+
+          // Pinch zoom
+          if (lbPointers.size === 2 && lbStart?.dist) {
+            const pts = Array.from(lbPointers.values());
+            const dx = pts[0].x - pts[1].x;
+            const dy = pts[0].y - pts[1].y;
+            const dist = Math.hypot(dx, dy) || 1;
+            const next = Math.max(1, Math.min(3.2, (lbStart.scale || 1) * (dist / lbStart.dist)));
+            lbScale = next;
+            applyLightboxTransform();
+            return;
+          }
+
+          if (!lbStart) return;
+          const dx = e.clientX - lbStart.x;
+          const dy = e.clientY - lbStart.y;
+
+          // Pan when zoomed
+          if (lbScale > 1.02) {
+            lbTx = (lbStart.tx || 0) + dx;
+            lbTy = (lbStart.ty || 0) + dy;
+            applyLightboxTransform();
+            return;
+          }
+
+          // Swipe nav when not zoomed
+          if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.2) {
+            // lock so it doesn't fire multiple times
+            lbStart = null;
+            lbPointers = new Map();
+            moveLightbox(dx < 0 ? 1 : -1);
+          }
+        };
+
+        const onUp = (e) => {
+          lbPointers.delete(e.pointerId);
+          if (lbPointers.size === 0) lbStart = null;
+          if (lbScale < 1.01) resetLightboxTransform();
+        };
+
+        const onWheel = (e) => {
+          if (prefersReducedMotion()) return;
+          e.preventDefault?.();
+          const delta = e.deltaY || 0;
+          const next = Math.max(1, Math.min(3.2, lbScale + (delta > 0 ? -0.1 : 0.1)));
+          lbScale = next;
+          applyLightboxTransform();
+        };
+
+        const onDbl = () => {
+          lbScale = lbScale > 1.4 ? 1 : 2.2;
+          lbTx = 0;
+          lbTy = 0;
+          applyLightboxTransform();
+        };
+
+        stage.addEventListener("pointerdown", onDown);
+        stage.addEventListener("pointermove", onMove);
+        stage.addEventListener("pointerup", onUp);
+        stage.addEventListener("pointercancel", onUp);
+        stage.addEventListener("wheel", onWheel, { passive: false });
+        stage.addEventListener("dblclick", onDbl);
       }
 
       function imgExists(src) {
@@ -1966,6 +2666,18 @@ END:VCALENDAR`;
           btn.addEventListener("click", () => closeDialog(btn.getAttribute("data-close")));
         });
 
+        // Lightbox controls + gestures
+        $("#btnLightboxPrev")?.addEventListener("click", () => moveLightbox(-1));
+        $("#btnLightboxNext")?.addEventListener("click", () => moveLightbox(1));
+        bindLightboxGestures();
+        document.addEventListener("keydown", (e) => {
+          const dlg = $("#dlgLightbox");
+          const open = !!(dlg && (dlg.open || dlg.hasAttribute("open")));
+          if (!open) return;
+          if (e.key === "ArrowLeft") moveLightbox(-1);
+          if (e.key === "ArrowRight") moveLightbox(1);
+        });
+
         $("#btnCopyAddr")?.addEventListener("click", () => copyText(WEDDING.addressText));
         $("#btnCopyMapLink")?.addEventListener("click", () => copyText(WEDDING.naviLink || ""));
         $("#btnShareMap")?.addEventListener("click", async () => {
@@ -1984,6 +2696,24 @@ END:VCALENDAR`;
           await copyText(url);
         });
 
+        // Bottom action bar (mobile)
+        $("#abMap")?.addEventListener("click", () => {
+          const dest = encodeURIComponent(String(WEDDING.placeText || WEDDING.addressText || "").trim());
+          const url = dest ? `https://www.google.com/maps/dir/?api=1&destination=${dest}` : String(WEDDING.naviLink || "");
+          if (url) window.open(url, "_blank", "noreferrer");
+        });
+        $("#abWhatsapp")?.addEventListener("click", () => openDialog("dlgQuickContact"));
+        $("#abPix")?.addEventListener("click", () => openDialog("dlgQuickPix"));
+        $("#abLang")?.addEventListener("click", () => {
+          const next = currentCountry === "KR" ? "BR" : "KR";
+          setCountry(next);
+          toast(next === "KR" ? t("toast.langKo") : t("toast.langPt"));
+        });
+        $("#abTheme")?.addEventListener("click", toggleTheme);
+
+        $("#quickPixGroom")?.addEventListener("click", () => copyText(String(WEDDING.gift.groomBank || "")));
+        $("#quickPixBride")?.addEventListener("click", () => copyText(String(WEDDING.gift.brideBank || "")));
+
         $$("[data-copy]").forEach((btn) => {
           btn.addEventListener("click", () => {
             const sel = btn.getAttribute("data-copy");
@@ -1995,12 +2725,26 @@ END:VCALENDAR`;
 
         // Guestbook
         $("#btnGbSubmit")?.addEventListener("click", async () => {
-          const ok = await guestbookApi.add({
-            name: $("#gbName").value,
-            message: $("#gbMessage").value,
-          });
+          const name = $("#gbName").value;
+          const message = $("#gbMessage").value;
+          const msgNorm = normalizeMessage(message);
+          if (!msgNorm) return toast(t("toast.needMessage"));
+
+          const now = Date.now();
+          const lastTs = Number(localStorage.getItem(GB_LAST_TS_KEY) || "0");
+          const cooldownMs = 10_000;
+          if (now - lastTs < cooldownMs) {
+            const sec = Math.ceil((cooldownMs - (now - lastTs)) / 1000);
+            return toast(t("toast.cooldown", { sec }));
+          }
+          const lastMsg = String(localStorage.getItem(GB_LAST_MSG_KEY) || "");
+          if (lastMsg && lastMsg === msgNorm) return toast(t("toast.duplicate"));
+
+          const ok = await guestbookApi.add({ name, message });
           if (!ok) return toast(t("toast.needMessage"));
           $("#gbMessage").value = "";
+          localStorage.setItem(GB_LAST_TS_KEY, String(now));
+          localStorage.setItem(GB_LAST_MSG_KEY, msgNorm);
           toast(t("toast.leftMessage"));
           renderGuestbook();
         });
@@ -2059,27 +2803,51 @@ END:VCALENDAR`;
           card.style.background = "rgba(255,255,255,.68)";
           const when = new Date(it.time || Date.now());
           const stamp = `${when.getFullYear()}.${String(when.getMonth() + 1).padStart(2, "0")}.${String(when.getDate()).padStart(2, "0")}`;
+          const id = guestbookItemId(it);
+          const liked = isGuestbookLiked(id);
           card.innerHTML = `
-            <div style="display:flex;justify-content:space-between;gap:10px;align-items:baseline">
-              <strong style="font-size:14px">${escapeHtml(it.name || t("guestbook.anonymous"))}</strong>
-              <span class="muted" style="font-size:12px">${stamp}</span>
+            <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start">
+              <div style="min-width:0">
+                <strong style="font-size:14px">${escapeHtml(it.name || t("guestbook.anonymous"))}</strong>
+                <div class="muted" style="font-size:12px;margin-top:2px">${stamp}</div>
+              </div>
+              <button
+                class="icon-btn"
+                type="button"
+                data-like="${escapeHtml(id)}"
+                aria-label="Like"
+                style="padding:8px 10px;min-height:40px;${liked ? "border-color: rgba(200, 164, 107, 0.55); box-shadow: 0 0 0 3px rgba(200, 164, 107, 0.16);" : ""}"
+              >
+                <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" style="display:block">
+                  <path
+                    d="M12 21s-7-4.6-9.3-9.1C1.3 8.7 3.2 6 6.2 6c1.7 0 3 .8 3.8 1.8C10.8 6.8 12.1 6 13.8 6c3 0 4.9 2.7 3.5 5.9C19 16.4 12 21 12 21z"
+                    fill="${liked ? "rgba(200, 164, 107, 0.92)" : "rgba(16, 32, 36, 0.22)"}"
+                  />
+                </svg>
+              </button>
             </div>
             <div style="margin-top:8px;font-size:14px;line-height:1.7">${escapeHtml(it.message || "")}</div>
           `;
           root.appendChild(card);
+          card.querySelector("[data-like]")?.addEventListener("click", () => {
+            toggleGuestbookLike(id);
+            renderGuestbookList();
+          });
         });
       }
 
       // ================== BOOT ==================
+      initTheme(resolveInitialTheme());
       initCountry(resolveInitialCountry());
       initFirebaseIfEnabled();
       setDataModeUI();
       bindContent();
+      initHeroMotion();
       bindUI();
       renderGuestbook();
       setHeroImage();
       buildGallery();
+      initIntro();
     </script>
   </body>
 </html>
-
