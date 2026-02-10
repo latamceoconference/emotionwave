@@ -21,7 +21,6 @@
 
     <!-- Optional: Firebase(Realtime Database) 공유 모드 사용 시에만 필요합니다. (README 참고) -->
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 
     <style>
@@ -311,19 +310,6 @@
         font-size: 15px;
         line-height: 1.7;
         margin: 0 0 18px;
-      }
-      .hero-quote {
-        margin: -8px 0 14px;
-        padding-left: 12px;
-        border-left: 2px solid rgba(200, 164, 107, 0.65);
-        font-size: 15px;
-        line-height: 1.7;
-        color: rgba(16, 32, 36, 0.88);
-        letter-spacing: -0.01em;
-      }
-      :root[data-theme="dark"] .hero-quote {
-        border-left-color: rgba(200, 164, 107, 0.62);
-        color: rgba(255, 255, 255, 0.88);
       }
       .cta-row {
         display: flex;
@@ -872,112 +858,6 @@
         font-size: 13px;
         opacity: 0.9;
       }
-      .intro-quote {
-        margin-top: 10px;
-        font-size: 14px;
-        line-height: 1.7;
-        opacity: 0.92;
-        padding-left: 12px;
-        border-left: 2px solid rgba(255, 255, 255, 0.38);
-      }
-      .intro-meta {
-        opacity: 0;
-        transform: translateY(6px);
-      }
-      .intro.show .intro-meta {
-        animation: fadeUp 0.6s ease forwards;
-        animation-delay: 2s;
-      }
-      .intro.show .intro-quote {
-        animation: fadeUp 0.6s ease forwards;
-        animation-delay: 0.3s;
-      }
-      @keyframes fadeUp {
-        from {
-          opacity: 0;
-          transform: translateY(8px);
-          filter: blur(2px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-          filter: blur(0);
-        }
-      }
-
-      /* ====== Story scroll (K-style narrative) ====== */
-      .story {
-        position: relative;
-      }
-      .story-grid {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 12px;
-      }
-      .story-line {
-        position: absolute;
-        left: 28px;
-        top: 26px;
-        bottom: 26px;
-        width: 2px;
-        background: linear-gradient(180deg, rgba(200, 164, 107, 0.0), rgba(200, 164, 107, 0.55), rgba(200, 164, 107, 0.0));
-        border-radius: 999px;
-        pointer-events: none;
-      }
-      :root[data-theme="dark"] .story-line {
-        background: linear-gradient(180deg, rgba(200, 164, 107, 0.0), rgba(200, 164, 107, 0.48), rgba(200, 164, 107, 0.0));
-      }
-      .story-item {
-        display: grid;
-        grid-template-columns: 40px 1fr;
-        gap: 12px;
-        align-items: start;
-      }
-      .story-dot {
-        width: 14px;
-        height: 14px;
-        border-radius: 999px;
-        background: rgba(200, 164, 107, 0.92);
-        box-shadow: 0 10px 30px rgba(200, 164, 107, 0.25);
-        margin-top: 4px;
-        margin-left: 21px;
-      }
-      .story-text {
-        font-size: 15px;
-        line-height: 1.8;
-        color: rgba(16, 32, 36, 0.88);
-      }
-      :root[data-theme="dark"] .story-text {
-        color: rgba(255, 255, 255, 0.86);
-      }
-      .story-text .muted {
-        font-size: 13px;
-      }
-      @media (max-width: 560px) {
-        .story-line {
-          left: 22px;
-        }
-        .story-item {
-          grid-template-columns: 32px 1fr;
-        }
-        .story-dot {
-          margin-left: 14px;
-        }
-      }
-
-      /* ====== Reveal on scroll ====== */
-      [data-reveal] {
-        opacity: 0;
-        transform: translateY(10px);
-        filter: blur(2px);
-        transition: opacity 0.6s ease, transform 0.6s ease, filter 0.6s ease;
-        transition-delay: var(--d, 0ms);
-      }
-      [data-reveal].in {
-        opacity: 1;
-        transform: translateY(0);
-        filter: blur(0);
-      }
       .intro-actions {
         display: flex;
         gap: 10px;
@@ -1283,7 +1163,6 @@
       <div class="intro-card" role="dialog" aria-modal="true" aria-label="Intro">
         <div class="intro-kicker" data-i18n="intro.kicker">WEDDING INVITATION</div>
         <div class="intro-names" id="introNames">Haseung Song · Larissa Vilas Boas de Araujo</div>
-        <div class="intro-quote" data-i18n="intro.quote">Um dia especial, com pessoas muito especiais.</div>
         <div class="intro-meta" id="introMeta">2026. 05. 30 · Rancho do Celso - Rifaina/SP</div>
         <div class="intro-actions">
           <button class="btn primary" id="btnIntroEnter" type="button" data-i18n="intro.enter">Entrar</button>
@@ -1347,7 +1226,6 @@
                   2026. 05. 30 (sáb) 16:30<br />
                   Rancho do Celso
                 </p>
-                <p class="hero-quote" data-i18n="hero.quote" data-reveal style="--d: 40ms">Hoje, escolhemos caminhar juntos.</p>
                 <p class="personal" id="personalGreeting" aria-live="polite"></p>
                 <div class="cta-row">
                   <button class="btn" id="btnCalendar" type="button" data-i18n="hero.calendar">Adicionar ao calendário</button>
@@ -1368,41 +1246,6 @@
                 <div class="pill">
                   <strong data-i18n="pill.place">Local</strong>
                   <span id="pillPlace">Rancho do Celso</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="story" class="story">
-        <div class="wrap">
-          <h2 class="section-title" data-i18n="section.story.title" data-reveal style="--d: 0ms">A nossa história</h2>
-          <p class="section-sub" data-i18n="section.story.sub" data-reveal style="--d: 70ms">Um convite em cinco cenas.</p>
-
-          <div class="card" style="position: relative; overflow: hidden">
-            <div class="story-line" aria-hidden="true"></div>
-            <div class="story-grid" aria-label="Story">
-              <div class="story-item" data-reveal style="--d: 0ms">
-                <div class="story-dot" aria-hidden="true"></div>
-                <div class="story-text" data-i18n="section.story.beat1">Tudo começou com um encontro simples.</div>
-              </div>
-              <div class="story-item" data-reveal style="--d: 90ms">
-                <div class="story-dot" aria-hidden="true"></div>
-                <div class="story-text" data-i18n="section.story.beat2">Com o tempo, cresceu a certeza.</div>
-              </div>
-              <div class="story-item" data-reveal style="--d: 180ms">
-                <div class="story-dot" aria-hidden="true"></div>
-                <div class="story-text" data-i18n="section.story.beat3">E tomamos uma decisão para a vida inteira.</div>
-              </div>
-              <div class="story-item" data-reveal style="--d: 270ms">
-                <div class="story-dot" aria-hidden="true"></div>
-                <div class="story-text" data-i18n="section.story.beat4">Com alegria, convidamos você para este momento.</div>
-              </div>
-              <div class="story-item" data-reveal style="--d: 360ms">
-                <div class="story-dot" aria-hidden="true"></div>
-                <div class="story-text">
-                  <span data-i18n="section.story.beat5">A seguir, confira as informações do evento.</span>
                 </div>
               </div>
             </div>
@@ -1861,8 +1704,8 @@
           screen: { overlay: "Uma onda de felicitações, feita por todos" },
           nav: { info: "Informações", location: "Como chegar", gallery: "Galeria", activity: "Participar", gift: "Presentes" },
           navShort: { info: "Info", location: "Mapa", gallery: "Fotos", activity: "Ativ.", gift: "PIX" },
-          hero: { kicker: "INVITATION", quote: "Hoje, escolhemos caminhar juntos.", calendar: "Adicionar ao calendário", join: "Participar", directions: "Rotas" },
-          intro: { kicker: "WEDDING INVITATION", quote: "Um dia especial, com pessoas muito especiais.", enter: "Entrar", skip: "Pular", scroll: "Role para continuar" },
+          hero: { kicker: "INVITATION", calendar: "Adicionar ao calendário", join: "Participar", directions: "Rotas" },
+          intro: { kicker: "WEDDING INVITATION", enter: "Entrar", skip: "Pular", scroll: "Role para continuar" },
           personal: { greeting: "{name}, que alegria ter você aqui." },
           quick: {
             map: "Mapa",
@@ -1885,15 +1728,6 @@
           },
           pill: { ceremony: "Cerimônia", place: "Local" },
           section: {
-            story: {
-              title: "A nossa história",
-              sub: "Um convite em cinco cenas.",
-              beat1: "Tudo começou com um encontro simples.",
-              beat2: "Com o tempo, cresceu a certeza.",
-              beat3: "E tomamos uma decisão para a vida inteira.",
-              beat4: "Com alegria, convidamos você para este momento.",
-              beat5: "A seguir, confira as informações do evento.",
-            },
             invite: {
               title: "Convidamos você",
               text:
@@ -1906,7 +1740,7 @@
               title: "Presentes",
               sub: "Sua presença já é muito especial para nós. Caso deseje nos presentear, uma contribuição via PIX será recebida com carinho.",
             },
-            footer: { note: "Obrigado(a) por estar conosco neste dia tão especial." },
+            footer: { note: "Esta página é um único `index.html`, pronta para GitHub Pages." },
           },
           info: {
             dateLabel: "Data",
@@ -1973,8 +1807,6 @@
             downloaded: "Arquivo do calendário baixado",
             needMessage: "Digite uma mensagem",
             leftMessage: "Enviado",
-            fbWriteFail: "Não foi possível salvar no modo compartilhado. Verifique as regras do Firebase (Realtime Database) e tente novamente.",
-            fbReadFail: "Não foi possível carregar mensagens compartilhadas. Verifique as regras do Firebase (Realtime Database).",
             cleared: "Limpo",
             voted: "Votado",
             joined: "Participação enviada",
@@ -1998,8 +1830,8 @@
           screen: { overlay: "함께 만드는 축하의 파도" },
           nav: { info: "안내", location: "오시는 길", gallery: "갤러리", activity: "참여", gift: "마음 전하실 곳" },
           navShort: { info: "안내", location: "지도", gallery: "사진", activity: "참여", gift: "PIX" },
-          hero: { kicker: "INVITATION", quote: "오늘, 저희는 같은 길을 걷기로 했습니다.", calendar: "캘린더 추가", join: "축하 참여하기", directions: "길찾기" },
-          intro: { kicker: "WEDDING INVITATION", quote: "소중한 분들과 함께하는 특별한 날입니다.", enter: "입장하기", skip: "건너뛰기", scroll: "스크롤해서 계속" },
+          hero: { kicker: "INVITATION", calendar: "캘린더 추가", join: "축하 참여하기", directions: "길찾기" },
+          intro: { kicker: "WEDDING INVITATION", enter: "입장하기", skip: "건너뛰기", scroll: "스크롤해서 계속" },
           personal: { greeting: "{name}님, 와주셔서 정말 감사해요." },
           quick: {
             map: "지도",
@@ -2022,15 +1854,6 @@
           },
           pill: { ceremony: "예식", place: "장소" },
           section: {
-            story: {
-              title: "우리의 이야기",
-              sub: "다섯 장면으로 전하는 초대",
-              beat1: "작은 만남에서 시작되었습니다.",
-              beat2: "시간이 흐르며 확신이 자라났고",
-              beat3: "평생을 함께하기로 결심했습니다.",
-              beat4: "기쁜 마음으로 이 자리에 초대합니다.",
-              beat5: "아래에서 행사 정보를 확인해 주세요.",
-            },
             invite: {
               title: "초대합니다",
               text: "서로 다른 길을 걸어온 두 사람이 한 길을 걷기로 했습니다.<br />소중한 분들과 함께 그 시작을 나누고 싶습니다.<br />귀한 걸음으로 자리를 빛내 주세요.",
@@ -2042,7 +1865,7 @@
               title: "마음 전하실 곳",
               sub: "함께해 주시는 것만으로도 큰 기쁨입니다.<br />혹시 마음을 전하고 싶으시다면, PIX로 따뜻한 마음을 전해주셔도 감사히 받겠습니다.",
             },
-            footer: { note: "와주셔서 정말 감사합니다." },
+            footer: { note: "이 페이지는 단일 `index.html`로 구성되어 GitHub Pages에 바로 올릴 수 있습니다." },
           },
           info: {
             dateLabel: "일시",
@@ -2105,8 +1928,6 @@
             downloaded: "캘린더 파일을 내려받았습니다",
             needMessage: "메시지를 입력해 주세요",
             leftMessage: "남겼습니다",
-            fbWriteFail: "공유 모드(Firebase)에 저장하지 못했어요. Realtime Database 규칙(Rules)을 확인해 주세요.",
-            fbReadFail: "공유 메시지를 불러오지 못했어요. Realtime Database 규칙(Rules)을 확인해 주세요.",
             cleared: "초기화했습니다",
             voted: "투표했습니다",
             joined: "참여했습니다",
@@ -2276,27 +2097,6 @@
         io.observe(hero);
       }
 
-      function initReveals() {
-        const els = $$("[data-reveal]");
-        if (els.length === 0) return;
-        if (prefersReducedMotion() || !("IntersectionObserver" in window)) {
-          els.forEach((el) => el.classList.add("in"));
-          return;
-        }
-        const io = new IntersectionObserver(
-          (entries) => {
-            entries.forEach((en) => {
-              if (en.isIntersecting) {
-                en.target.classList.add("in");
-                io.unobserve(en.target);
-              }
-            });
-          },
-          { threshold: 0.18, rootMargin: "0px 0px -10% 0px" }
-        );
-        els.forEach((el) => io.observe(el));
-      }
-
       function resolveInitialCountry() {
         const c = String(params.get("country") || "").toUpperCase();
         if (c === "KR" || c === "BR") return c;
@@ -2405,34 +2205,10 @@
         const ok = required.every((k) => String(cfg[k] || "").trim().length > 0);
         if (!ok) return false;
 
-        if (!window.firebase || typeof firebase.initializeApp !== "function") {
-          console.warn("Firebase SDK not loaded. Falling back to local mode.");
-          db = null;
-          dataMode = "local";
-          return false;
-        }
-
         try {
-          // Avoid duplicate init errors
-          if (Array.isArray(firebase.apps) && firebase.apps.length) {
-            // already initialized
-          } else {
-            firebase.initializeApp(cfg);
-          }
+          firebase.initializeApp(cfg);
           db = firebase.database();
           dataMode = "shared";
-
-          // Optional: anonymous auth (recommended if DB rules require auth != null)
-          try {
-            if (typeof firebase.auth === "function") {
-              const auth = firebase.auth();
-              // Fire and forget; DB rules may be open anyway.
-              auth.signInAnonymously().catch((e) => console.warn("Anonymous auth failed:", e));
-            }
-          } catch (e) {
-            console.warn("Auth init failed:", e);
-          }
-
           return true;
         } catch (e) {
           console.warn("Firebase init failed:", e);
@@ -2476,16 +2252,9 @@
           if (!item.message) return false;
 
           if (dataMode === "shared" && db) {
-            try {
-              const ref = db.ref("wedding/guestbook").push();
-              const id = ref.key || tmpId;
-              await ref.set({ ...item, id });
-            } catch (e) {
-              console.warn("Guestbook write failed:", e);
-              // Most common: PERMISSION_DENIED due to RTDB rules
-              toast(t("toast.fbWriteFail"));
-              return false;
-            }
+            const ref = db.ref("wedding/guestbook").push();
+            const id = ref.key || tmpId;
+            await ref.set({ ...item, id });
           } else {
             const list = lsGet(LS_KEYS.guestbook, []);
             list.unshift(item);
@@ -2506,15 +2275,7 @@
               arr.sort((a, b) => (b.time || 0) - (a.time || 0));
               cb(arr);
             };
-            guestbookApi._ref.on(
-              "value",
-              guestbookApi._handler,
-              (e) => {
-                console.warn("Guestbook read failed:", e);
-                toast(t("toast.fbReadFail"));
-                cb(lsGet(LS_KEYS.guestbook, []));
-              }
-            );
+            guestbookApi._ref.on("value", guestbookApi._handler);
           } else {
             cb(lsGet(LS_KEYS.guestbook, []));
           }
@@ -3318,7 +3079,6 @@ END:VCALENDAR`;
       setDataModeUI();
       bindContent();
       initHeroMotion();
-      initReveals();
       bindUI();
       renderGuestbook();
       setHeroImage();
