@@ -883,6 +883,85 @@
       .menu-grid {
         grid-template-columns: repeat(3, minmax(0, 1fr));
       }
+      .program-showcase {
+        display: grid;
+        grid-template-columns: minmax(0, 1.04fr) minmax(0, 0.96fr);
+        gap: 18px;
+        margin-top: 18px;
+        align-items: stretch;
+      }
+      .program-showcase-media {
+        position: relative;
+        overflow: hidden;
+        border-radius: 20px;
+        min-height: 280px;
+        border: 1px solid rgba(16, 32, 36, 0.08);
+        background: linear-gradient(135deg, rgba(200, 164, 107, 0.16), rgba(125, 184, 196, 0.1));
+      }
+      .program-showcase-media img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      .program-showcase-copy {
+        display: grid;
+        gap: 14px;
+        align-content: center;
+      }
+      .program-showcase-title {
+        margin: 0;
+        font-family: var(--font-display);
+        font-size: 28px;
+        line-height: 1.35;
+      }
+      .program-showcase-sub {
+        margin: 0;
+        color: var(--sub);
+        font-size: 14px;
+        line-height: 1.8;
+      }
+      .program-showcase-note {
+        margin: 0;
+        padding: 14px 16px;
+        border-radius: 18px;
+        border: 1px solid rgba(16, 32, 36, 0.08);
+        background: rgba(255, 255, 255, 0.58);
+        font-size: 14px;
+        line-height: 1.85;
+        color: var(--ink);
+      }
+      :root[data-theme="dark"] .program-showcase-note {
+        border-color: rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.04);
+      }
+      #dlgProgramLayout {
+        width: min(1120px, calc(100% - 24px));
+      }
+      .program-layout-stage {
+        display: grid;
+        gap: 16px;
+      }
+      .program-layout-image {
+        border-radius: 18px;
+        overflow: hidden;
+        border: 1px solid rgba(16, 32, 36, 0.08);
+        background: linear-gradient(135deg, rgba(200, 164, 107, 0.16), rgba(125, 184, 196, 0.1));
+      }
+      .program-layout-image img {
+        width: 100%;
+        display: block;
+      }
+      .program-layout-copy {
+        margin: 0;
+        color: var(--sub);
+        font-size: 14px;
+        line-height: 1.8;
+      }
+      :root[data-theme="dark"] .program-layout-image {
+        border-color: rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.04);
+      }
       .menu-showcase {
         display: grid;
         grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
@@ -1173,6 +1252,7 @@
         .timeline {
           grid-template-columns: repeat(2, minmax(0, 1fr));
         }
+        .program-showcase,
         .menu-grid {
           grid-template-columns: 1fr;
         }
@@ -1897,6 +1977,20 @@
           <h2 class="section-title" data-i18n="section.program.title">Programa do dia</h2>
           <p class="section-sub" data-i18n="section.program.sub">Uma jornada suave do pôr do sol até a celebração da noite.</p>
           <div class="timeline" id="programGrid"></div>
+          <div class="card program-showcase">
+            <div class="program-showcase-media">
+              <img id="programLayoutImg" src="layout1.png" alt="Venue layout" />
+            </div>
+            <div class="program-showcase-copy">
+              <div class="kicker" data-i18n="programLayout.kicker">VENUE LAYOUT</div>
+              <h3 class="program-showcase-title" data-i18n="programLayout.title">Layout do espaco</h3>
+              <p class="program-showcase-sub" data-i18n="programLayout.sub">Veja como a cerimônia e a recepcao foram organizadas no espaco.</p>
+              <p class="program-showcase-note" id="programLayoutNote"></p>
+              <div class="cta-row">
+                <button class="btn primary" id="btnProgramLayout" type="button" data-i18n="programLayout.button">Ver layout</button>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -2302,6 +2396,28 @@
       </div>
     </dialog>
 
+    <dialog id="dlgProgramLayout" aria-label="Venue layout">
+      <div class="dlg-head">
+        <div class="dlg-head-left">
+          <h3 data-i18n="dlg.programLayout.title">식장 레이아웃 안내</h3>
+          <span class="dlg-sub" data-i18n="dlg.programLayout.sub">행사 공간 구성을 한눈에 보실 수 있습니다.</span>
+        </div>
+        <div class="dlg-head-right">
+          <button class="icon-btn" type="button" data-close="dlgProgramLayout" data-i18n="common.close" data-i18n-aria="aria.close" aria-label="Fechar">
+            Fechar
+          </button>
+        </div>
+      </div>
+      <div class="dlg-body">
+        <div class="program-layout-stage">
+          <div class="program-layout-image">
+            <img id="programLayoutDialogImg" src="layout1.png" alt="Venue layout card" />
+          </div>
+          <p class="program-layout-copy" id="programLayoutDialogCopy"></p>
+        </div>
+      </div>
+    </dialog>
+
     <script>
       // ================== CONFIG (여기만 수정하면 됩니다) ==================
       const WEDDING = {
@@ -2394,6 +2510,13 @@
             text: { pt: "Mesa preparada com carinho para começar a noite de festa.", ko: "정성껏 준비한 식사와 함께 본격적인 축하가 이어집니다." },
           },
         ],
+        programLayout: {
+          image: "layout1.png",
+          note: {
+            pt: "Este layout ajuda a visualizar com mais clareza o fluxo entre a cerimonia, a recepcao e a area do jantar.",
+            ko: "식장 레이아웃을 통해 예식 공간, 리셉션, 식사 구성을 미리 편안하게 살펴보실 수 있습니다.",
+          },
+        },
         menuSections: [
           {
             title: { pt: "Mesa principal", ko: "메인 메뉴" },
@@ -2648,6 +2771,12 @@
           personal: { greeting: "{name}, que alegria ter você aqui." },
           story: { kicker: "OUR STORY", highlightsKicker: "HIGHLIGHTS" },
           essentials: { noticeKicker: "EVENT NOTES" },
+          programLayout: {
+            kicker: "VENUE LAYOUT",
+            title: "Layout do espaco",
+            sub: "Veja como a cerimonia e a recepcao foram organizadas no espaco.",
+            button: "Ver layout",
+          },
           menuShowcase: {
             kicker: "WEDDING MENU",
             title: "Menu Guide",
@@ -2773,6 +2902,10 @@
               hint: "Deslize para mudar · Pinça para zoom · Duplo toque para ajustar · Deslize para baixo para fechar",
               alt: "Imagem ampliada",
             },
+            programLayout: {
+              title: "Layout do espaco",
+              sub: "Visualize a organizacao do espaco da cerimonia e da recepcao.",
+            },
             menu: {
               title: "Guia do menu do casamento",
               sub: "Imagem do cardapio e apresentacao completa do menu.",
@@ -2819,6 +2952,12 @@
           personal: { greeting: "{name}님, 와주셔서 정말 감사해요." },
           story: { kicker: "OUR STORY", highlightsKicker: "HIGHLIGHTS" },
           essentials: { noticeKicker: "EVENT NOTES" },
+          programLayout: {
+            kicker: "VENUE LAYOUT",
+            title: "식장 레이아웃 안내",
+            sub: "예식과 리셉션 공간이 어떻게 구성되는지 한눈에 보실 수 있습니다.",
+            button: "레이아웃 보기",
+          },
           menuShowcase: {
             kicker: "WEDDING MENU",
             title: "식사 메뉴 안내",
@@ -2939,6 +3078,7 @@
           },
           dlg: {
             photo: { title: "사진", hint: "스와이프로 넘기기 · 핀치로 확대 · 더블탭으로 맞춤 · 아래로 스와이프 닫기", alt: "확대 이미지" },
+            programLayout: { title: "식장 레이아웃 안내", sub: "예식 공간 구성을 크게 확인하실 수 있습니다." },
             menu: { title: "웨딩 메뉴 안내", sub: "메뉴 이미지와 한국어 설명을 함께 확인하실 수 있습니다." },
           },
           gift: { groomSide: "신랑 측", brideSide: "신부 측", holder: "예금주", account: "계좌" },
@@ -3503,6 +3643,7 @@
         renderStoryMoments();
         renderHostHighlights();
         renderProgram();
+        renderProgramLayout();
         renderMenu();
         renderMenuBrochure();
         renderHeroFacts();
@@ -3697,6 +3838,20 @@
             `
           )
           .join("");
+      }
+
+      function renderProgramLayout() {
+        const data = WEDDING.programLayout || {};
+        const imageSrc = String(data.image || "layout1.png").trim() || "layout1.png";
+        const cardImg = $("#programLayoutImg");
+        const dialogImg = $("#programLayoutDialogImg");
+        const cardNote = $("#programLayoutNote");
+        const dialogCopy = $("#programLayoutDialogCopy");
+
+        if (cardImg) cardImg.setAttribute("src", imageSrc);
+        if (dialogImg) dialogImg.setAttribute("src", imageSrc);
+        if (cardNote) cardNote.textContent = tl(data.note);
+        if (dialogCopy) dialogCopy.textContent = tl(data.note);
       }
 
       function renderMenu() {
@@ -4362,6 +4517,11 @@ END:VCALENDAR`;
         $("#quickPixBride")?.addEventListener("click", () => {
           haptic(8);
           copyText(String(WEDDING.gift.brideBank || ""));
+        });
+
+        $("#btnProgramLayout")?.addEventListener("click", () => {
+          haptic(10);
+          openDialog("dlgProgramLayout");
         });
 
         $("#btnMenuBrochure")?.addEventListener("click", () => {
