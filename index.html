@@ -19,7 +19,7 @@
       rel="stylesheet"
     />
 
-    <!-- Optional: Firebase(Realtime Database) 공유 모드 사용 시에만 필요합니다. (README 참고) -->
+    <!-- Optional: Firebase (Realtime Database) for shared RSVP / guestbook -->
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 
@@ -935,8 +935,24 @@
         border-color: rgba(255, 255, 255, 0.1);
         background: rgba(255, 255, 255, 0.04);
       }
-      #dlgProgramLayout {
+      #dlgProgramLayout,
+      #dlgMenuLayout2 {
         width: min(1120px, calc(100% - 24px));
+        max-height: calc(100vh - 16px);
+      }
+      .program-layout-row {
+        margin-top: 20px;
+        display: flex;
+        justify-content: center;
+      }
+      .dlg-head--tools-only {
+        justify-content: flex-end;
+      }
+      .dlg-body--program-layout {
+        padding-top: 8px;
+        max-height: min(78vh, calc(100vh - 88px));
+        overflow: auto;
+        -webkit-overflow-scrolling: touch;
       }
       .program-layout-stage {
         display: grid;
@@ -950,6 +966,8 @@
       }
       .program-layout-image img {
         width: 100%;
+        max-width: 100%;
+        height: auto;
         display: block;
       }
       .program-layout-copy {
@@ -987,6 +1005,12 @@
         display: grid;
         gap: 14px;
         align-content: center;
+      }
+      .menu-showcase-cta {
+        align-items: stretch;
+      }
+      .menu-showcase-cta .btn {
+        min-width: 0;
       }
       .menu-showcase-title {
         margin: 0;
@@ -1826,7 +1850,6 @@
                 <div class="hero-quote" id="heroQuote"></div>
                 <div class="hero-facts" id="heroFacts"></div>
                 <div class="hr"></div>
-                <div class="badge" id="dataModeBadge" data-i18n="data.local">Dados: neste dispositivo (local)</div>
               </div>
             </div>
 
@@ -1977,19 +2000,8 @@
           <h2 class="section-title" data-i18n="section.program.title">Programa do dia</h2>
           <p class="section-sub" data-i18n="section.program.sub">Uma jornada suave do pôr do sol até a celebração da noite.</p>
           <div class="timeline" id="programGrid"></div>
-          <div class="card program-showcase">
-            <div class="program-showcase-media">
-              <img id="programLayoutImg" src="layout1.png" alt="Venue layout" />
-            </div>
-            <div class="program-showcase-copy">
-              <div class="kicker" data-i18n="programLayout.kicker">VENUE LAYOUT</div>
-              <h3 class="program-showcase-title" data-i18n="programLayout.title">Layout do espaco</h3>
-              <p class="program-showcase-sub" data-i18n="programLayout.sub">Veja como a cerimônia e a recepcao foram organizadas no espaco.</p>
-              <p class="program-showcase-note" id="programLayoutNote"></p>
-              <div class="cta-row">
-                <button class="btn primary" id="btnProgramLayout" type="button" data-i18n="programLayout.button">Ver layout</button>
-              </div>
-            </div>
+          <div class="program-layout-row">
+            <button class="btn primary" id="btnProgramLayout" type="button" data-i18n="programLayout.button">Layout</button>
           </div>
         </div>
       </section>
@@ -2009,8 +2021,9 @@
               <p class="menu-showcase-sub" data-i18n="menuShowcase.sub">
                 Conheca a composicao do jantar e veja o cardapio preparado para a celebracao.
               </p>
-              <div class="cta-row">
+              <div class="cta-row menu-showcase-cta">
                 <button class="btn primary" id="btnMenuBrochure" type="button" data-i18n="menuShowcase.button">Ver menu completo</button>
+                <button class="btn ghost" id="btnMenuLayout2" type="button" data-i18n="menuLayout2.button">Salão</button>
               </div>
             </div>
           </div>
@@ -2396,30 +2409,42 @@
       </div>
     </dialog>
 
-    <dialog id="dlgProgramLayout" aria-label="Venue layout">
-      <div class="dlg-head">
-        <div class="dlg-head-left">
-          <h3 data-i18n="dlg.programLayout.title">식장 레이아웃 안내</h3>
-          <span class="dlg-sub" data-i18n="dlg.programLayout.sub">행사 공간 구성을 한눈에 보실 수 있습니다.</span>
-        </div>
+    <dialog id="dlgProgramLayout" aria-label="Layout">
+      <div class="dlg-head dlg-head--tools-only">
         <div class="dlg-head-right">
           <button class="icon-btn" type="button" data-close="dlgProgramLayout" data-i18n="common.close" data-i18n-aria="aria.close" aria-label="Fechar">
             Fechar
           </button>
         </div>
       </div>
-      <div class="dlg-body">
+      <div class="dlg-body dlg-body--program-layout">
         <div class="program-layout-stage">
           <div class="program-layout-image">
-            <img id="programLayoutDialogImg" src="layout1.png" alt="Venue layout card" />
+            <img id="programLayoutDialogImg" src="layout1.png" alt="" />
           </div>
-          <p class="program-layout-copy" id="programLayoutDialogCopy"></p>
+        </div>
+      </div>
+    </dialog>
+
+    <dialog id="dlgMenuLayout2" aria-label="Layout">
+      <div class="dlg-head dlg-head--tools-only">
+        <div class="dlg-head-right">
+          <button class="icon-btn" type="button" data-close="dlgMenuLayout2" data-i18n="common.close" data-i18n-aria="aria.close" aria-label="Fechar">
+            Fechar
+          </button>
+        </div>
+      </div>
+      <div class="dlg-body dlg-body--program-layout">
+        <div class="program-layout-stage">
+          <div class="program-layout-image">
+            <img id="menuLayout2DialogImg" src="layout2.png" alt="" />
+          </div>
         </div>
       </div>
     </dialog>
 
     <script>
-      // ================== CONFIG (여기만 수정하면 됩니다) ==================
+      // ================== Site content & settings ==================
       const WEDDING = {
         groomName: "Haseung Song",
         brideName: "Larissa Vilas Boas de Araujo",
@@ -2512,10 +2537,9 @@
         ],
         programLayout: {
           image: "layout1.png",
-          note: {
-            pt: "Este layout ajuda a visualizar com mais clareza o fluxo entre a cerimonia, a recepcao e a area do jantar.",
-            ko: "식장 레이아웃을 통해 예식 공간, 리셉션, 식사 구성을 미리 편안하게 살펴보실 수 있습니다.",
-          },
+        },
+        menuLayout2: {
+          image: "layout2.png",
         },
         menuSections: [
           {
@@ -2547,8 +2571,8 @@
         menuBrochure: {
           image: "Menu1.png",
           intro: {
-            pt: "Preparamos este guia para que todos possam conhecer o cardapio com tranquilidade. No modo em portugues, exibimos apenas a versao em portugues do menu.",
-            ko: "식사 메뉴 버튼을 누르면 실제 메뉴 이미지와 함께 한국어 설명을 한눈에 확인하실 수 있도록 준비했습니다. 브라질 메뉴가 익숙하지 않은 하객분들도 부담 없이 보실 수 있게 구성한 안내입니다.",
+            pt: "Um cardápio preparado com carinho para celebrarmos juntos.",
+            ko: "함께 나눌 식사를 정성껏 준비했습니다.",
           },
           sections: [
             {
@@ -2711,7 +2735,7 @@
           },
         ],
 
-        // Firebase 공유 모드 (선택): README대로 세팅 후 값 입력
+        // Firebase (optional): enable for cloud-synced RSVP / guestbook
         firebase: {
           enabled: true,
           config: {
@@ -2772,16 +2796,16 @@
           story: { kicker: "OUR STORY", highlightsKicker: "HIGHLIGHTS" },
           essentials: { noticeKicker: "EVENT NOTES" },
           programLayout: {
-            kicker: "VENUE LAYOUT",
-            title: "Layout do espaco",
-            sub: "Veja como a cerimonia e a recepcao foram organizadas no espaco.",
-            button: "Ver layout",
+            button: "Layout",
           },
           menuShowcase: {
             kicker: "WEDDING MENU",
             title: "Menu Guide",
             sub: "Conheca a composicao do jantar e veja o cardapio preparado para a celebracao.",
             button: "Ver menu completo",
+          },
+          menuLayout2: {
+            button: "Salão",
           },
           quick: {
             map: "Mapa",
@@ -2797,10 +2821,6 @@
           data: {
             local: "Evento ao ar livre – sapato confortável recomendado",
             shared: "Detalhes do nosso grande dia",
-            noteLocal: "Modo local. Para juntar participação de todos, ative o modo compartilhado (Firebase). (Veja o README)",
-            noteShared: "Modo compartilhado. A participação de todos aparece em tempo real.",
-            hintLocal: "No modo local, salva apenas neste dispositivo. No modo compartilhado (Firebase), soma respostas de todos.",
-            hintShared: "Modo compartilhado: respostas de todos ficam reunidas.",
           },
           pill: { ceremony: "Cerimônia", place: "Local" },
           section: {
@@ -2902,13 +2922,9 @@
               hint: "Deslize para mudar · Pinça para zoom · Duplo toque para ajustar · Deslize para baixo para fechar",
               alt: "Imagem ampliada",
             },
-            programLayout: {
-              title: "Layout do espaco",
-              sub: "Visualize a organizacao do espaco da cerimonia e da recepcao.",
-            },
             menu: {
               title: "Guia do menu do casamento",
-              sub: "Imagem do cardapio e apresentacao completa do menu.",
+              sub: "Cardápio preparado para a celebração.",
             },
           },
           gift: { groomSide: "Lado do noivo", brideSide: "Lado da noiva", holder: "Titular", account: "Conta" },
@@ -2917,7 +2933,7 @@
             copied: "Copiado",
             copyFail: "Falha ao copiar",
             checkInput: "Verifique os dados",
-            needDateISO: "Defina o dateISO",
+            needDateISO: "Calendário indisponível no momento.",
             downloaded: "Arquivo do calendário baixado",
             needMessage: "Digite uma mensagem",
             needRsvpName: "Informe o seu nome para o RSVP",
@@ -2934,7 +2950,7 @@
             langPt: "Português",
             langKo: "한국어",
           },
-          gallery: { needFiles: "Adicione fotos em assets/gallery/", open: "Abrir foto", alt: "Foto da galeria", more: "Ver todas ({count})", less: "Mostrar menos" },
+          gallery: { needFiles: "Galeria em atualização.", open: "Abrir foto", alt: "Foto da galeria", more: "Ver todas ({count})", less: "Mostrar menos" },
           aria: { whatsapp: "Abrir conversa no WhatsApp", close: "Fechar", prev: "Anterior", next: "Próxima", like: "Curtir" },
         },
         ko: {
@@ -2953,16 +2969,16 @@
           story: { kicker: "OUR STORY", highlightsKicker: "HIGHLIGHTS" },
           essentials: { noticeKicker: "EVENT NOTES" },
           programLayout: {
-            kicker: "VENUE LAYOUT",
-            title: "식장 레이아웃 안내",
-            sub: "예식과 리셉션 공간이 어떻게 구성되는지 한눈에 보실 수 있습니다.",
-            button: "레이아웃 보기",
+            button: "Layout",
           },
           menuShowcase: {
             kicker: "WEDDING MENU",
             title: "식사 메뉴 안내",
             sub: "식사 구성을 편안하게 살펴보실 수 있도록 메뉴 카드를 준비했습니다.",
             button: "전체 메뉴 보기",
+          },
+          menuLayout2: {
+            button: "연회장",
           },
           quick: {
             map: "지도",
@@ -2977,11 +2993,7 @@
           },
           data: {
             local: "야외 행사입니다 — 편한 신발을 추천드려요",
-            shared: "데이터 저장: 공유(Firebase)",
-            noteLocal: "현재는 “로컬 저장” 모드입니다. 여러 사람의 참여를 모으려면 Firebase 공유 모드를 설정해 주세요. (README 참고)",
-            noteShared: "지금은 “공유 모드”입니다. 여러 사람의 참여가 실시간으로 모입니다.",
-            hintLocal: "로컬 모드: 이 기기에서만 저장됩니다. 공유 모드를 켜면 여러 사람의 RSVP가 모입니다.",
-            hintShared: "공유 모드: 여러 사람의 RSVP가 한 곳에 모입니다.",
+            shared: "소중한 마음이 함께 모이는 공간입니다",
           },
           pill: { ceremony: "예식", place: "장소" },
           section: {
@@ -3078,8 +3090,7 @@
           },
           dlg: {
             photo: { title: "사진", hint: "스와이프로 넘기기 · 핀치로 확대 · 더블탭으로 맞춤 · 아래로 스와이프 닫기", alt: "확대 이미지" },
-            programLayout: { title: "식장 레이아웃 안내", sub: "예식 공간 구성을 크게 확인하실 수 있습니다." },
-            menu: { title: "웨딩 메뉴 안내", sub: "메뉴 이미지와 한국어 설명을 함께 확인하실 수 있습니다." },
+            menu: { title: "웨딩 메뉴 안내", sub: "메뉴 이미지와 안내를 함께 확인하실 수 있습니다." },
           },
           gift: { groomSide: "신랑 측", brideSide: "신부 측", holder: "예금주", account: "계좌" },
           common: { copy: "복사", close: "닫기", save: "저장" },
@@ -3087,7 +3098,7 @@
             copied: "복사했습니다",
             copyFail: "복사에 실패했습니다",
             checkInput: "입력값을 확인해 주세요",
-            needDateISO: "dateISO를 설정해 주세요",
+            needDateISO: "캘린더 파일을 만들 수 없습니다.",
             downloaded: "캘린더 파일을 내려받았습니다",
             needMessage: "메시지를 입력해 주세요",
             needRsvpName: "RSVP를 위해 성함을 입력해 주세요",
@@ -3104,7 +3115,7 @@
             langPt: "Português",
             langKo: "한국어",
           },
-          gallery: { needFiles: "assets/gallery/에 사진을 넣어주세요", open: "사진 확대", alt: "갤러리 사진", more: "전체 보기 ({count})", less: "접기" },
+          gallery: { needFiles: "사진을 준비 중입니다.", open: "사진 확대", alt: "갤러리 사진", more: "전체 보기 ({count})", less: "접기" },
           aria: { whatsapp: "WhatsApp으로 바로 연락하기", close: "닫기", prev: "이전 사진", next: "다음 사진", like: "하트" },
         },
       };
@@ -3644,6 +3655,7 @@
         renderHostHighlights();
         renderProgram();
         renderProgramLayout();
+        renderMenuLayout2();
         renderMenu();
         renderMenuBrochure();
         renderHeroFacts();
@@ -3843,15 +3855,15 @@
       function renderProgramLayout() {
         const data = WEDDING.programLayout || {};
         const imageSrc = String(data.image || "layout1.png").trim() || "layout1.png";
-        const cardImg = $("#programLayoutImg");
         const dialogImg = $("#programLayoutDialogImg");
-        const cardNote = $("#programLayoutNote");
-        const dialogCopy = $("#programLayoutDialogCopy");
-
-        if (cardImg) cardImg.setAttribute("src", imageSrc);
         if (dialogImg) dialogImg.setAttribute("src", imageSrc);
-        if (cardNote) cardNote.textContent = tl(data.note);
-        if (dialogCopy) dialogCopy.textContent = tl(data.note);
+      }
+
+      function renderMenuLayout2() {
+        const data = WEDDING.menuLayout2 || {};
+        const imageSrc = String(data.image || "layout2.png").trim() || "layout2.png";
+        const dialogImg = $("#menuLayout2DialogImg");
+        if (dialogImg) dialogImg.setAttribute("src", imageSrc);
       }
 
       function renderMenu() {
@@ -4527,6 +4539,11 @@ END:VCALENDAR`;
         $("#btnMenuBrochure")?.addEventListener("click", () => {
           haptic(10);
           openDialog("dlgMenuBrochure");
+        });
+
+        $("#btnMenuLayout2")?.addEventListener("click", () => {
+          haptic(10);
+          openDialog("dlgMenuLayout2");
         });
 
         // Gallery show more
