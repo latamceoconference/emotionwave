@@ -1,0 +1,4257 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="format-detection" content="telephone=no,date=no,address=no,email=no" />
+
+    <title>Convite de Casamento</title>
+    <meta name="description" content="Com alegria, convidamos você para o nosso casamento. Informações, localização e mensagens." />
+
+    <meta property="og:title" content="Convite de Casamento" />
+    <meta property="og:description" content="Informações, localização e mensagens" />
+    <meta property="og:type" content="website" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Optional: Firebase(Realtime Database) 공유 모드 사용 시에만 필요합니다. (README 참고) -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+
+    <style>
+      :root {
+        /* Brand */
+        --pantone-628c: #7db8c4; /* PANTONE 628 C (web approximation) */
+        --accent: #c8a46b; /* warm highlight */
+
+        /* Surfaces */
+        --bg0: #f7fcfd;
+        --bg1: #eef7f9;
+        --bg2: #ffffff;
+        --ink: #102024;
+        --sub: rgba(16, 32, 36, 0.72);
+        --line: rgba(16, 32, 36, 0.12);
+        --card: rgba(255, 255, 255, 0.78);
+        --card-strong: rgba(255, 255, 255, 0.9);
+
+        /* Effects */
+        --shadow: 0 18px 50px rgba(16, 32, 36, 0.12);
+        --shadow2: 0 12px 28px rgba(16, 32, 36, 0.1);
+        --focus: rgba(125, 184, 196, 0.42);
+        --radius: 20px;
+        --max: 980px;
+      }
+
+      /* ====== Theme (Light/Dark) ====== */
+      :root[data-theme="dark"] {
+        --bg0: #07181c;
+        --bg1: #051318;
+        --bg2: #06171b;
+        --ink: rgba(255, 255, 255, 0.92);
+        --sub: rgba(255, 255, 255, 0.72);
+        --line: rgba(255, 255, 255, 0.14);
+        --card: rgba(10, 26, 30, 0.66);
+        --card-strong: rgba(10, 26, 30, 0.78);
+        --shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
+        --shadow2: 0 12px 28px rgba(0, 0, 0, 0.28);
+        --focus: rgba(125, 184, 196, 0.45);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        margin: 0;
+        color: var(--ink);
+        background: radial-gradient(1000px 580px at 10% -10%, rgba(125, 184, 196, 0.42), transparent 60%),
+          radial-gradient(900px 520px at 90% 0%, rgba(125, 184, 196, 0.22), transparent 62%),
+          radial-gradient(900px 560px at 60% 110%, rgba(200, 164, 107, 0.14), transparent 60%),
+          linear-gradient(180deg, var(--bg1), var(--bg0) 55%, var(--bg2));
+        font-family: "Noto Sans KR", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+      :root[data-theme="dark"] body {
+        background: radial-gradient(1100px 640px at 10% -10%, rgba(125, 184, 196, 0.28), transparent 62%),
+          radial-gradient(980px 560px at 90% 0%, rgba(125, 184, 196, 0.14), transparent 64%),
+          radial-gradient(900px 560px at 60% 110%, rgba(200, 164, 107, 0.11), transparent 64%),
+          linear-gradient(180deg, var(--bg1), var(--bg0) 55%, var(--bg2));
+      }
+
+      /* Subtle premium grain */
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background-image: radial-gradient(rgba(16, 32, 36, 0.05) 1px, transparent 1px);
+        background-size: 3px 3px;
+        opacity: 0.08;
+        mix-blend-mode: multiply;
+      }
+      :root[data-theme="dark"] body::before {
+        opacity: 0.12;
+        mix-blend-mode: screen;
+      }
+
+      a {
+        color: inherit;
+      }
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+
+      .wrap {
+        max-width: var(--max);
+        margin: 0 auto;
+        padding: 0 18px;
+      }
+
+      /* ====== Top Nav ====== */
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        backdrop-filter: blur(14px);
+        background: rgba(247, 252, 253, 0.78);
+        border-bottom: 1px solid rgba(16, 32, 36, 0.08);
+      }
+      :root[data-theme="dark"] .topbar {
+        background: rgba(5, 19, 24, 0.72);
+        border-bottom-color: rgba(255, 255, 255, 0.1);
+      }
+      .topbar-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 12px 0;
+      }
+      .brand {
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+        white-space: nowrap;
+        min-width: 0;
+      }
+      .brand .title {
+        font-family: "Playfair Display", serif;
+        letter-spacing: 0.02em;
+        font-size: 18px;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .brand .date {
+        font-size: 12px;
+        color: var(--sub);
+        flex: 0 0 auto;
+      }
+      .nav {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+      .nav a {
+        text-decoration: none;
+        font-size: 13px;
+        color: var(--sub);
+        padding: 8px 10px;
+        border-radius: 999px;
+        border: 1px solid transparent;
+      }
+      .nav a .nav-short {
+        display: none;
+      }
+      .nav a:hover {
+        border-color: rgba(16, 32, 36, 0.12);
+        background: rgba(255, 255, 255, 0.65);
+        color: var(--ink);
+      }
+      :root[data-theme="dark"] .nav a:hover {
+        border-color: rgba(255, 255, 255, 0.14);
+        background: rgba(10, 26, 30, 0.62);
+      }
+
+      .topbar-right {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        min-width: 0;
+      }
+
+      .lang-switch {
+        display: inline-flex;
+        gap: 6px;
+        padding: 4px;
+        border-radius: 999px;
+        border: 1px solid rgba(16, 32, 36, 0.12);
+        background: rgba(255, 255, 255, 0.7);
+      }
+      :root[data-theme="dark"] .lang-switch {
+        border-color: rgba(255, 255, 255, 0.14);
+        background: rgba(10, 26, 30, 0.6);
+      }
+      .lang-btn {
+        border: 1px solid transparent;
+        background: transparent;
+        color: var(--sub);
+        padding: 7px 10px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 700;
+        cursor: pointer;
+        letter-spacing: 0.02em;
+      }
+      .lang-btn:hover {
+        border-color: rgba(31, 29, 26, 0.12);
+        background: rgba(255, 255, 255, 0.8);
+        color: var(--ink);
+      }
+      :root[data-theme="dark"] .lang-btn:hover {
+        border-color: rgba(255, 255, 255, 0.14);
+        background: rgba(10, 26, 30, 0.7);
+      }
+      .lang-btn.active {
+        background: linear-gradient(180deg, rgba(125, 184, 196, 0.34), rgba(125, 184, 196, 0.14));
+        border-color: rgba(125, 184, 196, 0.55);
+        color: var(--ink);
+      }
+
+      /* ====== Hero ====== */
+      .hero {
+        padding: 38px 0 14px;
+      }
+      .hero-grid {
+        display: grid;
+        grid-template-columns: 1.05fr 0.95fr;
+        gap: 18px;
+        align-items: stretch;
+      }
+      @media (max-width: 860px) {
+        .hero-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+      .hero-card {
+        background: var(--card);
+        border: 1px solid rgba(16, 32, 36, 0.1);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+      :root[data-theme="dark"] .hero-card {
+        border-color: rgba(255, 255, 255, 0.12);
+      }
+      .hero-copy {
+        padding: 28px 24px 24px;
+      }
+      .kicker {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 12px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--sub);
+      }
+      .kicker::before {
+        content: "";
+        width: 26px;
+        height: 1px;
+        background: rgba(31, 29, 26, 0.22);
+        display: inline-block;
+      }
+      :root[data-theme="dark"] .kicker::before {
+        background: rgba(255, 255, 255, 0.22);
+      }
+      .names {
+        margin: 12px 0 8px;
+        font-family: "Playfair Display", serif;
+        font-weight: 500;
+        font-size: clamp(30px, 4.4vw, 44px);
+        line-height: 1.12;
+        letter-spacing: 0.02em;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+      }
+      .names .and {
+        display: inline-block;
+        font-size: 20px;
+        color: rgba(31, 29, 26, 0.55);
+        margin: 0 10px;
+        transform: translateY(-2px);
+      }
+      :root[data-theme="dark"] .names .and {
+        color: rgba(255, 255, 255, 0.58);
+      }
+      .meta {
+        color: var(--sub);
+        font-size: 15px;
+        line-height: 1.7;
+        margin: 0 0 18px;
+      }
+      .cta-row {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .btn {
+        appearance: none;
+        border: 1px solid rgba(16, 32, 36, 0.14);
+        background: rgba(255, 255, 255, 0.92);
+        color: var(--ink);
+        border-radius: 999px;
+        padding: 11px 14px;
+        font-size: 14px;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        cursor: pointer;
+        transition: transform 0.06s ease, box-shadow 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
+      }
+      .btn:active {
+        transform: scale(0.98);
+      }
+      .btn.primary {
+        border-color: rgba(125, 184, 196, 0.6);
+        background: linear-gradient(180deg, rgba(125, 184, 196, 0.32), rgba(255, 255, 255, 0.88));
+      }
+      .btn.ghost {
+        background: transparent;
+      }
+      .btn:hover {
+        box-shadow: var(--shadow2);
+        border-color: rgba(16, 32, 36, 0.22);
+        background: rgba(255, 255, 255, 0.95);
+      }
+      :root[data-theme="dark"] .btn {
+        border-color: rgba(255, 255, 255, 0.14);
+        background: rgba(10, 26, 30, 0.72);
+      }
+      :root[data-theme="dark"] .btn:hover {
+        border-color: rgba(255, 255, 255, 0.22);
+        background: rgba(10, 26, 30, 0.82);
+      }
+      :root[data-theme="dark"] .btn.primary {
+        border-color: rgba(125, 184, 196, 0.55);
+        background: linear-gradient(180deg, rgba(125, 184, 196, 0.22), rgba(10, 26, 30, 0.82));
+      }
+      .btn:focus-visible,
+      .lang-btn:focus-visible,
+      .chip:focus-visible,
+      .poll-item:focus-visible,
+      .icon-link:focus-visible,
+      input:focus-visible,
+      textarea:focus-visible,
+      select:focus-visible {
+        outline: none;
+        box-shadow: 0 0 0 4px var(--focus);
+      }
+
+      .hero-media {
+        position: relative;
+        min-height: 320px;
+        background: radial-gradient(720px 420px at 15% 20%, rgba(125, 184, 196, 0.55), transparent 62%),
+          radial-gradient(560px 380px at 90% 35%, rgba(200, 164, 107, 0.22), transparent 64%),
+          linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.55));
+      }
+      .hero-media::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, rgba(247, 252, 253, 0.35), rgba(247, 252, 253, 0.05) 55%, rgba(247, 252, 253, 0.55));
+        pointer-events: none;
+      }
+      .hero-media::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image: var(--hero-image, url("assets/hero.jpg"));
+        background-size: cover;
+        background-position: center;
+        opacity: 0.42;
+        mix-blend-mode: normal;
+        filter: saturate(1.08) contrast(1.08);
+        pointer-events: none;
+      }
+
+      /* Subtle cinematic motion (disabled for reduced motion) */
+      .hero-media::after {
+        transform: scale(1.08);
+        transition: transform 1.2s ease;
+      }
+      .hero.is-inview .hero-media::after {
+        transform: scale(1.02);
+      }
+      .hero-media-inner {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        padding: 18px;
+        gap: 12px;
+      }
+      .hero-editorial {
+        position: absolute;
+        top: 18px;
+        left: 18px;
+        z-index: 1;
+        display: grid;
+        gap: 8px;
+        max-width: 58%;
+      }
+      .hero-monogram {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 56px;
+        height: 56px;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        background: rgba(255, 255, 255, 0.22);
+        backdrop-filter: blur(10px);
+        font-family: "Playfair Display", serif;
+        font-size: 22px;
+        color: rgba(255, 255, 255, 0.92);
+      }
+      .hero-editorial-note {
+        padding: 12px 14px;
+        border-radius: 16px;
+        background: rgba(6, 23, 27, 0.24);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        color: rgba(255, 255, 255, 0.92);
+        font-size: 12px;
+        line-height: 1.7;
+      }
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255, 255, 255, 0.75);
+        border: 1px solid rgba(31, 29, 26, 0.1);
+        border-radius: 999px;
+        padding: 10px 12px;
+        box-shadow: 0 12px 35px rgba(31, 29, 26, 0.1);
+        color: var(--sub);
+        font-size: 12px;
+        white-space: nowrap;
+      }
+      .pill strong {
+        color: var(--ink);
+      }
+      .personal {
+        margin: 10px 0 0;
+        font-size: 13px;
+        color: var(--sub);
+      }
+      .hero-quote {
+        margin: 18px 0 0;
+        padding: 16px 18px;
+        border-radius: 18px;
+        border: 1px solid rgba(16, 32, 36, 0.08);
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.74), rgba(255, 255, 255, 0.52));
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
+        font-family: "Playfair Display", serif;
+        font-size: 18px;
+        line-height: 1.65;
+        color: rgba(16, 32, 36, 0.84);
+      }
+      :root[data-theme="dark"] .hero-quote {
+        border-color: rgba(255, 255, 255, 0.1);
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+        color: rgba(255, 255, 255, 0.88);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+      }
+      .hero-facts {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
+        margin-top: 16px;
+      }
+      .hero-fact {
+        padding: 12px 14px;
+        border-radius: 16px;
+        border: 1px solid rgba(16, 32, 36, 0.08);
+        background: rgba(255, 255, 255, 0.6);
+      }
+      :root[data-theme="dark"] .hero-fact {
+        border-color: rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.03);
+      }
+      .hero-fact .fact-label {
+        display: block;
+        font-size: 11px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--sub);
+      }
+      .hero-fact .fact-value {
+        display: block;
+        margin-top: 6px;
+        font-size: 14px;
+        font-weight: 700;
+        line-height: 1.55;
+      }
+
+      /* ====== Section ====== */
+      section {
+        padding: 18px 0;
+      }
+      .section-title {
+        font-family: "Playfair Display", serif;
+        font-weight: 500;
+        letter-spacing: 0.02em;
+        font-size: 22px;
+        margin: 0 0 12px;
+        color: rgba(16, 32, 36, 0.92);
+      }
+      :root[data-theme="dark"] .section-title {
+        color: var(--ink);
+      }
+      .section-sub {
+        margin: -4px 0 14px;
+        color: var(--sub);
+        font-size: 14px;
+        line-height: 1.7;
+      }
+      .grid2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+      @media (max-width: 860px) {
+        .grid2 {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .card {
+        background: var(--card);
+        border: 1px solid rgba(16, 32, 36, 0.1);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        padding: 18px 16px;
+        backdrop-filter: blur(14px);
+      }
+      :root[data-theme="dark"] .card {
+        border-color: rgba(255, 255, 255, 0.12);
+      }
+
+      @media (hover: hover) and (pointer: fine) {
+        .card:hover,
+        .hero-card:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 26px 70px rgba(16, 32, 36, 0.14);
+        }
+        .card,
+        .hero-card {
+          transition: transform 0.18s ease, box-shadow 0.28s ease, border-color 0.28s ease;
+        }
+      }
+      .kv {
+        display: grid;
+        grid-template-columns: 96px 1fr;
+        gap: 10px;
+        align-items: start;
+      }
+      .kv .k {
+        font-size: 13px;
+        color: var(--sub);
+      }
+      .kv .v {
+        font-size: 15px;
+        line-height: 1.7;
+        min-width: 0;
+        overflow-wrap: anywhere;
+      }
+
+      .contact-line {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        padding: 2px 0;
+      }
+      .contact-main {
+        display: flex;
+        gap: 8px;
+        align-items: baseline;
+        min-width: 0;
+        flex-wrap: wrap;
+      }
+      .contact-main .sep {
+        color: rgba(31, 29, 26, 0.35);
+      }
+      .contact-actions {
+        display: inline-flex;
+        gap: 8px;
+        align-items: center;
+        flex: 0 0 auto;
+      }
+      .icon-link {
+        width: 38px;
+        height: 38px;
+        border-radius: 999px;
+        border: 1px solid rgba(31, 29, 26, 0.12);
+        background: rgba(255, 255, 255, 0.92);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        transition: transform 0.06s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+      }
+      .icon-link:active {
+        transform: scale(0.98);
+      }
+      .icon-link:hover {
+        box-shadow: 0 10px 26px rgba(31, 29, 26, 0.12);
+        border-color: rgba(31, 29, 26, 0.22);
+      }
+      .icon-link.whatsapp {
+        border-color: rgba(37, 211, 102, 0.35);
+      }
+      .icon-link.whatsapp svg {
+        width: 18px;
+        height: 18px;
+        fill: #25d366;
+      }
+      .hr {
+        height: 1px;
+        background: rgba(16, 32, 36, 0.1);
+        margin: 14px 0;
+      }
+      :root[data-theme="dark"] .hr {
+        background: rgba(255, 255, 255, 0.12);
+      }
+      .badge {
+        display: inline-flex;
+        gap: 8px;
+        align-items: center;
+        padding: 8px 10px;
+        border-radius: 999px;
+        border: 1px solid rgba(16, 32, 36, 0.12);
+        background: rgba(255, 255, 255, 0.72);
+        font-size: 12px;
+        color: var(--sub);
+        white-space: nowrap;
+      }
+      :root[data-theme="dark"] .badge {
+        border-color: rgba(255, 255, 255, 0.14);
+        background: rgba(10, 26, 30, 0.7);
+      }
+      .muted {
+        color: var(--sub);
+      }
+
+      /* ====== Map ====== */
+      .map {
+        width: 100%;
+        height: 320px;
+        border-radius: 16px;
+        border: 1px solid rgba(31, 29, 26, 0.1);
+        overflow: hidden;
+        background: linear-gradient(135deg, rgba(200, 164, 107, 0.08), rgba(141, 106, 61, 0.06));
+      }
+      :root[data-theme="dark"] .map {
+        border-color: rgba(255, 255, 255, 0.12);
+        background: linear-gradient(135deg, rgba(125, 184, 196, 0.12), rgba(200, 164, 107, 0.08));
+      }
+      .map iframe {
+        width: 100%;
+        height: 100%;
+        border: 0;
+      }
+
+      /* ====== Gallery ====== */
+      .gallery {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+      }
+      @media (max-width: 860px) {
+        .gallery {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      .gitem {
+        position: relative;
+        border-radius: 16px;
+        overflow: hidden;
+        border: 1px solid rgba(31, 29, 26, 0.1);
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.35));
+        min-height: 130px;
+        aspect-ratio: 1 / 1;
+        cursor: pointer;
+        padding: 0;
+      }
+      :root[data-theme="dark"] .gitem {
+        border-color: rgba(255, 255, 255, 0.12);
+        background: linear-gradient(135deg, rgba(10, 26, 30, 0.78), rgba(10, 26, 30, 0.56));
+      }
+      .gitem img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        transform: scale(1.01);
+        transition: transform 0.35s ease, filter 0.35s ease;
+        filter: saturate(1.02) contrast(1.03);
+      }
+      :root[data-theme="dark"] .gitem img {
+        filter: saturate(1.06) contrast(1.08) brightness(0.98);
+      }
+      .gitem:hover img {
+        transform: scale(1.06);
+      }
+
+      input[type="text"],
+      textarea {
+        width: 100%;
+        border-radius: 14px;
+        border: 1px solid rgba(31, 29, 26, 0.14);
+        background: rgba(255, 255, 255, 0.92);
+        padding: 12px 12px;
+        font-size: 14px;
+        color: var(--ink);
+        outline: none;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      }
+      :root[data-theme="dark"] input[type="text"],
+      :root[data-theme="dark"] textarea {
+        border-color: rgba(255, 255, 255, 0.14);
+        background: rgba(10, 26, 30, 0.72);
+      }
+      input::placeholder,
+      textarea::placeholder {
+        color: rgba(16, 32, 36, 0.42);
+        opacity: 1;
+      }
+      :root[data-theme="dark"] input::placeholder,
+      :root[data-theme="dark"] textarea::placeholder {
+        color: rgba(255, 255, 255, 0.42);
+      }
+      textarea {
+        min-height: 96px;
+        resize: none;
+      }
+      input[type="text"]:focus,
+      textarea:focus {
+        border-color: rgba(200, 164, 107, 0.75);
+        box-shadow: 0 0 0 4px rgba(200, 164, 107, 0.18);
+      }
+
+      .editorial-grid {
+        align-items: stretch;
+      }
+      .story-copy {
+        display: grid;
+        gap: 12px;
+        margin-top: 16px;
+      }
+      .story-copy p {
+        margin: 0;
+        font-size: 15px;
+        line-height: 1.9;
+        color: var(--sub);
+      }
+      .story-moment-grid,
+      .timeline,
+      .menu-grid,
+      .highlight-strip,
+      .stat-grid,
+      .detail-grid,
+      .notice-list,
+      .guide-list {
+        display: grid;
+        gap: 12px;
+      }
+      .story-moment-grid,
+      .menu-grid {
+        margin-top: 16px;
+      }
+      .story-moment-grid,
+      .stat-grid {
+        grid-template-columns: 1fr;
+      }
+      .story-moment,
+      .timeline-item,
+      .menu-card,
+      .stat-card,
+      .faq-card,
+      .highlight-chip,
+      .detail-card,
+      .notice-card,
+      .guide-card {
+        border: 1px solid rgba(16, 32, 36, 0.08);
+        background: rgba(255, 255, 255, 0.54);
+        border-radius: 18px;
+      }
+      :root[data-theme="dark"] .story-moment,
+      :root[data-theme="dark"] .timeline-item,
+      :root[data-theme="dark"] .menu-card,
+      :root[data-theme="dark"] .stat-card,
+      :root[data-theme="dark"] .faq-card,
+      :root[data-theme="dark"] .highlight-chip,
+      :root[data-theme="dark"] .detail-card,
+      :root[data-theme="dark"] .notice-card,
+      :root[data-theme="dark"] .guide-card {
+        border-color: rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.03);
+      }
+      .story-moment,
+      .menu-card,
+      .stat-card,
+      .faq-card,
+      .highlight-chip,
+      .detail-card,
+      .notice-card,
+      .guide-card {
+        padding: 14px;
+      }
+      .timeline {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+      .timeline-item {
+        padding: 16px;
+        position: relative;
+        overflow: hidden;
+      }
+      .timeline-item::before {
+        content: "";
+        position: absolute;
+        inset: 0 auto 0 0;
+        width: 3px;
+        background: linear-gradient(180deg, rgba(125, 184, 196, 0.95), rgba(200, 164, 107, 0.68));
+      }
+      .timeline-time {
+        display: inline-flex;
+        align-items: center;
+        min-height: 34px;
+        padding: 6px 10px;
+        border-radius: 999px;
+        background: rgba(125, 184, 196, 0.16);
+        color: var(--ink);
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+      }
+      .timeline-title,
+      .menu-title,
+      .faq-title,
+      .stat-value,
+      .story-moment-title {
+        margin: 12px 0 6px;
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 1.45;
+      }
+      .timeline-copy,
+      .menu-copy,
+      .faq-copy,
+      .stat-label,
+      .story-moment-copy {
+        margin: 0;
+        color: var(--sub);
+        font-size: 13px;
+        line-height: 1.7;
+      }
+      .menu-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+      .menu-list {
+        display: grid;
+        gap: 8px;
+        margin: 14px 0 0;
+        padding: 0;
+        list-style: none;
+      }
+      .menu-list li {
+        display: grid;
+        gap: 2px;
+        padding-top: 8px;
+        border-top: 1px solid rgba(16, 32, 36, 0.08);
+      }
+      :root[data-theme="dark"] .menu-list li {
+        border-top-color: rgba(255, 255, 255, 0.08);
+      }
+      .menu-item-title {
+        font-size: 14px;
+        font-weight: 600;
+      }
+      .menu-item-note {
+        color: var(--sub);
+        font-size: 12px;
+        line-height: 1.6;
+      }
+      .highlight-strip {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+      .highlight-chip {
+        display: grid;
+        gap: 4px;
+      }
+      .highlight-chip strong {
+        font-size: 14px;
+      }
+      .highlight-chip span {
+        color: var(--sub);
+        font-size: 12px;
+        line-height: 1.6;
+      }
+      .notice-card {
+        position: relative;
+        overflow: hidden;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.74), rgba(255, 255, 255, 0.54));
+      }
+      .notice-card::before {
+        content: "";
+        position: absolute;
+        inset: 0 auto 0 0;
+        width: 4px;
+        background: linear-gradient(180deg, rgba(200, 164, 107, 0.95), rgba(125, 184, 196, 0.78));
+      }
+      :root[data-theme="dark"] .notice-card {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+      }
+      .notice-kicker {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 11px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--sub);
+      }
+      .notice-title {
+        margin: 10px 0 6px;
+        font-family: "Playfair Display", serif;
+        font-size: 24px;
+        line-height: 1.3;
+      }
+      .notice-copy {
+        margin: 0;
+        font-size: 14px;
+        line-height: 1.8;
+        color: var(--sub);
+      }
+      .detail-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        margin-top: 14px;
+      }
+      .detail-card .detail-label {
+        display: block;
+        font-size: 11px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--sub);
+      }
+      .detail-card .detail-title {
+        display: block;
+        margin-top: 8px;
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 1.5;
+      }
+      .detail-card .detail-copy {
+        margin: 8px 0 0;
+        color: var(--sub);
+        font-size: 13px;
+        line-height: 1.7;
+      }
+      .guide-list {
+        margin-top: 14px;
+      }
+      .guide-card {
+        display: grid;
+        gap: 6px;
+      }
+      .guide-card strong {
+        font-size: 14px;
+      }
+      .guide-card span,
+      .guide-card p {
+        margin: 0;
+        color: var(--sub);
+        font-size: 13px;
+        line-height: 1.7;
+      }
+      .stat-grid {
+        margin-top: 16px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .stat-card {
+        min-height: 104px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+      .stat-card .stat-value {
+        font-family: "Playfair Display", serif;
+        font-size: 28px;
+        margin: 0 0 4px;
+      }
+      .rsvp-status {
+        display: grid;
+        gap: 10px;
+      }
+      .rsvp-status .status-box {
+        border: 1px solid rgba(16, 32, 36, 0.08);
+        border-radius: 18px;
+        padding: 14px;
+        background: rgba(255, 255, 255, 0.52);
+      }
+      :root[data-theme="dark"] .rsvp-status .status-box {
+        border-color: rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.03);
+      }
+      .section-header-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        align-items: flex-start;
+        margin-bottom: 14px;
+      }
+      .faq-card h3 {
+        margin: 0 0 6px;
+      }
+      @media (max-width: 980px) {
+        .hero-facts,
+        .detail-grid {
+          grid-template-columns: 1fr;
+        }
+        .timeline {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .menu-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+      @media (max-width: 640px) {
+        .timeline,
+        .highlight-strip,
+        .stat-grid {
+          grid-template-columns: 1fr;
+        }
+        .hero-editorial {
+          max-width: calc(100% - 36px);
+        }
+      }
+
+      /* ====== Dialog ====== */
+      dialog {
+        width: min(560px, calc(100% - 24px));
+        border: 1px solid rgba(31, 29, 26, 0.14);
+        border-radius: 22px;
+        padding: 0;
+        box-shadow: 0 30px 90px rgba(31, 29, 26, 0.22);
+        background: rgba(255, 255, 255, 0.92);
+        backdrop-filter: blur(14px);
+      }
+      :root[data-theme="dark"] dialog {
+        border-color: rgba(255, 255, 255, 0.14);
+        background: rgba(10, 26, 30, 0.78);
+        box-shadow: 0 34px 110px rgba(0, 0, 0, 0.55);
+      }
+      dialog::backdrop {
+        background: rgba(15, 14, 12, 0.35);
+      }
+      :root[data-theme="dark"] dialog::backdrop {
+        background: rgba(0, 0, 0, 0.55);
+      }
+      .dlg-head {
+        padding: 16px 16px 12px;
+        border-bottom: 1px solid rgba(31, 29, 26, 0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+      }
+      :root[data-theme="dark"] .dlg-head {
+        border-bottom-color: rgba(255, 255, 255, 0.12);
+      }
+      .dlg-head h3 {
+        margin: 0;
+        font-size: 16px;
+      }
+      .icon-btn {
+        border: 1px solid rgba(31, 29, 26, 0.14);
+        background: rgba(255, 255, 255, 0.85);
+        border-radius: 12px;
+        padding: 8px 10px;
+        cursor: pointer;
+      }
+      .icon-btn:active {
+        transform: scale(0.98);
+      }
+      :root[data-theme="dark"] .icon-btn {
+        border-color: rgba(255, 255, 255, 0.14);
+        background: rgba(10, 26, 30, 0.7);
+      }
+      .dlg-body {
+        padding: 14px 16px 16px;
+      }
+      .row {
+        display: grid;
+        gap: 10px;
+      }
+      .row2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+      @media (max-width: 520px) {
+        .row2 {
+          grid-template-columns: 1fr;
+        }
+      }
+      .label {
+        font-size: 12px;
+        color: var(--sub);
+      }
+      .select {
+        width: 100%;
+        border-radius: 14px;
+        border: 1px solid rgba(31, 29, 26, 0.14);
+        background: rgba(255, 255, 255, 0.92);
+        padding: 12px 12px;
+        font-size: 14px;
+        color: var(--ink);
+      }
+      .dlg-actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 12px;
+      }
+      .toast {
+        position: fixed;
+        left: 50%;
+        bottom: 18px;
+        transform: translateX(-50%);
+        background: rgba(255, 255, 255, 0.92);
+        border: 1px solid rgba(31, 29, 26, 0.14);
+        border-radius: 999px;
+        padding: 10px 12px;
+        box-shadow: 0 18px 50px rgba(31, 29, 26, 0.18);
+        font-size: 13px;
+        color: var(--ink);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s ease, transform 0.2s ease;
+      }
+      :root[data-theme="dark"] .toast {
+        background: rgba(10, 26, 30, 0.86);
+        border-color: rgba(255, 255, 255, 0.14);
+        box-shadow: 0 24px 70px rgba(0, 0, 0, 0.45);
+      }
+      .toast.show {
+        opacity: 1;
+        transform: translateX(-50%) translateY(-6px);
+      }
+
+      /* ====== Intro overlay (cinematic) ====== */
+      .intro {
+        position: fixed;
+        inset: 0;
+        z-index: 1000;
+        display: grid;
+        place-items: center;
+        padding: 18px;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.35s ease;
+      }
+      .intro.show {
+        opacity: 1;
+        pointer-events: auto;
+      }
+      .intro-bg {
+        position: absolute;
+        inset: -20px;
+        background-image: var(--hero-image, url("assets/hero.jpg"));
+        background-size: cover;
+        background-position: center;
+        filter: blur(18px) saturate(1.08) contrast(1.06);
+        transform: scale(1.08);
+        opacity: 0.9;
+      }
+      .intro-bg::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, rgba(7, 24, 28, 0.22), rgba(7, 24, 28, 0.55));
+      }
+      .intro-card {
+        position: relative;
+        width: min(520px, 100%);
+        border-radius: 28px;
+        border: 1px solid rgba(255, 255, 255, 0.22);
+        background: rgba(255, 255, 255, 0.16);
+        box-shadow: 0 30px 100px rgba(0, 0, 0, 0.35);
+        backdrop-filter: blur(18px);
+        padding: 20px 18px;
+        color: rgba(255, 255, 255, 0.92);
+        text-align: left;
+      }
+      .intro-kicker {
+        font-size: 12px;
+        letter-spacing: 0.14em;
+        opacity: 0.9;
+        font-weight: 700;
+      }
+      .intro-names {
+        margin-top: 10px;
+        font-family: "Playfair Display", serif;
+        font-size: clamp(22px, 5vw, 34px);
+        line-height: 1.15;
+      }
+      .intro-meta {
+        margin-top: 10px;
+        font-size: 13px;
+        opacity: 0.9;
+      }
+      .intro-actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 14px;
+      }
+      .intro-actions .btn {
+        min-height: 44px;
+      }
+      .intro-scroll {
+        margin-top: 10px;
+        font-size: 12px;
+        opacity: 0.82;
+      }
+
+      /* ====== Bottom action bar (mobile-first) ====== */
+      .actionbar {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 60;
+        padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+        background: rgba(247, 252, 253, 0.82);
+        border-top: 1px solid rgba(16, 32, 36, 0.1);
+        backdrop-filter: blur(18px);
+        box-shadow: 0 -18px 50px rgba(16, 32, 36, 0.08);
+      }
+      :root[data-theme="dark"] .actionbar {
+        background: rgba(5, 19, 24, 0.78);
+        border-top-color: rgba(255, 255, 255, 0.12);
+        box-shadow: 0 -22px 70px rgba(0, 0, 0, 0.35);
+      }
+      .actionbar-inner {
+        max-width: var(--max);
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 8px;
+      }
+      .ab-btn {
+        display: grid;
+        gap: 4px;
+        place-items: center;
+        border-radius: 16px;
+        border: 1px solid rgba(16, 32, 36, 0.12);
+        background: rgba(255, 255, 255, 0.7);
+        min-height: 52px;
+        cursor: pointer;
+        padding: 8px 6px;
+        color: var(--ink);
+        text-decoration: none;
+      }
+      .ab-btn:active {
+        transform: scale(0.98);
+      }
+      :root[data-theme="dark"] .ab-btn {
+        border-color: rgba(255, 255, 255, 0.14);
+        background: rgba(10, 26, 30, 0.7);
+      }
+      .ab-ico {
+        width: 22px;
+        height: 22px;
+        opacity: 0.92;
+      }
+      .ab-txt {
+        font-size: 11px;
+        color: var(--sub);
+        white-space: nowrap;
+      }
+      @media (hover: hover) and (pointer: fine) {
+        .ab-btn:hover {
+          transform: translateY(-1px);
+          box-shadow: var(--shadow2);
+        }
+      }
+      @media (min-width: 861px) {
+        .actionbar {
+          display: none;
+        }
+      }
+      @media (max-width: 860px) {
+        body {
+          padding-bottom: 86px;
+        }
+      }
+
+      /* ====== Lightbox (swipe/zoom) ====== */
+      .lightbox-stage {
+        width: 100%;
+        border-radius: 16px;
+        border: 1px solid rgba(31, 29, 26, 0.1);
+        background: rgba(255, 255, 255, 0.72);
+        overflow: hidden;
+        position: relative;
+        touch-action: none;
+      }
+      :root[data-theme="dark"] .lightbox-stage {
+        border-color: rgba(255, 255, 255, 0.14);
+        background: rgba(10, 26, 30, 0.72);
+      }
+      .lightbox-pan {
+        width: 100%;
+        height: 100%;
+        transform: translate3d(0, 0, 0) scale(1);
+        transform-origin: center;
+        will-change: transform;
+      }
+      .lightbox-stage img {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+      .dlg-sub {
+        font-size: 12px;
+        color: var(--sub);
+      }
+      .dlg-head-left {
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+        min-width: 0;
+      }
+      .dlg-head-right {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+      .lightbox-navbtn {
+        width: 40px;
+        height: 40px;
+        display: grid;
+        place-items: center;
+        border-radius: 12px;
+      }
+
+      .hidden {
+        display: none !important;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation: none !important;
+          transition: none !important;
+          scroll-behavior: auto !important;
+        }
+      }
+
+      /* ====== Mobile polish ====== */
+      html {
+        scroll-behavior: smooth;
+      }
+      @media (max-width: 560px) {
+        /* Cards: unified left alignment on small phones */
+        .card {
+          text-align: left;
+        }
+        .card .section-title,
+        .card .section-sub {
+          text-align: left;
+        }
+
+        .topbar-inner {
+          flex-wrap: wrap;
+          align-items: flex-start;
+          gap: 10px;
+        }
+        .brand {
+          width: 100%;
+          justify-content: space-between;
+          align-items: center;
+          gap: 12px;
+        }
+        .brand .title {
+          max-width: 70%;
+        }
+        .brand .title {
+          font-size: 16px;
+        }
+        .topbar-right {
+          width: 100%;
+          justify-content: space-between;
+          align-items: center;
+        }
+        .nav {
+          flex-wrap: nowrap;
+          overflow-x: hidden;
+          -webkit-overflow-scrolling: touch;
+          scrollbar-width: none;
+          gap: 6px;
+          padding-bottom: 2px;
+          max-width: none;
+          flex: 1 1 auto;
+          min-width: 0;
+        }
+        .nav::-webkit-scrollbar {
+          display: none;
+        }
+        .nav a {
+          white-space: nowrap;
+          padding: 7px 8px;
+          font-size: 12px;
+        }
+        .nav a .nav-full {
+          display: none;
+        }
+        .nav a .nav-short {
+          display: inline;
+        }
+        .hero-copy {
+          padding: 22px 18px 18px;
+          text-align: left;
+        }
+        .kicker {
+          justify-content: flex-start;
+          width: auto;
+        }
+        .names .and {
+          display: block;
+          margin: 6px 0;
+          transform: none;
+          font-size: 16px;
+        }
+        #groomName,
+        #brideName {
+          display: block;
+        }
+        .meta {
+          font-size: 14px;
+          text-align: left;
+        }
+        .cta-row {
+          gap: 8px;
+          justify-content: flex-start;
+        }
+        .cta-row .btn {
+          flex: 1;
+          justify-content: center;
+        }
+        .pill {
+          padding: 9px 10px;
+        }
+        .map {
+          height: 260px;
+        }
+        .gallery {
+          gap: 8px;
+        }
+        .kv {
+          grid-template-columns: 78px 1fr;
+        }
+        .contact-line {
+          flex-wrap: wrap;
+          align-items: flex-start;
+        }
+        .contact-main {
+          flex: 1 1 auto;
+          justify-content: flex-start;
+          text-align: left;
+        }
+        .contact-main {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 4px;
+        }
+        .contact-main .sep {
+          display: none;
+        }
+        .contact-main a {
+          display: inline-block;
+        }
+        .contact-actions {
+          width: 100%;
+          justify-content: flex-end;
+          margin-top: 6px;
+        }
+
+        /* Hero media pills: prevent clipping on small screens */
+        .hero-media {
+          min-height: 380px;
+        }
+        .hero-media-inner {
+          flex-direction: column;
+          align-items: stretch;
+          justify-content: flex-end;
+          padding: 14px;
+          padding-bottom: calc(14px + env(safe-area-inset-bottom));
+          gap: 10px;
+        }
+        .pill {
+          width: 100%;
+          justify-content: space-between;
+          padding: 10px 12px;
+          font-size: 12px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- ====== Cinematic Intro ====== -->
+    <div id="introOverlay" class="intro hidden" aria-hidden="true">
+      <div class="intro-bg" aria-hidden="true"></div>
+      <div class="intro-card" role="dialog" aria-modal="true" aria-label="Intro">
+        <div class="intro-kicker" data-i18n="intro.kicker">WEDDING INVITATION</div>
+        <div class="intro-names" id="introNames">Haseung Song · Larissa Vilas Boas de Araujo</div>
+        <div class="intro-meta" id="introMeta">2026. 05. 30 · Rancho do Celso - Rifaina/SP</div>
+        <div class="intro-actions">
+          <button class="btn primary" id="btnIntroEnter" type="button" data-i18n="intro.enter">Entrar</button>
+          <button class="btn ghost" id="btnIntroSkip" type="button" data-i18n="intro.skip">Pular</button>
+        </div>
+        <div class="intro-scroll muted" data-i18n="intro.scroll">Role para continuar</div>
+      </div>
+    </div>
+
+    <!-- ====== Invitation ====== -->
+    <header class="topbar" id="top">
+      <div class="wrap topbar-inner">
+        <div class="brand" aria-label="Convite">
+          <div class="title" id="brandTitle">Wedding Invitation</div>
+          <div class="date" id="brandDate">2026. 05. 30</div>
+        </div>
+        <div class="topbar-right">
+          <nav class="nav" aria-label="Navegação">
+            <a href="#info">
+              <span class="nav-full" data-i18n="nav.info">Informações</span>
+              <span class="nav-short" data-i18n="navShort.info">Info</span>
+            </a>
+            <a href="#program">
+              <span class="nav-full" data-i18n="nav.program">Programa</span>
+              <span class="nav-short" data-i18n="navShort.program">Prog.</span>
+            </a>
+            <a href="#location">
+              <span class="nav-full" data-i18n="nav.location">Como chegar</span>
+              <span class="nav-short" data-i18n="navShort.location">Mapa</span>
+            </a>
+            <a href="#gallery">
+              <span class="nav-full" data-i18n="nav.gallery">Galeria</span>
+              <span class="nav-short" data-i18n="navShort.gallery">Fotos</span>
+            </a>
+            <a href="#rsvp">
+              <span class="nav-full" data-i18n="nav.rsvp">RSVP</span>
+              <span class="nav-short" data-i18n="navShort.rsvp">RSVP</span>
+            </a>
+            <a href="#gift">
+              <span class="nav-full" data-i18n="nav.gift">Presentes</span>
+              <span class="nav-short" data-i18n="navShort.gift">PIX</span>
+            </a>
+          </nav>
+          <div class="lang-switch" role="group" aria-label="Idioma / País">
+            <button class="lang-btn" type="button" data-country="BR">BR</button>
+            <button class="lang-btn" type="button" data-country="KR">KR</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="wrap">
+          <div class="hero-grid">
+            <div class="hero-card">
+              <div class="hero-copy">
+                <div class="kicker" data-i18n="hero.kicker">INVITATION</div>
+                <h1 class="names">
+                  <span id="groomName">Haseung Song</span>
+                  <span class="and">&amp;</span>
+                  <span id="brideName">Larissa Vilas Boas de Araujo</span>
+                </h1>
+                <p class="meta" id="heroMeta">
+                  2026. 05. 30 (sáb) 16:30<br />
+                  Rancho do Celso
+                </p>
+                <p class="personal" id="personalGreeting" aria-live="polite"></p>
+                <div class="cta-row">
+                  <button class="btn" id="btnCalendar" type="button" data-i18n="hero.calendar">Adicionar ao calendário</button>
+                  <a class="btn ghost" href="#rsvp" data-i18n="hero.join">Participar</a>
+                  <a class="btn ghost" href="#location" data-i18n="hero.directions">Rotas</a>
+                </div>
+                <div class="hero-quote" id="heroQuote"></div>
+                <div class="hero-facts" id="heroFacts"></div>
+                <div class="hr"></div>
+                <div class="badge" id="dataModeBadge" data-i18n="data.local">Dados: neste dispositivo (local)</div>
+              </div>
+            </div>
+
+            <div class="hero-card hero-media" aria-label="대표 이미지 영역">
+              <div class="hero-editorial">
+                <div class="hero-monogram" id="heroMonogram">H&L</div>
+                <div class="hero-editorial-note" id="heroMediaNote"></div>
+              </div>
+              <div class="hero-media-inner">
+                <div class="pill">
+                  <strong data-i18n="pill.ceremony">Cerimônia</strong>
+                  <span id="pillDate">2026. 05. 30</span>
+                </div>
+                <div class="pill">
+                  <strong data-i18n="pill.place">Local</strong>
+                  <span id="pillPlace">Rancho do Celso</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="info">
+        <div class="wrap">
+          <h2 class="section-title" data-i18n="section.invite.title">Convidamos você</h2>
+          <p class="section-sub" id="inviteText" data-i18n-html="section.invite.text">
+            Duas histórias que caminharam separadas agora seguem lado a lado.<br />
+            Gostaríamos de compartilhar este começo com pessoas especiais.<br />
+            Sua presença será uma grande alegria.
+          </p>
+
+          <div class="grid2 editorial-grid">
+            <div class="card">
+              <div class="kicker" data-i18n="story.kicker">OUR STORY</div>
+              <div class="story-copy" id="storyParagraphs"></div>
+            </div>
+            <div class="card">
+              <div class="kicker" data-i18n="story.highlightsKicker">HIGHLIGHTS</div>
+              <div class="story-moment-grid" id="storyMomentGrid"></div>
+            </div>
+          </div>
+
+          <div class="grid2" style="margin-top: 14px">
+            <div class="card">
+              <div class="kv">
+                <div class="k" data-i18n="info.dateLabel">Data</div>
+                <div class="v" id="infoDate">2026. 00. 00 (sáb) 00:00</div>
+              </div>
+              <div class="hr"></div>
+              <div class="kv">
+                <div class="k" data-i18n="info.placeLabel">Local</div>
+                <div class="v">
+                  <div id="infoPlace">Nome do local</div>
+                  <div class="muted" id="infoAddr">
+                    <a
+                      id="infoMapLink"
+                      href="#"
+                      target="_blank"
+                      rel="noreferrer"
+                      style="text-decoration: underline"
+                      data-i18n="info.mapLinkText"
+                    >O Link</a>
+                  </div>
+                </div>
+              </div>
+              <div class="hr"></div>
+              <div class="kv">
+                <div class="k" data-i18n="info.noteLabel">Aviso</div>
+                <div class="v muted" id="infoNote" data-i18n="info.noteText">Estacionamento no local do evento</div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="kv">
+                <div class="k" data-i18n="info.contactLabel">Contato</div>
+                <div class="v">
+                  <div class="contact-line">
+                    <div class="contact-main">
+                      <span data-i18n="info.contactGroom">Noivo</span>
+                      <span class="sep">·</span>
+                      <span id="groomContactName">Haseung Song</span>
+                      <span class="sep">·</span>
+                      <a id="groomTel" href="#" style="text-decoration: underline"><span id="groomPhone">010-0000-0000</span></a>
+                    </div>
+                    <div class="contact-actions">
+                      <a
+                        id="groomWhatsapp"
+                        class="icon-link whatsapp"
+                        href="#"
+                        target="_blank"
+                        rel="noreferrer"
+                        aria-label="WhatsApp"
+                        data-i18n-aria="aria.whatsapp"
+                      >
+                        <svg viewBox="0 0 32 32" aria-hidden="true">
+                          <path
+                            d="M19.11 17.29c-.27-.14-1.6-.79-1.85-.88-.25-.09-.43-.14-.61.14-.18.27-.7.88-.86 1.06-.16.18-.31.2-.58.07-.27-.14-1.12-.41-2.13-1.31-.79-.71-1.33-1.58-1.48-1.85-.16-.27-.02-.42.12-.55.12-.12.27-.31.41-.46.14-.16.18-.27.27-.45.09-.18.05-.34-.02-.48-.07-.14-.61-1.48-.84-2.03-.22-.53-.45-.46-.61-.47h-.52c-.18 0-.48.07-.73.34-.25.27-.95.93-.95 2.26s.98 2.62 1.12 2.8c.14.18 1.93 2.95 4.68 4.13.65.28 1.15.45 1.55.58.65.21 1.24.18 1.71.11.52-.08 1.6-.66 1.83-1.3.23-.64.23-1.18.16-1.3-.07-.12-.25-.2-.52-.34z"
+                          />
+                          <path
+                            d="M26.67 5.33C23.83 2.5 20.06 1 16.04 1 7.9 1 1.3 7.6 1.3 15.74c0 2.6.68 5.14 1.97 7.38L1 31l8.08-2.22c2.17 1.19 4.62 1.81 7.1 1.81h.01c8.14 0 14.74-6.6 14.74-14.74 0-3.99-1.55-7.75-4.26-10.52zm-10.62 22.7h-.01c-2.22 0-4.4-.6-6.29-1.73l-.45-.27-4.79 1.32 1.28-4.67-.29-.48a12.17 12.17 0 0 1-1.85-6.46c0-6.71 5.46-12.17 12.18-12.17 3.25 0 6.31 1.26 8.59 3.54 2.28 2.29 3.54 5.34 3.54 8.6 0 6.71-5.46 12.17-12.11 12.32z"
+                          />
+                        </svg>
+                      </a>
+                    </div>
+                  </div>
+
+                  <div class="contact-line">
+                    <div class="contact-main">
+                      <span data-i18n="info.contactBride">Noiva</span>
+                      <span class="sep">·</span>
+                      <span id="brideContactName">Larissa vilas boas de araujo</span>
+                      <span class="sep">·</span>
+                      <a id="brideTel" href="#" style="text-decoration: underline"><span id="bridePhone">010-0000-0000</span></a>
+                    </div>
+                    <div class="contact-actions">
+                      <a
+                        id="brideWhatsapp"
+                        class="icon-link whatsapp"
+                        href="#"
+                        target="_blank"
+                        rel="noreferrer"
+                        aria-label="WhatsApp"
+                        data-i18n-aria="aria.whatsapp"
+                      >
+                        <svg viewBox="0 0 32 32" aria-hidden="true">
+                          <path
+                            d="M19.11 17.29c-.27-.14-1.6-.79-1.85-.88-.25-.09-.43-.14-.61.14-.18.27-.7.88-.86 1.06-.16.18-.31.2-.58.07-.27-.14-1.12-.41-2.13-1.31-.79-.71-1.33-1.58-1.48-1.85-.16-.27-.02-.42.12-.55.12-.12.27-.31.41-.46.14-.16.18-.27.27-.45.09-.18.05-.34-.02-.48-.07-.14-.61-1.48-.84-2.03-.22-.53-.45-.46-.61-.47h-.52c-.18 0-.48.07-.73.34-.25.27-.95.93-.95 2.26s.98 2.62 1.12 2.8c.14.18 1.93 2.95 4.68 4.13.65.28 1.15.45 1.55.58.65.21 1.24.18 1.71.11.52-.08 1.6-.66 1.83-1.3.23-.64.23-1.18.16-1.3-.07-.12-.25-.2-.52-.34z"
+                          />
+                          <path
+                            d="M26.67 5.33C23.83 2.5 20.06 1 16.04 1 7.9 1 1.3 7.6 1.3 15.74c0 2.6.68 5.14 1.97 7.38L1 31l8.08-2.22c2.17 1.19 4.62 1.81 7.1 1.81h.01c8.14 0 14.74-6.6 14.74-14.74 0-3.99-1.55-7.75-4.26-10.52zm-10.62 22.7h-.01c-2.22 0-4.4-.6-6.29-1.73l-.45-.27-4.79 1.32 1.28-4.67-.29-.48a12.17 12.17 0 0 1-1.85-6.46c0-6.71 5.46-12.17 12.18-12.17 3.25 0 6.31 1.26 8.59 3.54 2.28 2.29 3.54 5.34 3.54 8.6 0 6.71-5.46 12.17-12.11 12.32z"
+                          />
+                        </svg>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="hr"></div>
+              <div class="highlight-strip" id="hostHighlights"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="program">
+        <div class="wrap">
+          <h2 class="section-title" data-i18n="section.program.title">Programa do dia</h2>
+          <p class="section-sub" data-i18n="section.program.sub">Uma jornada suave do pôr do sol até a celebração da noite.</p>
+          <div class="timeline" id="programGrid"></div>
+        </div>
+      </section>
+
+      <section id="menu">
+        <div class="wrap">
+          <h2 class="section-title" data-i18n="section.menu.title">Menu</h2>
+          <p class="section-sub" data-i18n="section.menu.sub">Preparamos uma mesa acolhedora para que todos celebrem com conforto.</p>
+          <div class="menu-grid" id="menuGrid"></div>
+        </div>
+      </section>
+
+      <section id="essentials">
+        <div class="wrap">
+          <h2 class="section-title" data-i18n="section.essentials.title">Detalhes do evento</h2>
+          <p class="section-sub" data-i18n="section.essentials.sub">Tudo o que os convidados precisam saber, sem excesso e com clareza.</p>
+          <div class="notice-list">
+            <article class="card notice-card">
+              <div class="notice-kicker" data-i18n="essentials.noticeKicker">EVENT NOTES</div>
+              <h3 class="notice-title" id="noticeTitle"></h3>
+              <p class="notice-copy" id="noticeCopy"></p>
+            </article>
+          </div>
+          <div class="detail-grid" id="detailGrid"></div>
+        </div>
+      </section>
+
+      <section id="location">
+        <div class="wrap">
+          <h2 class="section-title" data-i18n="section.location.title">Como chegar</h2>
+          <p class="section-sub" data-i18n="section.location.sub">Substitua pelo link de incorporação (embed) do mapa do local.</p>
+
+          <div class="grid2">
+            <div class="card">
+              <div class="map" aria-label="지도">
+                <iframe
+                  id="mapFrame"
+                  title="지도"
+                  loading="lazy"
+                  referrerpolicy="no-referrer-when-downgrade"
+                  src="about:blank"
+                ></iframe>
+              </div>
+              <div class="hr"></div>
+              <div class="cta-row">
+                <a class="btn" id="btnNavi" href="#" target="_blank" rel="noreferrer" data-i18n="location.route">Abrir rotas</a>
+                <button class="btn" id="btnCopyAddr" type="button" data-i18n="location.copy">Copiar endereço</button>
+                <button class="btn" id="btnCopyMapLink" type="button" data-i18n="location.copyLink">Copiar link do mapa</button>
+                <button class="btn ghost" id="btnShareMap" type="button" data-i18n="location.share">Compartilhar</button>
+              </div>
+              <div class="muted" style="font-size: 12px; margin-top: 10px; line-height: 1.6">
+                <span data-i18n="location.linkLabel">Link do Google Maps:</span>
+                <a id="mapLinkText" href="#" target="_blank" rel="noreferrer" style="text-decoration: underline">Abrir</a>
+              </div>
+            </div>
+
+            <div class="card">
+              <h3 class="section-title" style="font-size: 18px; margin-top: 0" data-i18n="location.guideTitle">Chegar com tranquilidade</h3>
+              <p class="section-sub" style="margin-bottom: 0" data-i18n="location.guideIntro">Reunimos os pontos principais para que sua chegada seja leve e sem pressa.</p>
+              <div class="guide-list" id="locationGuide"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="gallery">
+        <div class="wrap">
+          <h2 class="section-title" data-i18n="section.gallery.title">Galeria</h2>
+          <p class="section-sub" data-i18n="section.gallery.sub">Coloque fotos como `assets/gallery/01.jpg` e elas aparecerão automaticamente. (Veja o README)</p>
+
+          <div class="card">
+            <div class="gallery" id="galleryGrid" aria-label="Galeria"></div>
+            <div class="cta-row" id="galleryMoreWrap" style="margin-top: 12px; display: none">
+              <button class="btn" id="btnGalleryMore" type="button">Ver todas</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="rsvp">
+        <div class="wrap">
+          <h2 class="section-title" data-i18n="section.rsvp.title">RSVP</h2>
+          <p class="section-sub" data-i18n="section.rsvp.sub">Confirme sua presença e nos ajude a preparar cada detalhe com carinho.</p>
+
+          <div class="grid2">
+            <div class="card">
+              <div class="row">
+                <div>
+                  <div class="label" data-i18n="rsvp.statusLabel">Resposta</div>
+                  <select id="rsvpStatus" class="select" aria-label="RSVP status">
+                    <option value="attending">Attending</option>
+                    <option value="not_attending">Not attending</option>
+                  </select>
+                </div>
+                <div class="row2">
+                  <div>
+                    <div class="label" data-i18n="rsvp.nameLabel">Nome</div>
+                    <input id="rsvpName" type="text" maxlength="24" placeholder="Seu nome completo" data-i18n-placeholder="rsvp.namePh" />
+                  </div>
+                  <div>
+                    <div class="label" data-i18n="rsvp.guestsLabel">Acompanhantes</div>
+                    <select id="rsvpGuests" class="select" aria-label="Acompanhantes">
+                      <option value="0">0</option>
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="4">4</option>
+                    </select>
+                  </div>
+                </div>
+                <div>
+                  <div class="label" data-i18n="rsvp.mealLabel">Preferência de refeição</div>
+                  <select id="rsvpMeal" class="select" aria-label="Meal choice"></select>
+                </div>
+                <div>
+                  <div class="label" data-i18n="rsvp.noteLabel">Alergias ou pedidos</div>
+                  <textarea id="rsvpNote" maxlength="220" placeholder="Conte-nos se houver alguma restrição ou observação" data-i18n-placeholder="rsvp.notePh"></textarea>
+                </div>
+                <div class="cta-row">
+                  <button class="btn primary" id="btnRsvpSubmit" type="button" data-i18n="rsvp.submit">Enviar RSVP</button>
+                  <button class="btn ghost" id="btnRsvpReset" type="button" data-i18n="rsvp.reset">Limpar</button>
+                </div>
+                <div class="muted" style="font-size: 12px; line-height: 1.7" data-i18n="rsvp.helper">
+                  Caso seus planos mudem, você pode enviar novamente mais perto da data.
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="kicker" data-i18n="rsvp.summaryKicker">EVENT OVERVIEW</div>
+              <div class="stat-grid" id="rsvpStats"></div>
+              <div class="hr"></div>
+              <div class="rsvp-status" id="rsvpLastSubmission"></div>
+            </div>
+          </div>
+
+          <div class="card" style="margin-top: 14px">
+            <div class="section-header-row">
+              <div>
+                <h3 class="section-title" style="font-size: 18px; margin-top: 0" data-i18n="guestbook.title">Mensagem</h3>
+                <p class="section-sub" style="margin-bottom: 0" data-i18n="section.message.sub">Depois do RSVP, deixe uma mensagem para tornar este dia ainda mais especial.</p>
+              </div>
+            </div>
+            <div class="row">
+              <div>
+                <div class="label sr-only" data-i18n="guestbook.nameLabel">Nome</div>
+                <input id="gbName" type="text" maxlength="16" placeholder="Seu nome (opcional)" data-i18n-placeholder="guestbook.namePh" />
+              </div>
+              <div>
+                <div class="label sr-only" data-i18n="guestbook.msgLabel">Mensagem</div>
+                <textarea id="gbMessage" maxlength="200" placeholder="Deixe sua mensagem" data-i18n-placeholder="guestbook.msgPh"></textarea>
+              </div>
+              <div class="cta-row">
+                <button class="btn primary" id="btnGbSubmit" type="button" data-i18n="guestbook.submit">Enviar</button>
+              </div>
+              <div class="hr"></div>
+              <div id="guestbookList" class="row" aria-label="방명록 목록"></div>
+              <div class="cta-row" id="guestbookMoreWrap" style="margin-top: 12px; display: none">
+                <button class="btn" id="btnGuestbookMore" type="button">Ver mais</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="faq">
+        <div class="wrap">
+          <h2 class="section-title" data-i18n="section.faq.title">Guia rápido</h2>
+          <p class="section-sub" data-i18n="section.faq.sub">Alguns detalhes úteis para que todos possam aproveitar o dia com leveza.</p>
+          <div class="grid2" id="faqGrid"></div>
+        </div>
+      </section>
+
+      <section id="gift">
+        <div class="wrap">
+          <h2 class="section-title" data-i18n="section.gift.title">Presentes</h2>
+          <p class="section-sub" data-i18n-html="section.gift.sub">Use o botão “Copiar” para copiar os dados com segurança.</p>
+
+          <div class="grid2">
+            <div class="card">
+              <h3 class="section-title" style="font-size: 18px; margin-top: 0" data-i18n="gift.groom.side">Lado do noivo</h3>
+              <div class="kv">
+                <div class="k" data-i18n="gift.holder">Titular</div>
+                <div class="v" id="groomHolder">홍길동</div>
+              </div>
+              <div class="hr"></div>
+              <div class="kv">
+                <div class="k" data-i18n="gift.account">Conta</div>
+                <div class="v">
+                  <div id="groomBank">은행명 000-000-000000</div>
+                  <div class="cta-row" style="margin-top: 10px">
+                    <button class="btn" type="button" data-copy="#groomBank" data-i18n="common.copy">Copiar</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <h3 class="section-title" style="font-size: 18px; margin-top: 0" data-i18n="gift.bride.side">Lado da noiva</h3>
+              <div class="kv">
+                <div class="k" data-i18n="gift.holder">Titular</div>
+                <div class="v" id="brideHolder">김영희</div>
+              </div>
+              <div class="hr"></div>
+              <div class="kv">
+                <div class="k" data-i18n="gift.account">Conta</div>
+                <div class="v">
+                  <div id="brideBank">은행명 000-000-000000</div>
+                  <div class="cta-row" style="margin-top: 10px">
+                    <button class="btn" type="button" data-copy="#brideBank" data-i18n="common.copy">Copiar</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="wrap">
+          <div class="card" style="text-align: center">
+            <div class="muted" style="font-size: 13px; line-height: 1.8" data-i18n-html="section.footer.note">
+              Agradecemos de coração por celebrarem o nosso casamento.
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- ====== Lightbox ====== -->
+    <dialog id="dlgLightbox" aria-label="Imagem">
+      <div class="dlg-head">
+        <div class="dlg-head-left">
+          <h3 data-i18n="dlg.photo.title">Foto</h3>
+          <span class="dlg-sub" id="lightboxCounter">1 / 1</span>
+        </div>
+        <div class="dlg-head-right">
+          <button class="icon-btn lightbox-navbtn" id="btnLightboxPrev" type="button" data-i18n-aria="aria.prev" aria-label="Prev">
+            <svg class="ab-ico" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M15.5 19.5 8.5 12l7-7.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
+          <button class="icon-btn lightbox-navbtn" id="btnLightboxNext" type="button" data-i18n-aria="aria.next" aria-label="Next">
+            <svg class="ab-ico" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M8.5 4.5 15.5 12l-7 7.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
+          <button
+            class="icon-btn"
+            type="button"
+            data-close="dlgLightbox"
+            aria-label="Fechar"
+            data-i18n-aria="aria.close"
+            data-i18n="common.close"
+          >
+            Fechar
+          </button>
+        </div>
+      </div>
+      <div class="dlg-body">
+        <div class="lightbox-stage" id="lightboxStage">
+          <div class="lightbox-pan" id="lightboxPan">
+            <img id="lightboxImg" alt="Imagem ampliada" data-i18n-alt="dlg.photo.alt" />
+          </div>
+        </div>
+        <div class="muted" style="font-size: 12px; margin-top: 10px">
+          <span data-i18n="dlg.photo.hint">Feche e selecione outra foto para ver mais.</span>
+        </div>
+      </div>
+    </dialog>
+
+    <div class="toast" id="toast" role="status" aria-live="polite">Concluído</div>
+
+    <!-- ====== Quick actions (Mobile) ====== -->
+    <div class="actionbar" id="actionBar" role="navigation" aria-label="Quick actions">
+      <div class="actionbar-inner">
+        <button class="ab-btn" id="abMap" type="button">
+          <svg class="ab-ico" viewBox="0 0 24 24" aria-hidden="true">
+            <path
+              d="M12 21s7-5.3 7-11a7 7 0 1 0-14 0c0 5.7 7 11 7 11z"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <circle cx="12" cy="10" r="2.5" fill="none" stroke="currentColor" stroke-width="2" />
+          </svg>
+          <span class="ab-txt" data-i18n="quick.map">Mapa</span>
+        </button>
+
+        <button class="ab-btn" id="abWhatsapp" type="button">
+          <svg class="ab-ico" viewBox="0 0 32 32" aria-hidden="true">
+            <path
+              d="M19.11 17.29c-.27-.14-1.6-.79-1.85-.88-.25-.09-.43-.14-.61.14-.18.27-.7.88-.86 1.06-.16.18-.31.2-.58.07-.27-.14-1.12-.41-2.13-1.31-.79-.71-1.33-1.58-1.48-1.85-.16-.27-.02-.42.12-.55.12-.12.27-.31.41-.46.14-.16.18-.27.27-.45.09-.18.05-.34-.02-.48-.07-.14-.61-1.48-.84-2.03-.22-.53-.45-.46-.61-.47h-.52c-.18 0-.48.07-.73.34-.25.27-.95.93-.95 2.26s.98 2.62 1.12 2.8c.14.18 1.93 2.95 4.68 4.13.65.28 1.15.45 1.55.58.65.21 1.24.18 1.71.11.52-.08 1.6-.66 1.83-1.3.23-.64.23-1.18.16-1.3-.07-.12-.25-.2-.52-.34z"
+              fill="currentColor"
+            />
+            <path
+              d="M26.67 5.33C23.83 2.5 20.06 1 16.04 1 7.9 1 1.3 7.6 1.3 15.74c0 2.6.68 5.14 1.97 7.38L1 31l8.08-2.22c2.17 1.19 4.62 1.81 7.1 1.81h.01c8.14 0 14.74-6.6 14.74-14.74 0-3.99-1.55-7.75-4.26-10.52zm-10.62 22.7h-.01c-2.22 0-4.4-.6-6.29-1.73l-.45-.27-4.79 1.32 1.28-4.67-.29-.48a12.17 12.17 0 0 1-1.85-6.46c0-6.71 5.46-12.17 12.18-12.17 3.25 0 6.31 1.26 8.59 3.54 2.28 2.29 3.54 5.34 3.54 8.6 0 6.71-5.46 12.17-12.11 12.32z"
+              fill="currentColor"
+            />
+          </svg>
+          <span class="ab-txt" data-i18n="quick.whatsapp">WhatsApp</span>
+        </button>
+
+        <button class="ab-btn" id="abPix" type="button">
+          <svg class="ab-ico" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 7h16M6 11h12M8 15h8M10 19h4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+          </svg>
+          <span class="ab-txt" data-i18n="quick.pix">PIX</span>
+        </button>
+
+        <button class="ab-btn" id="abLang" type="button">
+          <svg class="ab-ico" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 5h8M8 5v14M6 9h4M14 19l6-14M14 12h6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+          </svg>
+          <span class="ab-txt" data-i18n="quick.lang">언어</span>
+        </button>
+
+        <button class="ab-btn" id="abTheme" type="button">
+          <svg class="ab-ico" viewBox="0 0 24 24" aria-hidden="true">
+            <path
+              d="M21 12.3A8.5 8.5 0 0 1 11.7 3 6.8 6.8 0 1 0 21 12.3z"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          <span class="ab-txt" data-i18n="quick.theme">테마</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ====== Quick sheets ====== -->
+    <dialog id="dlgQuickContact" aria-label="Contact">
+      <div class="dlg-head">
+        <h3 data-i18n="quick.contactTitle">WhatsApp</h3>
+        <button class="icon-btn" type="button" data-close="dlgQuickContact" data-i18n="common.close" data-i18n-aria="aria.close" aria-label="Fechar">
+          Fechar
+        </button>
+      </div>
+      <div class="dlg-body">
+        <div class="row2">
+          <a class="btn" id="quickWhatsappGroom" href="#" target="_blank" rel="noreferrer"><span data-i18n="quick.groom">Noivo</span></a>
+          <a class="btn" id="quickWhatsappBride" href="#" target="_blank" rel="noreferrer"><span data-i18n="quick.bride">Noiva</span></a>
+        </div>
+      </div>
+    </dialog>
+
+    <dialog id="dlgQuickPix" aria-label="PIX">
+      <div class="dlg-head">
+        <h3 data-i18n="quick.pixTitle">PIX</h3>
+        <button class="icon-btn" type="button" data-close="dlgQuickPix" data-i18n="common.close" data-i18n-aria="aria.close" aria-label="Fechar">
+          Fechar
+        </button>
+      </div>
+      <div class="dlg-body">
+        <div class="row2">
+          <button class="btn" id="quickPixGroom" type="button"><span data-i18n="quick.groom">Noivo</span></button>
+          <button class="btn" id="quickPixBride" type="button"><span data-i18n="quick.bride">Noiva</span></button>
+        </div>
+      </div>
+    </dialog>
+
+    <script>
+      // ================== CONFIG (여기만 수정하면 됩니다) ==================
+      const WEDDING = {
+        groomName: "Haseung Song",
+        brideName: "Larissa Vilas Boas de Araujo",
+        dateText: "2026. 05. 30 (sáb) 16:30",
+        dateISO: "2026-05-30T16:30:00-03:00", // 캘린더용 (브라질 기준 예시)
+        placeText: "Rancho do Celso - Rifaina/SP",
+        placeShort: "Rancho do Celso - Rifaina/SP",
+        addressText: "Rancho do Celso - Rifaina/SP",
+        naviLink: "https://goo.gl/maps/Eir3bNDdSjEec3YJA?g_st=aw",
+        mapEmbedUrl:
+          "https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3747.480863602356!2d-47.428118924769045!3d-20.07217598134847!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMjDCsDA0JzE5LjgiUyA0N8KwMjUnMzIuMCJX!5e0!3m2!1sko!2sbr!4v1770246189302!5m2!1sko!2sbr", // 구글 지도 퍼가기(Embed) iframe의 src
+        // 연락처(브라질): WhatsApp/전화 링크가 잘 되려면 국가코드 포함 추천 (+55 ...)
+        phone: { groom: "+55 11 98145-1081", bride: "+55 11 98811-2997" },
+        gift: {
+          groomHolder: "Haseung Song (Bradesco)",
+          groomBank: "70399339183",
+          brideHolder: "Larissa Vilas Boas de Araujo (Nubank)",
+          brideBank: "32346800864",
+        },
+        heroQuote: {
+          pt: "Queremos que este site seja tão acolhedor quanto o dia que estamos preparando para receber você.",
+          ko: "이 초대장이, 저희가 준비한 하루처럼 따뜻하고 편안하게 느껴지길 바랍니다.",
+        },
+        heroMediaNote: {
+          pt: "Uma celebração íntima ao pôr do sol, com atmosfera leve, mesa preparada com carinho e informações organizadas para todos os convidados.",
+          ko: "노을이 지는 시간, 편안한 분위기와 정성껏 준비한 식사, 그리고 하객분들이 한눈에 보기 쉬운 안내를 담은 웨딩 사이트입니다.",
+        },
+        heroFacts: [
+          { label: { pt: "Dress code", ko: "드레스 코드" }, value: { pt: "Elegante leve", ko: "격식은 갖추되 편안하게" } },
+          { label: { pt: "Ambiente", ko: "예식 분위기" }, value: { pt: "Ao ar livre", ko: "야외 중심" } },
+          { label: { pt: "Chegada", ko: "도착 권장" }, value: { pt: "20 min antes", ko: "20분 전 도착" } },
+        ],
+        storyParagraphs: [
+          {
+            pt: "Entre o céu azul de Rifaina e a calmaria do fim da tarde, escolhemos celebrar o nosso casamento de um jeito íntimo, leve e cheio de afeto.",
+            ko: "리파이나의 푸른 하늘과 잔잔한 오후 아래에서, 저희는 가장 우리다운 방식으로 따뜻하고 편안한 결혼식을 준비하고 있습니다.",
+          },
+          {
+            pt: "Queremos que este convite seja mais do que uma página com informações. Ele é o primeiro capítulo do dia que vamos viver ao lado das pessoas que amamos.",
+            ko: "이 초대장이 단순한 안내 페이지를 넘어, 사랑하는 분들과 함께할 하루의 첫 장면처럼 느껴졌으면 좋겠습니다.",
+          },
+          {
+            pt: "Cada detalhe foi pensado para que todos possam chegar com tranquilidade, jantar com conforto e guardar boas memórias até a última música da noite.",
+            ko: "오시는 길부터 식사, 저녁의 분위기까지 한 분 한 분이 편안하게 머무르실 수 있도록 세심하게 준비하고 있습니다.",
+          },
+        ],
+        storyMoments: [
+          {
+            eyebrow: { pt: "CERIMONIA", ko: "CEREMONY" },
+            title: { pt: "Pôr do sol e votos", ko: "노을 아래의 예식" },
+            text: { pt: "Uma cerimônia ao ar livre, com luz suave e atmosfera serena.", ko: "야외에서 진행되는 예식으로, 부드러운 빛과 차분한 분위기를 담았습니다." },
+          },
+          {
+            eyebrow: { pt: "RECEPCAO", ko: "RECEPTION" },
+            title: { pt: "Jantar e brindes", ko: "식사와 건배" },
+            text: { pt: "Depois dos votos, queremos brindar com todos em uma recepção aconchegante.", ko: "예식 후에는 함께 식사하고 웃으며 여유롭게 축하를 나누고 싶습니다." },
+          },
+          {
+            eyebrow: { pt: "GUEST EXPERIENCE", ko: "GUEST EXPERIENCE" },
+            title: { pt: "Uma noite para lembrar", ko: "기억에 남는 하루" },
+            text: { pt: "Informações claras, RSVP fácil e uma experiência pensada como um site de evento completo.", ko: "한눈에 보기 쉬운 안내와 RSVP, 그리고 완성도 높은 행사 사이트 경험을 목표로 했습니다." },
+          },
+        ],
+        hostHighlights: [
+          { label: { pt: "Dress code", ko: "드레스 코드" }, value: { pt: "Elegante e leve", ko: "우아하고 편안하게" } },
+          { label: { pt: "Atmosfera", ko: "분위기" }, value: { pt: "Romântica ao ar livre", ko: "로맨틱한 야외 웨딩" } },
+          { label: { pt: "Estacionamento", ko: "주차" }, value: { pt: "Disponível no local", ko: "행사장 내 가능" } },
+        ],
+        programItems: [
+          {
+            time: "15:30",
+            title: { pt: "Recepção dos convidados", ko: "하객 맞이" },
+            text: { pt: "Boas-vindas, acomodação e primeiros registros do dia.", ko: "도착 안내와 자리 안내, 그리고 예식 전 첫 순간을 함께합니다." },
+          },
+          {
+            time: "16:30",
+            title: { pt: "Cerimônia", ko: "예식" },
+            text: { pt: "Troca de votos em uma cerimônia ao pôr do sol.", ko: "노을이 지는 시간에 맞춰 예식이 진행됩니다." },
+          },
+          {
+            time: "17:30",
+            title: { pt: "Coquetel e fotos", ko: "칵테일과 사진" },
+            text: { pt: "Um momento leve para conversar, brindar e fotografar com calma.", ko: "가볍게 대화를 나누고 함께 사진을 남기는 시간입니다." },
+          },
+          {
+            time: "18:30",
+            title: { pt: "Jantar e celebração", ko: "식사와 축하" },
+            text: { pt: "Mesa preparada com carinho para começar a noite de festa.", ko: "정성껏 준비한 식사와 함께 본격적인 축하가 이어집니다." },
+          },
+        ],
+        menuSections: [
+          {
+            title: { pt: "Mesa principal", ko: "메인 메뉴" },
+            description: { pt: "Sabores reconfortantes para o jantar principal.", ko: "편안하게 즐기실 수 있는 메인 식사 구성입니다." },
+            items: [
+              { title: { pt: "Prato da casa", ko: "오늘의 메인 요리" }, note: { pt: "Servido quente no jantar", ko: "디너 타임에 제공됩니다" } },
+              { title: { pt: "Opção vegetariana", ko: "채식 옵션" }, note: { pt: "Disponível mediante RSVP", ko: "RSVP에서 선택 가능합니다" } },
+              { title: { pt: "Acompanhamentos", ko: "사이드 메뉴" }, note: { pt: "Saladas, pães e acompanhamentos leves", ko: "샐러드와 빵, 가벼운 곁들임 메뉴" } },
+            ],
+          },
+          {
+            title: { pt: "Sobremesa", ko: "디저트" },
+            description: { pt: "Uma finalização delicada para compartilhar bons brindes.", ko: "달콤한 마무리와 함께 축하의 분위기를 이어갑니다." },
+            items: [
+              { title: { pt: "Bolo e doces", ko: "웨딩 케이크와 디저트" }, note: { pt: "Seleção especial da celebração", ko: "예식에 맞춘 디저트 셀렉션" } },
+              { title: { pt: "Frutas e café", ko: "과일과 커피" }, note: { pt: "Para uma pausa leve e confortável", ko: "부담 없이 즐기실 수 있도록 준비합니다" } },
+            ],
+          },
+          {
+            title: { pt: "Bebidas", ko: "음료" },
+            description: { pt: "Bebidas leves e brindes para a noite.", ko: "식사와 잘 어울리는 음료와 건배를 위한 구성입니다." },
+            items: [
+              { title: { pt: "Sem álcool", ko: "논알코올 음료" }, note: { pt: "Água, sucos e refrigerantes", ko: "물, 주스, 청량음료" } },
+              { title: { pt: "Brinde", ko: "건배 음료" }, note: { pt: "Servido no momento de celebração", ko: "축하 순간에 함께합니다" } },
+            ],
+          },
+        ],
+        rsvpSettings: {
+          meals: [
+            { value: "classic", label: { pt: "Menu principal", ko: "기본 식사" } },
+            { value: "vegetarian", label: { pt: "Menu vegetariano", ko: "채식 메뉴" } },
+            { value: "light", label: { pt: "Refeição leve", ko: "가벼운 식사" } },
+          ],
+        },
+        faqItems: [
+          {
+            question: { pt: "Há dress code?", ko: "드레스 코드는 어떻게 되나요?" },
+            answer: { pt: "Sugerimos traje elegante e confortável, adequado para cerimônia ao ar livre.", ko: "야외 예식에 어울리는 단정하고 편안한 복장을 추천드립니다." },
+          },
+          {
+            question: { pt: "Posso levar crianças?", ko: "아이와 함께 참석해도 되나요?" },
+            answer: { pt: "Sim. Se vier com crianças, use o campo de observações no RSVP para nos avisar.", ko: "가능합니다. 함께 오시는 경우 RSVP 비고란에 남겨 주세요." },
+          },
+          {
+            question: { pt: "Como funciona o estacionamento?", ko: "주차는 어떻게 하나요?" },
+            answer: { pt: "Há estacionamento no local. Ainda assim, recomendamos chegar com antecedência.", ko: "행사장 내 주차가 가능하며, 조금 여유 있게 도착하시면 더 편합니다." },
+          },
+          {
+            question: { pt: "Posso atualizar meu RSVP depois?", ko: "RSVP를 나중에 수정할 수 있나요?" },
+            answer: { pt: "Sim. Você pode enviar novamente caso seus planos mudem antes do evento.", ko: "네. 일정이 바뀌시면 예식 전까지 다시 제출해 주셔도 됩니다." },
+          },
+        ],
+        essentialsNotice: {
+          title: {
+            pt: "Um evento elegante, leve e pensado para ser vivido com calma.",
+            ko: "우아하지만 편안하게, 천천히 즐기실 수 있도록 준비한 하루입니다.",
+          },
+          copy: {
+            pt: "Como a cerimônia e parte da recepção acontecem em ambiente aberto, recomendamos sapatos confortáveis, chegada antecipada e atenção ao campo de RSVP para preferências alimentares.",
+            ko: "예식과 리셉션 일부가 야외에서 진행되므로 편한 신발을 추천드리며, 식사 관련 요청사항은 RSVP에 남겨 주시면 더 세심하게 준비하겠습니다.",
+          },
+        },
+        detailCards: [
+          {
+            label: { pt: "Dress code", ko: "드레스 코드" },
+            title: { pt: "Elegante e leve", ko: "우아하고 편안하게" },
+            copy: {
+              pt: "Trajes em tons suaves ou neutros combinam bem com o ambiente do evento. Recomendamos calçados confortáveis por conta da área externa.",
+              ko: "부드럽고 차분한 톤의 복장이 행사 분위기와 잘 어울립니다. 야외 공간이 있어 편한 신발을 추천드립니다.",
+            },
+          },
+          {
+            label: { pt: "Arrival", ko: "도착 안내" },
+            title: { pt: "Chegue com antecedência", ko: "조금 여유 있게 도착해 주세요" },
+            copy: {
+              pt: "Sugerimos chegada de 15 a 20 minutos antes da cerimônia para acomodação, fotos e início pontual.",
+              ko: "자리 안내와 사진 촬영, 예식 시작을 위해 15~20분 정도 여유 있게 도착하시면 좋습니다.",
+            },
+          },
+          {
+            label: { pt: "Table service", ko: "식사 안내" },
+            title: { pt: "Informe restrições no RSVP", ko: "식사 요청은 RSVP에 남겨 주세요" },
+            copy: {
+              pt: "Teremos menu principal, opção vegetariana e observações para restrições alimentares informadas com antecedência.",
+              ko: "기본 식사와 채식 옵션을 준비하며, 알레르기나 요청사항은 RSVP를 통해 미리 알려 주시면 반영하겠습니다.",
+            },
+          },
+        ],
+        locationGuide: [
+          {
+            title: { pt: "Estacionamento no local", ko: "행사장 내 주차 가능" },
+            text: { pt: "Há estacionamento disponível no espaço. Ainda assim, chegar com antecedência ajuda a evitar correria.", ko: "행사장 내 주차가 가능하며, 조금 일찍 오시면 더 여유롭게 입장하실 수 있습니다." },
+          },
+          {
+            title: { pt: "Área externa", ko: "야외 공간 안내" },
+            text: { pt: "Parte do evento acontece ao ar livre. Se preferir, leve uma peça leve para o fim da tarde.", ko: "행사 일부가 야외에서 진행되어 저녁 시간에는 가벼운 겉옷이 있으면 좋습니다." },
+          },
+          {
+            title: { pt: "Contato rápido", ko: "빠른 연락" },
+            text: { pt: "Se surgir qualquer imprevisto no dia, use os botões de WhatsApp acima para falar com os noivos.", ko: "행사 당일 문의가 있으시면 상단 WhatsApp 버튼으로 바로 연락해 주세요." },
+          },
+        ],
+
+        // Firebase 공유 모드 (선택): README대로 세팅 후 값 입력
+        firebase: {
+          enabled: true,
+          config: {
+            // (auto) 이전 버전에서 사용하던 Firebase 프로젝트 설정
+            apiKey: "AIzaSyAYhMbJkSRs2uz-ZaAAbyAUrVjArqf1kZQ",
+            authDomain: "emotional-wave-wedding.firebaseapp.com",
+            databaseURL: "https://emotional-wave-wedding-default-rtdb.firebaseio.com",
+            projectId: "emotional-wave-wedding",
+            storageBucket: "emotional-wave-wedding.firebasestorage.app",
+            messagingSenderId: "313104873838",
+            appId: "1:313104873838:web:7099d1ebaaabefddc3297f",
+          },
+        },
+
+        // 갤러리 자동 탐색 (1~11, 01~11, jpg/jpeg 모두 지원)
+        galleryAutoMax: 12,
+        // 특정 파일만 고정으로 쓰고 싶으면 아래처럼 직접 배열을 넣으면 됩니다.
+        // galleryFiles: ["assets/gallery/01.jpg", "assets/gallery/02.jpg"],
+
+        // 히어로 이미지 후보 (먼저 존재하는 파일을 사용)
+        heroImageCandidates: ["assets/hero.jpg", "hero.jpg", "01.jpg", "02.jpg"],
+      };
+
+      // ================== URL PARAMS ==================
+      const params = new URLSearchParams(location.search);
+
+      // ================== LOCAL STORAGE KEYS ==================
+      const THEME_STORAGE_KEY = "wedding.theme.v1";
+      const INTRO_SEEN_KEY = "wedding.intro.seen.v1";
+      const GB_LAST_TS_KEY = "wedding.guestbook.lastTs.v1";
+      const GB_LAST_MSG_KEY = "wedding.guestbook.lastMsg.v1";
+      const GB_LIKES_KEY = "wedding.guestbook.likes.v1";
+      const RSVP_LAST_HASH_KEY = "wedding.rsvp.lastHash.v1";
+      const RSVP_LAST_TS_KEY = "wedding.rsvp.lastTs.v1";
+
+      // ================== UTIL ==================
+      const $ = (sel, root = document) => root.querySelector(sel);
+      const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
+
+      // ================== I18N (Default: Portuguese / BR) ==================
+      const COUNTRY_STORAGE_KEY = "wedding.country.v1";
+      const COUNTRY_TO_LANG = { BR: "pt", KR: "ko" };
+
+      const I18N = {
+        pt: {
+          meta: {
+            title: "Convite de Casamento",
+            description: "Confira a história do casal, o programa do dia, o menu e confirme sua presença no nosso casamento.",
+            ogTitle: "Convite de Casamento",
+            ogDescription: "História, programa, menu e RSVP do nosso casamento",
+          },
+          screen: { overlay: "Uma onda de felicitações, feita por todos" },
+          nav: { info: "Nossa história", program: "Programa", location: "Como chegar", gallery: "Galeria", rsvp: "RSVP", gift: "Presentes" },
+          navShort: { info: "Story", program: "Prog.", location: "Mapa", gallery: "Fotos", rsvp: "RSVP", gift: "PIX" },
+          hero: { kicker: "INVITATION", calendar: "Adicionar ao calendário", join: "Confirmar presença", directions: "Rotas" },
+          intro: { kicker: "WEDDING INVITATION", enter: "Entrar", skip: "Pular", scroll: "Role para continuar" },
+          personal: { greeting: "{name}, que alegria ter você aqui." },
+          story: { kicker: "OUR STORY", highlightsKicker: "HIGHLIGHTS" },
+          essentials: { noticeKicker: "EVENT NOTES" },
+          quick: {
+            map: "Mapa",
+            whatsapp: "WhatsApp",
+            pix: "PIX",
+            lang: "Idioma",
+            theme: "Tema",
+            contactTitle: "WhatsApp",
+            pixTitle: "PIX",
+            groom: "Noivo",
+            bride: "Noiva",
+          },
+          data: {
+            local: "Evento ao ar livre – sapato confortável recomendado",
+            shared: "Detalhes do nosso grande dia",
+            noteLocal: "Modo local. Para juntar participação de todos, ative o modo compartilhado (Firebase). (Veja o README)",
+            noteShared: "Modo compartilhado. A participação de todos aparece em tempo real.",
+            hintLocal: "No modo local, salva apenas neste dispositivo. No modo compartilhado (Firebase), soma respostas de todos.",
+            hintShared: "Modo compartilhado: respostas de todos ficam reunidas.",
+          },
+          pill: { ceremony: "Cerimônia", place: "Local" },
+          section: {
+            invite: {
+              title: "Nossa história",
+              text:
+                "Um convite pensado como uma experiência completa: história, detalhes, menu e RSVP em um só lugar.",
+            },
+            program: { title: "Programa do dia", sub: "Uma jornada suave do pôr do sol até a celebração da noite." },
+            menu: { title: "Menu", sub: "Preparamos uma mesa acolhedora para que todos celebrem com conforto." },
+            essentials: { title: "Detalhes do evento", sub: "Tudo o que os convidados precisam saber, sem excesso e com clareza." },
+            location: { title: "Como chegar", sub: "Por favor, consulte o local abaixo para participar do evento.", route: "Abrir rotas", copy: "Copiar endereço", transitTitle: "Transporte" },
+            gallery: { title: "Galeria", sub: "Uma seleção de fotos para acompanhar a atmosfera do nosso dia." },
+            rsvp: { title: "RSVP", sub: "Confirme sua presença e nos ajude a preparar cada detalhe com carinho." },
+            message: { sub: "Depois do RSVP, deixe uma mensagem para tornar este dia ainda mais especial." },
+            faq: { title: "Guia rápido", sub: "Alguns detalhes úteis para que todos possam aproveitar o dia com leveza." },
+            gift: {
+              title: "Presentes",
+              sub: "Sua presença já é muito especial para nós. Caso deseje nos presentear, uma contribuição via PIX será recebida com carinho.",
+            },
+            footer: { note: "Agradecemos de coração por celebrarem o nosso casamento." },
+          },
+          info: {
+            dateLabel: "Data",
+            placeLabel: "Local",
+            contactLabel: "Contato",
+            contactGroom: "Noivo",
+            contactBride: "Noiva",
+            noteLabel: "Aviso",
+            mapLinkText: "O Link",
+            noteText: "Estacionamento no local do evento",
+          },
+          location: {
+            route: "Abrir no Google Maps",
+            copy: "Copiar endereço",
+            copyLink: "Copiar link do mapa",
+            share: "Compartilhar",
+            linkLabel: "Link do Google Maps:",
+            guideTitle: "Chegar com tranquilidade",
+            guideIntro: "Reunimos os pontos principais para que sua chegada seja leve e sem pressa.",
+            transit: {
+              subway: "Metrô",
+              subwayEx: "Ex) Linha X, Estação Y, 5 min a pé",
+              bus: "Ônibus",
+              busEx: "Ex) 000, 000, 000 (ponto)",
+              parking: "Estacionamento",
+              parkingEx: "Ex) 2h grátis / recomendado transporte público",
+            },
+          },
+          wave: { title: "Onda de felicitações", placeholder: "Uma mensagem curta (opcional)" },
+          emotion: { calm: "Calma", moved: "Emoção", joy: "Alegria", gratitude: "Gratidão" },
+          poll: {
+            title: "Votação de palavras",
+            sub: "Escolha uma. O resultado atualiza automaticamente.",
+            export: "Exportar meus dados",
+            clear: "Limpar dados deste dispositivo",
+            option: { warm: "Um começo acolhedor", bright: "Um dia brilhante", calm: "Felicidade tranquila", fun: "Memórias divertidas" },
+            votes: "{count} voto(s) · {pct}%",
+            ariaVote: "Votar: {label}",
+          },
+          rsvp: {
+            statusLabel: "Resposta",
+            statusAttending: "Estarei presente",
+            statusNotAttending: "Não poderei ir",
+            nameLabel: "Nome",
+            namePh: "Seu nome completo",
+            guestsLabel: "Acompanhantes",
+            mealLabel: "Preferência de refeição",
+            noteLabel: "Alergias ou pedidos",
+            notePh: "Conte-nos se houver alguma restrição ou observação",
+            submit: "Enviar RSVP",
+            reset: "Limpar",
+            helper: "Caso seus planos mudem, você pode enviar novamente mais perto da data.",
+            summaryKicker: "EVENT OVERVIEW",
+            statsResponses: "Respostas recebidas",
+            statsAttending: "Confirmações",
+            statsRegrets: "Ausências",
+            statsGuests: "Pessoas previstas",
+            savedTitle: "Sua resposta mais recente",
+            savedEmpty: "Ainda não há RSVP salvo neste dispositivo.",
+            savedAttending: "Presença confirmada para {name} · {guests} pessoa(s)",
+            savedRegret: "{name} informou que não poderá comparecer",
+          },
+          guestbook: {
+            title: "Mensagem de carinho",
+            nameLabel: "Nome",
+            namePh: "Seu nome (opcional)",
+            msgLabel: "Mensagem",
+            msgPh: "Deixe sua mensagem",
+            submit: "Enviar",
+            empty: "Ainda não há mensagens. Seja o(a) primeiro(a)!",
+            anonymous: "Anônimo",
+            more: "Ver mais",
+            less: "Mostrar menos",
+          },
+          dlg: {
+            photo: {
+              title: "Foto",
+              hint: "Deslize para mudar · Pinça para zoom · Duplo toque para ajustar · Deslize para baixo para fechar",
+              alt: "Imagem ampliada",
+            },
+          },
+          gift: { groomSide: "Lado do noivo", brideSide: "Lado da noiva", holder: "Titular", account: "Conta" },
+          common: { copy: "Copiar", close: "Fechar", save: "Salvar" },
+          toast: {
+            copied: "Copiado",
+            copyFail: "Falha ao copiar",
+            checkInput: "Verifique os dados",
+            needDateISO: "Defina o dateISO",
+            downloaded: "Arquivo do calendário baixado",
+            needMessage: "Digite uma mensagem",
+            needRsvpName: "Informe o seu nome para o RSVP",
+            leftMessage: "Enviado",
+            rsvpSent: "RSVP enviado com sucesso",
+            cleared: "Limpo",
+            voted: "Votado",
+            joined: "Participação enviada",
+            cooldown: "Aguarde {sec}s e tente novamente",
+            duplicate: "Mensagem repetida. Você pode escrever algo diferente.",
+            duplicateRsvp: "Esse RSVP já foi enviado recentemente. Atualize algum campo para reenviar.",
+            themeLight: "Tema claro",
+            themeDark: "Tema escuro",
+            langPt: "Português",
+            langKo: "한국어",
+          },
+          gallery: { needFiles: "Adicione fotos em assets/gallery/", open: "Abrir foto", alt: "Foto da galeria", more: "Ver todas ({count})", less: "Mostrar menos" },
+          aria: { whatsapp: "Abrir conversa no WhatsApp", close: "Fechar", prev: "Anterior", next: "Próxima", like: "Curtir" },
+        },
+        ko: {
+          meta: {
+            title: "결혼식에 초대합니다",
+            description: "두 사람의 이야기, 예식 프로그램, 식사 안내, RSVP까지 한 번에 확인하실 수 있습니다.",
+            ogTitle: "결혼식에 초대합니다",
+            ogDescription: "스토리, 프로그램, 메뉴, RSVP 안내",
+          },
+          screen: { overlay: "함께 만드는 축하의 파도" },
+          nav: { info: "우리 이야기", program: "프로그램", location: "오시는 길", gallery: "갤러리", rsvp: "RSVP", gift: "마음 전하실 곳" },
+          navShort: { info: "스토리", program: "순서", location: "지도", gallery: "사진", rsvp: "RSVP", gift: "PIX" },
+          hero: { kicker: "INVITATION", calendar: "캘린더 추가", join: "참석 여부 남기기", directions: "길찾기" },
+          intro: { kicker: "WEDDING INVITATION", enter: "입장하기", skip: "건너뛰기", scroll: "스크롤해서 계속" },
+          personal: { greeting: "{name}님, 와주셔서 정말 감사해요." },
+          story: { kicker: "OUR STORY", highlightsKicker: "HIGHLIGHTS" },
+          essentials: { noticeKicker: "EVENT NOTES" },
+          quick: {
+            map: "지도",
+            whatsapp: "왓츠앱",
+            pix: "PIX",
+            lang: "언어",
+            theme: "테마",
+            contactTitle: "WhatsApp",
+            pixTitle: "PIX",
+            groom: "신랑",
+            bride: "신부",
+          },
+          data: {
+            local: "야외 행사입니다 — 편한 신발을 추천드려요",
+            shared: "데이터 저장: 공유(Firebase)",
+            noteLocal: "현재는 “로컬 저장” 모드입니다. 여러 사람의 참여를 모으려면 Firebase 공유 모드를 설정해 주세요. (README 참고)",
+            noteShared: "지금은 “공유 모드”입니다. 여러 사람의 참여가 실시간으로 모입니다.",
+            hintLocal: "로컬 모드: 이 기기에서만 저장됩니다. 공유 모드를 켜면 여러 사람의 RSVP가 모입니다.",
+            hintShared: "공유 모드: 여러 사람의 RSVP가 한 곳에 모입니다.",
+          },
+          pill: { ceremony: "예식", place: "장소" },
+          section: {
+            invite: {
+              title: "우리 이야기",
+              text: "두 사람의 이야기, 예식 순서, 식사 안내, RSVP까지 한 번에 볼 수 있도록 정성껏 준비한 초대장입니다.",
+            },
+            program: { title: "프로그램", sub: "노을이 지는 시간부터 저녁의 축하까지, 하루의 흐름을 차분하게 안내합니다." },
+            menu: { title: "식사 안내", sub: "모두가 편안하게 즐기실 수 있도록 식사 구성을 준비했습니다." },
+            essentials: { title: "행사 안내", sub: "하객분들이 가장 많이 궁금해하실 내용을 간결하게 정리했습니다." },
+            location: { title: "오시는 길", sub: "아래 장소를 참고 해서 행사 참석 바랍니다.", route: "길찾기 링크", copy: "주소 복사", transitTitle: "교통 안내" },
+            gallery: { title: "갤러리", sub: "이 날의 분위기를 미리 전하는 사진들입니다." },
+            rsvp: { title: "RSVP", sub: "참석 여부를 남겨 주시면 더 세심하게 준비할 수 있습니다." },
+            message: { sub: "RSVP를 남기신 뒤, 따뜻한 축하 메시지도 함께 전해 주세요." },
+            faq: { title: "안내", sub: "편하게 오실 수 있도록 자주 궁금해하실 내용을 정리했습니다." },
+            gift: {
+              title: "마음 전하실 곳",
+              sub: "함께해 주시는 것만으로도 큰 기쁨입니다.<br />혹시 마음을 전하고 싶으시다면, PIX로 따뜻한 마음을 전해주셔도 감사히 받겠습니다.",
+            },
+            footer: { note: "함께해 주시는 마음을 오래 기억하겠습니다. 저희의 하루를 함께해 주셔서 감사합니다." },
+          },
+          info: {
+            dateLabel: "일시",
+            placeLabel: "장소",
+            contactLabel: "연락처",
+            contactGroom: "신랑",
+            contactBride: "신부",
+            noteLabel: "안내",
+            mapLinkText: "링크",
+            noteText: "행사장 내 주차가 가능합니다.",
+          },
+          location: {
+            route: "구글 지도 열기",
+            copy: "주소 복사",
+            copyLink: "지도 링크 복사",
+            share: "공유하기",
+            linkLabel: "구글 지도 링크:",
+            guideTitle: "편안하게 오실 수 있도록",
+            guideIntro: "현장에 오실 때 참고하시면 좋은 핵심 정보만 모았습니다.",
+            transit: {
+              subway: "지하철",
+              subwayEx: "예) 0호선 0역 0번 출구 도보 5분",
+              bus: "버스",
+              busEx: "예) 000, 000, 000 (정류장명)",
+              parking: "주차",
+              parkingEx: "예) 2시간 무료 / 혼잡 예상, 대중교통 권장",
+            },
+          },
+          wave: { title: "축하 파도", placeholder: "짧은 축하 한 줄 (선택)" },
+          emotion: { calm: "차분함", moved: "감동", joy: "기쁨", gratitude: "감사" },
+          poll: {
+            title: "축하 키워드 투표",
+            sub: "하나를 골라 주세요. 결과는 자동으로 반영됩니다.",
+            export: "내 데이터 내보내기",
+            clear: "이 기기 데이터 초기화",
+            option: { warm: "따뜻한 시작", bright: "반짝이는 하루", calm: "편안한 행복", fun: "즐거운 추억" },
+            votes: "{count}표 · {pct}%",
+            ariaVote: "{label} 투표",
+          },
+          rsvp: {
+            statusLabel: "응답",
+            statusAttending: "참석합니다",
+            statusNotAttending: "참석이 어렵습니다",
+            nameLabel: "이름",
+            namePh: "성함을 입력해 주세요",
+            guestsLabel: "동행 인원",
+            mealLabel: "식사 선택",
+            noteLabel: "알레르기/요청사항",
+            notePh: "식사나 좌석 관련 요청이 있으면 남겨 주세요",
+            submit: "RSVP 보내기",
+            reset: "초기화",
+            helper: "일정이 바뀌면 예식 전까지 다시 제출하셔도 됩니다.",
+            summaryKicker: "EVENT OVERVIEW",
+            statsResponses: "응답 수",
+            statsAttending: "참석",
+            statsRegrets: "불참",
+            statsGuests: "예상 인원",
+            savedTitle: "최근 내 응답",
+            savedEmpty: "이 기기에는 아직 저장된 RSVP가 없습니다.",
+            savedAttending: "{name}님 참석 · 총 {guests}명 예정",
+            savedRegret: "{name}님은 참석이 어렵다고 응답하셨습니다",
+          },
+          guestbook: {
+            title: "축하 메시지",
+            nameLabel: "이름",
+            namePh: "성함 (선택)",
+            msgLabel: "메시지",
+            msgPh: "따뜻한 마음을 남겨 주세요",
+            submit: "메시지 남기기",
+            empty: "아직 메시지가 없습니다. 첫 메시지를 남겨 주세요.",
+            anonymous: "익명",
+            more: "더보기",
+            less: "접기",
+          },
+          dlg: {
+            photo: { title: "사진", hint: "스와이프로 넘기기 · 핀치로 확대 · 더블탭으로 맞춤 · 아래로 스와이프 닫기", alt: "확대 이미지" },
+          },
+          gift: { groomSide: "신랑 측", brideSide: "신부 측", holder: "예금주", account: "계좌" },
+          common: { copy: "복사", close: "닫기", save: "저장" },
+          toast: {
+            copied: "복사했습니다",
+            copyFail: "복사에 실패했습니다",
+            checkInput: "입력값을 확인해 주세요",
+            needDateISO: "dateISO를 설정해 주세요",
+            downloaded: "캘린더 파일을 내려받았습니다",
+            needMessage: "메시지를 입력해 주세요",
+            needRsvpName: "RSVP를 위해 성함을 입력해 주세요",
+            leftMessage: "남겼습니다",
+            rsvpSent: "RSVP가 저장되었습니다",
+            cleared: "초기화했습니다",
+            voted: "투표했습니다",
+            joined: "참여했습니다",
+            cooldown: "{sec}초 후에 다시 시도해 주세요",
+            duplicate: "같은 메시지는 연속으로 남길 수 없어요",
+            duplicateRsvp: "같은 RSVP가 방금 전송되었습니다. 변경 후 다시 제출해 주세요.",
+            themeLight: "라이트 모드",
+            themeDark: "다크 모드",
+            langPt: "Português",
+            langKo: "한국어",
+          },
+          gallery: { needFiles: "assets/gallery/에 사진을 넣어주세요", open: "사진 확대", alt: "갤러리 사진", more: "전체 보기 ({count})", less: "접기" },
+          aria: { whatsapp: "WhatsApp으로 바로 연락하기", close: "닫기", prev: "이전 사진", next: "다음 사진", like: "하트" },
+        },
+      };
+
+      let currentCountry = "BR";
+      let currentLang = "pt";
+
+      function t(key, vars = {}) {
+        const parts = String(key).split(".");
+        let cur = I18N[currentLang];
+        for (const p of parts) cur = cur?.[p];
+        const raw = typeof cur === "string" ? cur : "";
+        return raw.replace(/\{(\w+)\}/g, (_, k) => (vars[k] == null ? "" : String(vars[k])));
+      }
+
+      function tl(value) {
+        if (value && typeof value === "object") return String(value[currentLang] ?? value.pt ?? value.ko ?? "");
+        return String(value ?? "");
+      }
+
+      function setMeta() {
+        document.title = t("meta.title");
+        const desc = document.querySelector('meta[name="description"]');
+        desc && desc.setAttribute("content", t("meta.description"));
+        const ogt = document.querySelector('meta[property="og:title"]');
+        ogt && ogt.setAttribute("content", t("meta.ogTitle"));
+        const ogd = document.querySelector('meta[property="og:description"]');
+        ogd && ogd.setAttribute("content", t("meta.ogDescription"));
+      }
+
+      function applyI18n() {
+        document.documentElement.lang = currentLang === "ko" ? "ko" : "pt-BR";
+        setMeta();
+
+        $$("[data-i18n]").forEach((el) => {
+          el.textContent = t(el.getAttribute("data-i18n"));
+        });
+        $$("[data-i18n-html]").forEach((el) => {
+          el.innerHTML = t(el.getAttribute("data-i18n-html"));
+        });
+        $$("[data-i18n-placeholder]").forEach((el) => {
+          el.setAttribute("placeholder", t(el.getAttribute("data-i18n-placeholder")));
+        });
+        $$("[data-i18n-alt]").forEach((el) => {
+          el.setAttribute("alt", t(el.getAttribute("data-i18n-alt")));
+        });
+        $$("[data-i18n-aria]").forEach((el) => {
+          el.setAttribute("aria-label", t(el.getAttribute("data-i18n-aria")));
+        });
+
+        // 버튼 활성 표시
+        $$(".lang-btn").forEach((b) => {
+          const c = (b.getAttribute("data-country") || "").toUpperCase();
+          b.classList.toggle("active", c === currentCountry);
+        });
+      }
+
+      // ================== THEME ==================
+      let themeMode = "system"; // light | dark | system
+      let themeMql = null;
+
+      function resolveInitialTheme() {
+        const q = String(params.get("theme") || "").toLowerCase();
+        if (q === "light" || q === "dark" || q === "system") return q;
+        const saved = String(localStorage.getItem(THEME_STORAGE_KEY) || "").toLowerCase();
+        if (saved === "light" || saved === "dark" || saved === "system") return saved;
+        return "system";
+      }
+
+      function applyTheme(mode) {
+        const root = document.documentElement;
+        const pick =
+          mode === "system"
+            ? window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches
+              ? "dark"
+              : "light"
+            : mode;
+        root.setAttribute("data-theme", pick);
+      }
+
+      function initTheme(mode) {
+        themeMode = mode || "system";
+        localStorage.setItem(THEME_STORAGE_KEY, themeMode);
+        if (!themeMql && window.matchMedia) {
+          themeMql = window.matchMedia("(prefers-color-scheme: dark)");
+          themeMql.addEventListener?.("change", () => {
+            if (themeMode === "system") applyTheme("system");
+          });
+        }
+        applyTheme(themeMode);
+      }
+
+      function toggleTheme() {
+        const cur = document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light";
+        const next = cur === "dark" ? "light" : "dark";
+        initTheme(next);
+        toast(next === "dark" ? t("toast.themeDark") : t("toast.themeLight"));
+      }
+
+      // ================== INTRO / HERO MOTION ==================
+      function prefersReducedMotion() {
+        return !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+      }
+
+      function shouldShowIntro() {
+        if (String(params.get("intro") || "") === "0") return false;
+        if (prefersReducedMotion()) return false;
+        return String(localStorage.getItem(INTRO_SEEN_KEY) || "") !== "1";
+      }
+
+      function showIntro() {
+        const el = $("#introOverlay");
+        if (!el) return;
+        el.classList.remove("hidden");
+        el.setAttribute("aria-hidden", "false");
+        document.body.style.overflow = "hidden";
+        requestAnimationFrame(() => el.classList.add("show"));
+      }
+
+      function hideIntro(markSeen = true) {
+        const el = $("#introOverlay");
+        if (!el) return;
+        el.classList.remove("show");
+        setTimeout(() => {
+          el.classList.add("hidden");
+          el.setAttribute("aria-hidden", "true");
+        }, 220);
+        document.body.style.overflow = "";
+        if (markSeen) localStorage.setItem(INTRO_SEEN_KEY, "1");
+      }
+
+      function initIntro() {
+        if (!shouldShowIntro()) return;
+        showIntro();
+        $("#btnIntroEnter")?.addEventListener("click", () => {
+          hideIntro(true);
+          document.querySelector(".hero")?.scrollIntoView({ behavior: "smooth", block: "start" });
+        });
+        $("#btnIntroSkip")?.addEventListener("click", () => hideIntro(true));
+        $("#introOverlay")?.addEventListener("click", (e) => {
+          if (e.target && (e.target.id === "introOverlay" || e.target.classList?.contains("intro-bg"))) hideIntro(true);
+        });
+        window.addEventListener(
+          "keydown",
+          (e) => {
+            if (e.key === "Escape") hideIntro(true);
+          },
+          { once: true }
+        );
+      }
+
+      function initHeroMotion() {
+        const hero = document.querySelector(".hero");
+        if (!hero || prefersReducedMotion() || !("IntersectionObserver" in window)) return;
+        const io = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((en) => hero.classList.toggle("is-inview", en.isIntersecting));
+          },
+          { threshold: 0.25 }
+        );
+        io.observe(hero);
+      }
+
+      function resolveInitialCountry() {
+        const c = String(params.get("country") || "").toUpperCase();
+        if (c === "KR" || c === "BR") return c;
+        const lang = String(params.get("lang") || "").toLowerCase();
+        if (lang === "ko") return "KR";
+        if (lang === "pt") return "BR";
+        const saved = String(localStorage.getItem(COUNTRY_STORAGE_KEY) || "").toUpperCase();
+        if (saved === "KR" || saved === "BR") return saved;
+        return "BR"; // default: Portuguese
+      }
+
+      function initCountry(country) {
+        const next = String(country || "").toUpperCase();
+        if (next !== "KR" && next !== "BR") return;
+        currentCountry = next;
+        currentLang = COUNTRY_TO_LANG[next] || "pt";
+        localStorage.setItem(COUNTRY_STORAGE_KEY, next);
+        applyI18n();
+      }
+
+      function setCountry(country) {
+        const next = String(country || "").toUpperCase();
+        if (next !== "KR" && next !== "BR") return;
+        initCountry(next);
+        // country 변경 시 WhatsApp/전화/지도 링크 등 동적 링크도 갱신
+        bindContent();
+        setDataModeUI();
+        renderGuestbook();
+        buildGallery();
+      }
+
+      function toast(text) {
+        const t = $("#toast");
+        if (!t) return;
+        t.textContent = text;
+        t.classList.add("show");
+        clearTimeout(toast._timer);
+        toast._timer = setTimeout(() => t.classList.remove("show"), 2200);
+      }
+
+      async function copyText(text) {
+        try {
+          await navigator.clipboard.writeText(text);
+          toast(t("toast.copied"));
+          return true;
+        } catch {
+          try {
+            const ta = document.createElement("textarea");
+            ta.value = text;
+            ta.style.position = "fixed";
+            ta.style.opacity = "0";
+            document.body.appendChild(ta);
+            ta.focus();
+            ta.select();
+            document.execCommand("copy");
+            ta.remove();
+            toast(t("toast.copied"));
+            return true;
+          } catch {
+            toast(t("toast.copyFail"));
+            return false;
+          }
+        }
+      }
+
+      function openDialog(id) {
+        const dlg = document.getElementById(id);
+        if (!dlg) return;
+        if (typeof dlg.showModal === "function") dlg.showModal();
+        else dlg.setAttribute("open", "open");
+      }
+
+      function closeDialog(id) {
+        const dlg = document.getElementById(id);
+        if (!dlg) return;
+        if (typeof dlg.close === "function") dlg.close();
+        else dlg.removeAttribute("open");
+      }
+
+      function safeJsonParse(str, fallback) {
+        try {
+          return JSON.parse(str);
+        } catch {
+          return fallback;
+        }
+      }
+
+      const ASSET_CACHE_BUSTER = String(Date.now());
+
+      function escapeHtml(str) {
+        return String(str || "").replace(/[&<>"']/g, (m) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m]));
+      }
+
+      // ================== DATA PROVIDER ==================
+      const LS_KEYS = {
+        guestbook: "wedding.guestbook.v1",
+        rsvps: "wedding.rsvps.v1",
+        lastRsvp: "wedding.rsvp.last.v1",
+      };
+
+      let db = null;
+      let dataMode = "local";
+
+      function initFirebaseIfEnabled() {
+        if (!WEDDING.firebase?.enabled) return false;
+        const cfg = WEDDING.firebase.config || {};
+        const required = ["apiKey", "authDomain", "databaseURL", "projectId", "appId"];
+        const ok = required.every((k) => String(cfg[k] || "").trim().length > 0);
+        if (!ok) return false;
+
+        try {
+          firebase.initializeApp(cfg);
+          db = firebase.database();
+          dataMode = "shared";
+          return true;
+        } catch (e) {
+          console.warn("Firebase init failed:", e);
+          db = null;
+          dataMode = "local";
+          return false;
+        }
+      }
+
+      function setDataModeUI() {
+        const badge = $("#dataModeBadge");
+        if (dataMode === "shared") {
+          badge && (badge.textContent = t("data.shared"));
+        } else {
+          badge && (badge.textContent = t("data.local"));
+        }
+      }
+
+      function nowTs() {
+        return Date.now();
+      }
+
+      function lsGet(key, fallback) {
+        return safeJsonParse(localStorage.getItem(key) || "", fallback);
+      }
+      function lsSet(key, value) {
+        localStorage.setItem(key, JSON.stringify(value));
+      }
+
+      const guestbookApi = {
+        async add({ name, message }) {
+          const tmpId =
+            (window.crypto && typeof window.crypto.randomUUID === "function" && window.crypto.randomUUID()) ||
+            `${nowTs()}-${Math.random().toString(16).slice(2)}`;
+          const item = {
+            id: tmpId,
+            name: (name || "").trim().slice(0, 16) || t("guestbook.anonymous"),
+            message: (message || "").trim().slice(0, 200),
+            time: nowTs(),
+          };
+          if (!item.message) return false;
+
+          if (dataMode === "shared" && db) {
+            const ref = db.ref("wedding/guestbook").push();
+            const id = ref.key || tmpId;
+            await ref.set({ ...item, id });
+          } else {
+            const list = lsGet(LS_KEYS.guestbook, []);
+            list.unshift(item);
+            lsSet(LS_KEYS.guestbook, list.slice(0, 80));
+          }
+          return true;
+        },
+        onList(cb) {
+          if (dataMode === "shared" && db) {
+            // 중복 리스너 방지
+            if (guestbookApi._ref && guestbookApi._handler) {
+              guestbookApi._ref.off("value", guestbookApi._handler);
+            }
+            guestbookApi._ref = db.ref("wedding/guestbook").limitToLast(80);
+            guestbookApi._handler = (snap) => {
+              const obj = snap.val() || {};
+              const arr = Object.values(obj);
+              arr.sort((a, b) => (b.time || 0) - (a.time || 0));
+              cb(arr);
+            };
+            guestbookApi._ref.on("value", guestbookApi._handler);
+          } else {
+            cb(lsGet(LS_KEYS.guestbook, []));
+          }
+        },
+      };
+
+      function sanitizeFreeText(input, limit = 220) {
+        return String(input || "").replace(/\s+/g, " ").trim().slice(0, limit);
+      }
+
+      function getRsvpMeals() {
+        return Array.isArray(WEDDING.rsvpSettings?.meals) ? WEDDING.rsvpSettings.meals : [];
+      }
+
+      function normalizeRsvpRecord(data = {}) {
+        const name = sanitizeName(data.name);
+        const status = String(data.status || "attending") === "not_attending" ? "not_attending" : "attending";
+        const guests = status === "attending" ? Math.max(0, Math.min(4, Number(data.guests || 0))) : 0;
+        const meals = getRsvpMeals();
+        const fallbackMeal = meals[0]?.value || "";
+        const requestedMeal = String(data.meal || fallbackMeal);
+        const meal = status === "attending" && meals.some((item) => String(item.value) === requestedMeal) ? requestedMeal : fallbackMeal;
+        const note = sanitizeFreeText(data.note, 220);
+        return { status, name, guests, meal, note };
+      }
+
+      function getRsvpHash(record) {
+        const base = JSON.stringify({
+          status: record.status,
+          name: record.name,
+          guests: record.guests,
+          meal: record.meal,
+          note: record.note,
+        });
+        return hashShort(base);
+      }
+
+      function getMealLabel(mealValue) {
+        const item = getRsvpMeals().find((x) => String(x.value) === String(mealValue));
+        return item ? tl(item.label) : "-";
+      }
+
+      const rsvpApi = {
+        async add(input) {
+          // Production note:
+          // Mirror these constraints in Firebase Realtime Database rules as well:
+          // required name, bounded guests, bounded note length, and write scope limited to RSVP path.
+          const normalized = normalizeRsvpRecord(input);
+          if (!normalized.name) return { ok: false, reason: "name" };
+
+          const tmpId =
+            (window.crypto && typeof window.crypto.randomUUID === "function" && window.crypto.randomUUID()) ||
+            `${nowTs()}-${Math.random().toString(16).slice(2)}`;
+          const item = {
+            id: tmpId,
+            ...normalized,
+            time: nowTs(),
+          };
+
+          if (dataMode === "shared" && db) {
+            const ref = db.ref("wedding/rsvps").push();
+            const id = ref.key || tmpId;
+            await ref.set({ ...item, id });
+            lsSet(LS_KEYS.lastRsvp, { ...item, id });
+          } else {
+            const list = lsGet(LS_KEYS.rsvps, []);
+            list.unshift(item);
+            lsSet(LS_KEYS.rsvps, list.slice(0, 120));
+            lsSet(LS_KEYS.lastRsvp, item);
+          }
+          return { ok: true, item };
+        },
+        onList(cb) {
+          if (dataMode === "shared" && db) {
+            if (rsvpApi._ref && rsvpApi._handler) {
+              rsvpApi._ref.off("value", rsvpApi._handler);
+            }
+            rsvpApi._ref = db.ref("wedding/rsvps").limitToLast(200);
+            rsvpApi._handler = (snap) => {
+              const obj = snap.val() || {};
+              const arr = Object.values(obj);
+              arr.sort((a, b) => (b.time || 0) - (a.time || 0));
+              cb(arr);
+            };
+            rsvpApi._ref.on("value", rsvpApi._handler);
+          } else {
+            cb(lsGet(LS_KEYS.rsvps, []));
+          }
+        },
+      };
+
+      // Guestbook view state
+      let guestbookExpanded = false;
+      let guestbookFullList = [];
+      let rsvpFullList = [];
+
+      function getGuestbookLikes() {
+        return lsGet(GB_LIKES_KEY, {});
+      }
+      function isGuestbookLiked(id) {
+        const m = getGuestbookLikes();
+        return !!(id && m && m[id]);
+      }
+      function toggleGuestbookLike(id) {
+        if (!id) return;
+        const m = getGuestbookLikes();
+        if (m[id]) delete m[id];
+        else m[id] = 1;
+        lsSet(GB_LIKES_KEY, m);
+      }
+      function hashShort(str) {
+        const s = String(str || "");
+        let h = 0;
+        for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0;
+        return Math.abs(h).toString(36).slice(0, 6);
+      }
+      function guestbookItemId(it) {
+        const id = String(it?.id || "").trim();
+        if (id) return id;
+        return `t${it?.time || 0}-${hashShort(`${it?.time || 0}|${it?.name || ""}|${it?.message || ""}`)}`;
+      }
+
+      // ================== INIT CONTENT ==================
+      function bindContent() {
+        const setText = (sel, val) => {
+          const el = $(sel);
+          if (el) el.textContent = val;
+        };
+        const setHtml = (sel, html) => {
+          const el = $(sel);
+          if (el) el.innerHTML = html;
+        };
+        const setHref = (sel, href) => {
+          const el = $(sel);
+          if (el) el.setAttribute("href", href || "#");
+        };
+
+        setText("#brandTitle", `${WEDDING.groomName} · ${WEDDING.brideName}`);
+        setText("#brandDate", (WEDDING.dateText || "").replaceAll("년", ".").replaceAll("월", ".").replaceAll("일", "").slice(0, 12));
+
+        setText("#groomName", WEDDING.groomName);
+        setText("#brideName", WEDDING.brideName);
+        setHtml("#heroMeta", `${escapeHtml(WEDDING.dateText)}<br />${escapeHtml(WEDDING.placeText)}`);
+        setText("#heroQuote", tl(WEDDING.heroQuote));
+        setText("#heroMediaNote", tl(WEDDING.heroMediaNote));
+        setText("#heroMonogram", `${String(WEDDING.groomName || "G").trim().charAt(0) || "G"}&${String(WEDDING.brideName || "B").trim().charAt(0) || "B"}`);
+        setText("#introNames", `${WEDDING.groomName} · ${WEDDING.brideName}`);
+        setText("#introMeta", `${extractDateShort(WEDDING.dateText)} · ${WEDDING.placeText}`);
+
+        const nm = sanitizeName(params.get("name"));
+        setText("#personalGreeting", nm ? t("personal.greeting", { name: nm }) : "");
+
+        setText("#pillDate", extractDateShort(WEDDING.dateText));
+        setText("#pillPlace", WEDDING.placeShort || WEDDING.placeText);
+
+        setText("#infoDate", WEDDING.dateText);
+        setText("#infoPlace", WEDDING.placeText);
+        setHref("#infoMapLink", WEDDING.naviLink);
+
+        setText("#groomPhone", WEDDING.phone.groom);
+        setText("#bridePhone", WEDDING.phone.bride);
+        setText("#groomContactName", WEDDING.groomName);
+        setText("#brideContactName", WEDDING.brideName);
+
+        setHref("#groomTel", toTelHref(WEDDING.phone.groom));
+        setHref("#brideTel", toTelHref(WEDDING.phone.bride));
+
+        const waText = getWhatsappPrefillText();
+        setHref("#groomWhatsapp", toWhatsappLink(WEDDING.phone.groom, currentCountry, waText));
+        setHref("#brideWhatsapp", toWhatsappLink(WEDDING.phone.bride, currentCountry, waText));
+        setHref("#quickWhatsappGroom", toWhatsappLink(WEDDING.phone.groom, currentCountry, waText));
+        setHref("#quickWhatsappBride", toWhatsappLink(WEDDING.phone.bride, currentCountry, waText));
+
+        setHref("#btnNavi", WEDDING.naviLink);
+        const mapLink = String(WEDDING.naviLink || "").trim();
+        const embed = resolveMapEmbedUrl(mapLink, String(WEDDING.mapEmbedUrl || "").trim(), WEDDING.placeText, WEDDING.addressText);
+        const mapFrame = $("#mapFrame");
+        if (mapFrame) mapFrame.setAttribute("src", embed || "about:blank");
+        const mapA = $("#mapLinkText");
+        if (mapA) {
+          mapA.setAttribute("href", mapLink || "#");
+          mapA.textContent = mapLink ? shortenUrlForDisplay(mapLink) : "-";
+        }
+
+        // Gift
+        setText("#groomHolder", WEDDING.gift.groomHolder);
+        setText("#groomBank", WEDDING.gift.groomBank);
+        setText("#brideHolder", WEDDING.gift.brideHolder);
+        setText("#brideBank", WEDDING.gift.brideBank);
+
+        renderStoryParagraphs();
+        renderStoryMoments();
+        renderHostHighlights();
+        renderProgram();
+        renderMenu();
+        renderHeroFacts();
+        renderEssentials();
+        renderFaq();
+        renderLocationGuide();
+        fillRsvpSelects();
+        renderRsvpSummary();
+      }
+
+      function sanitizeName(input) {
+        const raw = String(input || "").trim();
+        if (!raw) return "";
+        // allow letters/numbers/space/·.- and Hangul
+        const cleaned = raw.replace(/[^\p{L}\p{N}\s·.\-]/gu, "").replace(/\s+/g, " ").trim();
+        return cleaned.slice(0, 24);
+      }
+
+      function getWhatsappPrefillText() {
+        if (currentLang === "ko") return `안녕하세요. ${WEDDING.groomName} · ${WEDDING.brideName} 결혼식 관련 문의드립니다.`;
+        return `Olá! Sobre o casamento de ${WEDDING.groomName} e ${WEDDING.brideName}.`;
+      }
+
+      function normalizeMessage(message) {
+        const s = String(message || "").trim();
+        if (!s) return "";
+        return s.replace(/\s+/g, " ").trim().toLowerCase().slice(0, 200);
+      }
+
+      function haptic(ms = 12) {
+        try {
+          if (navigator.vibrate) navigator.vibrate(ms);
+        } catch {
+          // ignore
+        }
+      }
+
+      function digitsOnly(str) {
+        return String(str || "").replace(/[^\d+]/g, "").replace(/\+/g, "");
+      }
+
+      function toTelHref(phone) {
+        const raw = String(phone || "").trim();
+        if (!raw) return "";
+        const normalized = raw.replace(/[^\d+]/g, "");
+        return `tel:${normalized}`;
+      }
+
+      function toWhatsappLink(phone, country, text) {
+        const d = digitsOnly(phone);
+        if (!d) return "";
+        const qText = String(text || "").trim();
+
+        // already has country code
+        const base = d.startsWith("55") || d.startsWith("82") ? d : null;
+
+        const c = String(country || "").toUpperCase();
+        if (c === "KR") {
+          // 010xxxxxxxx -> 82 + 10xxxxxxxx
+          const n = d.startsWith("0") ? d.slice(1) : d;
+          const num = base || `82${n}`;
+          return qText ? `https://wa.me/${num}?text=${encodeURIComponent(qText)}` : `https://wa.me/${num}`;
+        }
+        // default BR
+        // assume local (10~11 digits) -> prefix 55
+        const num = base || (d.length >= 10 && d.length <= 11 ? `55${d}` : d);
+        return qText ? `https://wa.me/${num}?text=${encodeURIComponent(qText)}` : `https://wa.me/${num}`;
+      }
+
+      function shortenUrlForDisplay(url) {
+        const s = String(url || "").trim();
+        if (!s) return "-";
+        if (s.length <= 40) return s;
+        return s.slice(0, 28) + "…" + s.slice(-10);
+      }
+
+      function resolveMapEmbedUrl(mapLink, mapEmbedUrl, placeText, addressText) {
+        const explicit = String(mapEmbedUrl || "").trim();
+        if (explicit) return explicit;
+        // NOTE:
+        // - goo.gl/maps, maps.app.goo.gl 등의 단축 링크는 iframe 임베드에서 깨질 수 있습니다(X-Frame-Options/리다이렉트 등).
+        // - 가장 안정적인 방법은 "검색형 임베드" URL을 사용하는 것입니다.
+        const q = encodeURIComponent(String(placeText || addressText || "").trim());
+        if (!q) return "";
+        return `https://maps.google.com/maps?q=${q}&output=embed`;
+      }
+
+      function appendQueryParam(url, key, value) {
+        try {
+          const u = new URL(url);
+          if (!u.searchParams.has(key)) u.searchParams.set(key, value);
+          return u.toString();
+        } catch {
+          // URL 파싱 실패 시 단순 문자열 처리
+          if (!url) return "";
+          const hasQ = url.includes("?");
+          const sep = hasQ ? "&" : "?";
+          if (url.includes(`${key}=`)) return url;
+          return `${url}${sep}${encodeURIComponent(key)}=${encodeURIComponent(value)}`;
+        }
+      }
+
+      function extractDateShort(text) {
+        const s = String(text || "");
+        // KO: 2026년 5월 30일
+        const mKo = s.match(/(\d{4})\s*년\s*(\d{1,2})\s*월\s*(\d{1,2})\s*일/);
+        if (mKo) {
+          const yyyy = mKo[1];
+          const mm = String(mKo[2]).padStart(2, "0");
+          const dd = String(mKo[3]).padStart(2, "0");
+          return `${yyyy}. ${mm}. ${dd}`;
+        }
+        // General: 2026. 05. 30 ...
+        const mGen = s.match(/(\d{4})\D+(\d{1,2})\D+(\d{1,2})/);
+        if (mGen) {
+          const yyyy = mGen[1];
+          const mm = String(mGen[2]).padStart(2, "0");
+          const dd = String(mGen[3]).padStart(2, "0");
+          return `${yyyy}. ${mm}. ${dd}`;
+        }
+        return s.slice(0, 12).trim();
+      }
+
+      function renderStoryParagraphs() {
+        const root = $("#storyParagraphs");
+        if (!root) return;
+        const items = Array.isArray(WEDDING.storyParagraphs) ? WEDDING.storyParagraphs : [];
+        root.innerHTML = items.map((item) => `<p>${escapeHtml(tl(item))}</p>`).join("");
+      }
+
+      function renderStoryMoments() {
+        const root = $("#storyMomentGrid");
+        if (!root) return;
+        const items = Array.isArray(WEDDING.storyMoments) ? WEDDING.storyMoments : [];
+        root.innerHTML = items
+          .map(
+            (item) => `
+              <div class="story-moment">
+                <div class="label">${escapeHtml(tl(item.eyebrow))}</div>
+                <div class="story-moment-title">${escapeHtml(tl(item.title))}</div>
+                <p class="story-moment-copy">${escapeHtml(tl(item.text))}</p>
+              </div>
+            `
+          )
+          .join("");
+      }
+
+      function renderHeroFacts() {
+        const root = $("#heroFacts");
+        if (!root) return;
+        const items = Array.isArray(WEDDING.heroFacts) ? WEDDING.heroFacts : [];
+        root.innerHTML = items
+          .map(
+            (item) => `
+              <div class="hero-fact">
+                <span class="fact-label">${escapeHtml(tl(item.label))}</span>
+                <span class="fact-value">${escapeHtml(tl(item.value))}</span>
+              </div>
+            `
+          )
+          .join("");
+      }
+
+      function renderHostHighlights() {
+        const root = $("#hostHighlights");
+        if (!root) return;
+        const items = Array.isArray(WEDDING.hostHighlights) ? WEDDING.hostHighlights : [];
+        root.innerHTML = items
+          .map(
+            (item) => `
+              <div class="highlight-chip">
+                <strong>${escapeHtml(tl(item.label))}</strong>
+                <span>${escapeHtml(tl(item.value))}</span>
+              </div>
+            `
+          )
+          .join("");
+      }
+
+      function renderProgram() {
+        const root = $("#programGrid");
+        if (!root) return;
+        const items = Array.isArray(WEDDING.programItems) ? WEDDING.programItems : [];
+        root.innerHTML = items
+          .map(
+            (item) => `
+              <article class="timeline-item">
+                <div class="timeline-time">${escapeHtml(item.time || "-")}</div>
+                <div class="timeline-title">${escapeHtml(tl(item.title))}</div>
+                <p class="timeline-copy">${escapeHtml(tl(item.text))}</p>
+              </article>
+            `
+          )
+          .join("");
+      }
+
+      function renderMenu() {
+        const root = $("#menuGrid");
+        if (!root) return;
+        const groups = Array.isArray(WEDDING.menuSections) ? WEDDING.menuSections : [];
+        root.innerHTML = groups
+          .map((group) => {
+            const items = Array.isArray(group.items) ? group.items : [];
+            return `
+              <article class="menu-card">
+                <div class="menu-title">${escapeHtml(tl(group.title))}</div>
+                <p class="menu-copy">${escapeHtml(tl(group.description))}</p>
+                <ul class="menu-list">
+                  ${items
+                    .map(
+                      (item) => `
+                        <li>
+                          <span class="menu-item-title">${escapeHtml(tl(item.title))}</span>
+                          <span class="menu-item-note">${escapeHtml(tl(item.note))}</span>
+                        </li>
+                      `
+                    )
+                    .join("")}
+                </ul>
+              </article>
+            `;
+          })
+          .join("");
+      }
+
+      function renderEssentials() {
+        const title = $("#noticeTitle");
+        const copy = $("#noticeCopy");
+        if (title) title.textContent = tl(WEDDING.essentialsNotice?.title);
+        if (copy) copy.textContent = tl(WEDDING.essentialsNotice?.copy);
+
+        const root = $("#detailGrid");
+        if (!root) return;
+        const items = Array.isArray(WEDDING.detailCards) ? WEDDING.detailCards : [];
+        root.innerHTML = items
+          .map(
+            (item) => `
+              <article class="detail-card">
+                <span class="detail-label">${escapeHtml(tl(item.label))}</span>
+                <span class="detail-title">${escapeHtml(tl(item.title))}</span>
+                <p class="detail-copy">${escapeHtml(tl(item.copy))}</p>
+              </article>
+            `
+          )
+          .join("");
+      }
+
+      function renderFaq() {
+        const root = $("#faqGrid");
+        if (!root) return;
+        const items = Array.isArray(WEDDING.faqItems) ? WEDDING.faqItems : [];
+        root.innerHTML = items
+          .map(
+            (item) => `
+              <article class="card faq-card">
+                <h3 class="faq-title">${escapeHtml(tl(item.question))}</h3>
+                <p class="faq-copy">${escapeHtml(tl(item.answer))}</p>
+              </article>
+            `
+          )
+          .join("");
+      }
+
+      function renderLocationGuide() {
+        const root = $("#locationGuide");
+        if (!root) return;
+        const items = Array.isArray(WEDDING.locationGuide) ? WEDDING.locationGuide : [];
+        root.innerHTML = items
+          .map(
+            (item) => `
+              <article class="guide-card">
+                <strong>${escapeHtml(tl(item.title))}</strong>
+                <p>${escapeHtml(tl(item.text))}</p>
+              </article>
+            `
+          )
+          .join("");
+      }
+
+      function fillRsvpSelects() {
+        const status = $("#rsvpStatus");
+        if (status) {
+          const attending = status.querySelector('option[value="attending"]');
+          const regret = status.querySelector('option[value="not_attending"]');
+          if (attending) attending.textContent = t("rsvp.statusAttending");
+          if (regret) regret.textContent = t("rsvp.statusNotAttending");
+        }
+
+        const meal = $("#rsvpMeal");
+        if (meal) {
+          const current = String(meal.value || "");
+          const options = getRsvpMeals();
+          meal.innerHTML = options
+            .map((item) => `<option value="${escapeHtml(item.value)}">${escapeHtml(tl(item.label))}</option>`)
+            .join("");
+          if (options.some((item) => String(item.value) === current)) meal.value = current;
+        }
+        syncRsvpFormState();
+      }
+
+      function syncRsvpFormState() {
+        const status = $("#rsvpStatus");
+        const guests = $("#rsvpGuests");
+        const meal = $("#rsvpMeal");
+        const attending = String(status?.value || "attending") !== "not_attending";
+        if (guests) {
+          guests.disabled = !attending;
+          if (!attending) guests.value = "0";
+        }
+        if (meal) {
+          meal.disabled = !attending;
+        }
+      }
+
+      function renderRsvpSummary() {
+        const statsRoot = $("#rsvpStats");
+        const statusRoot = $("#rsvpLastSubmission");
+        if (statsRoot) {
+          const list = Array.isArray(rsvpFullList) ? rsvpFullList : [];
+          const attending = list.filter((item) => item?.status !== "not_attending");
+          const regrets = list.length - attending.length;
+          const guests = attending.reduce((sum, item) => sum + 1 + Math.max(0, Number(item?.guests || 0)), 0);
+          const stats = [
+            { value: list.length, label: t("rsvp.statsResponses") },
+            { value: attending.length, label: t("rsvp.statsAttending") },
+            { value: regrets, label: t("rsvp.statsRegrets") },
+            { value: guests, label: t("rsvp.statsGuests") },
+          ];
+          statsRoot.innerHTML = stats
+            .map(
+              (item) => `
+                <div class="stat-card">
+                  <div class="stat-value">${escapeHtml(item.value)}</div>
+                  <div class="stat-label">${escapeHtml(item.label)}</div>
+                </div>
+              `
+            )
+            .join("");
+        }
+
+        if (statusRoot) {
+          const last = lsGet(LS_KEYS.lastRsvp, null);
+          if (!last || !last.name) {
+            statusRoot.innerHTML = `<div class="status-box"><strong>${escapeHtml(t("rsvp.savedTitle"))}</strong><div class="muted" style="margin-top:6px;font-size:13px">${escapeHtml(t("rsvp.savedEmpty"))}</div></div>`;
+            return;
+          }
+
+          const submittedAt = new Date(last.time || Date.now());
+          const stamp = `${submittedAt.getFullYear()}.${String(submittedAt.getMonth() + 1).padStart(2, "0")}.${String(submittedAt.getDate()).padStart(2, "0")}`;
+          const detail =
+            last.status === "not_attending"
+              ? t("rsvp.savedRegret", { name: last.name })
+              : t("rsvp.savedAttending", { name: last.name, guests: 1 + Math.max(0, Number(last.guests || 0)) });
+          const mealLine = last.status === "not_attending" ? "" : `<div class="muted" style="font-size:13px">${escapeHtml(getMealLabel(last.meal))}</div>`;
+          const noteLine = last.note ? `<div class="muted" style="font-size:13px">${escapeHtml(last.note)}</div>` : "";
+          statusRoot.innerHTML = `
+            <div class="status-box">
+              <strong>${escapeHtml(t("rsvp.savedTitle"))}</strong>
+              <div style="margin-top:8px;font-size:14px;line-height:1.7">${escapeHtml(detail)}</div>
+              ${mealLine}
+              ${noteLine}
+              <div class="muted" style="margin-top:8px;font-size:12px">${stamp}</div>
+            </div>
+          `;
+        }
+      }
+
+      function hydrateRsvpForm() {
+        const last = lsGet(LS_KEYS.lastRsvp, null);
+        $("#rsvpStatus") && ($("#rsvpStatus").value = String(last?.status || "attending"));
+        $("#rsvpName") && ($("#rsvpName").value = String(last?.name || ""));
+        $("#rsvpGuests") && ($("#rsvpGuests").value = String(last?.guests ?? 0));
+        fillRsvpSelects();
+        $("#rsvpMeal") && ($("#rsvpMeal").value = String(last?.meal || getRsvpMeals()[0]?.value || ""));
+        $("#rsvpNote") && ($("#rsvpNote").value = String(last?.note || ""));
+        syncRsvpFormState();
+      }
+
+      function watchRsvps() {
+        rsvpApi.onList((list) => {
+          rsvpFullList = Array.isArray(list) ? list : [];
+          renderRsvpSummary();
+        });
+      }
+
+      // ================== GALLERY ==================
+      let galleryFilesResolved = [];
+      let galleryExpanded = false;
+      const GALLERY_PREVIEW_COUNT = 6;
+      let lightboxIndex = 0;
+      let lbScale = 1;
+      let lbTx = 0;
+      let lbTy = 0;
+      let lbPointers = new Map();
+      let lbStart = null;
+
+      async function buildGallery() {
+        const grid = $("#galleryGrid");
+        if (!grid) return;
+        grid.innerHTML = "";
+
+        const candidates =
+          Array.isArray(WEDDING.galleryFiles) && WEDDING.galleryFiles.length > 0
+            ? WEDDING.galleryFiles
+            : generateGalleryCandidates(Number(WEDDING.galleryAutoMax || 11));
+
+        const exists = await Promise.all(candidates.map((src) => imgExists(src).then((ok) => ({ src, ok }))));
+        const files = Array.from(new Set(exists.filter((x) => x.ok).map((x) => x.src)));
+        galleryFilesResolved = files;
+
+        if (files.length === 0) {
+          for (let i = 0; i < 6; i++) {
+            const el = document.createElement("div");
+            el.className = "gitem";
+            el.style.background = "linear-gradient(135deg, rgba(200, 164, 107, 0.20), rgba(141, 106, 61, 0.10))";
+            el.title = t("gallery.needFiles");
+            grid.appendChild(el);
+          }
+          const moreWrap = $("#galleryMoreWrap");
+          if (moreWrap) moreWrap.style.display = "none";
+          return;
+        }
+
+        renderGalleryGrid(files);
+        updateGalleryMoreUI();
+      }
+
+      function renderGalleryGrid(files) {
+        const grid = $("#galleryGrid");
+        if (!grid) return;
+        grid.innerHTML = "";
+
+        const full = Array.isArray(files) ? files : [];
+        const visible = galleryExpanded ? full : full.slice(0, GALLERY_PREVIEW_COUNT);
+
+        visible.forEach((src, idx) => {
+          const item = document.createElement("button");
+          item.type = "button";
+          item.className = "gitem";
+          item.setAttribute("aria-label", t("gallery.open"));
+          item.innerHTML = `<img src="${escapeHtml(src)}" alt="${escapeHtml(t("gallery.alt"))}" loading="lazy" />`;
+          item.addEventListener("click", () => {
+            // idx is within visible list → map to full index
+            const fullIdx = full.indexOf(src);
+            openLightboxAt(fullIdx >= 0 ? fullIdx : idx);
+          });
+          grid.appendChild(item);
+        });
+      }
+
+      function updateGalleryMoreUI() {
+        const full = Array.isArray(galleryFilesResolved) ? galleryFilesResolved : [];
+        const wrap = $("#galleryMoreWrap");
+        const btn = $("#btnGalleryMore");
+        if (!wrap || !btn) return;
+        if (full.length <= GALLERY_PREVIEW_COUNT) {
+          wrap.style.display = "none";
+          return;
+        }
+        wrap.style.display = "";
+        const hiddenCount = Math.max(0, full.length - GALLERY_PREVIEW_COUNT);
+        btn.textContent = galleryExpanded ? t("gallery.less") : t("gallery.more", { count: hiddenCount });
+      }
+
+      function openLightboxAt(idx) {
+        const total = Array.isArray(galleryFilesResolved) ? galleryFilesResolved.length : 0;
+        if (!total) return;
+        const next = Math.max(0, Math.min(total - 1, Number(idx || 0)));
+        lightboxIndex = next;
+        const src = galleryFilesResolved[lightboxIndex];
+        const img = $("#lightboxImg");
+        if (img) img.src = src;
+        updateLightboxCounter();
+        resetLightboxTransform();
+        openDialog("dlgLightbox");
+        preloadGalleryAround(lightboxIndex);
+      }
+
+      function moveLightbox(delta) {
+        const total = Array.isArray(galleryFilesResolved) ? galleryFilesResolved.length : 0;
+        if (!total) return;
+        lightboxIndex = (lightboxIndex + delta + total) % total;
+        const src = galleryFilesResolved[lightboxIndex];
+        const img = $("#lightboxImg");
+        if (img) img.src = src;
+        updateLightboxCounter();
+        resetLightboxTransform();
+        preloadGalleryAround(lightboxIndex);
+      }
+
+      function updateLightboxCounter() {
+        const total = Array.isArray(galleryFilesResolved) ? galleryFilesResolved.length : 0;
+        const counter = $("#lightboxCounter");
+        if (!counter || !total) return;
+        const pct = Math.round((lbScale || 1) * 100);
+        counter.textContent = `${lightboxIndex + 1} / ${total}${pct !== 100 ? ` · ${pct}%` : ""}`;
+      }
+
+      function preloadGalleryAround(idx) {
+        const total = Array.isArray(galleryFilesResolved) ? galleryFilesResolved.length : 0;
+        if (!total) return;
+        const around = [idx - 1, idx + 1].map((i) => (i + total) % total);
+        around.forEach((i) => {
+          const src = galleryFilesResolved[i];
+          if (!src) return;
+          const im = new Image();
+          im.src = src;
+        });
+      }
+
+      function applyLightboxTransform() {
+        const pan = $("#lightboxPan");
+        if (!pan) return;
+        pan.style.transform = `translate3d(${lbTx}px, ${lbTy}px, 0) scale(${lbScale})`;
+        updateLightboxCounter();
+      }
+
+      function resetLightboxTransform() {
+        lbScale = 1;
+        lbTx = 0;
+        lbTy = 0;
+        lbPointers = new Map();
+        lbStart = null;
+        applyLightboxTransform();
+      }
+
+      function bindLightboxGestures() {
+        const stage = $("#lightboxStage");
+        if (!stage) return;
+
+        const onDown = (e) => {
+          stage.setPointerCapture?.(e.pointerId);
+          lbPointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+          if (lbPointers.size === 1) {
+            lbStart = { x: e.clientX, y: e.clientY, tx: lbTx, ty: lbTy, scale: lbScale, t0: Date.now() };
+          } else if (lbPointers.size === 2) {
+            const pts = Array.from(lbPointers.values());
+            const dx = pts[0].x - pts[1].x;
+            const dy = pts[0].y - pts[1].y;
+            const dist = Math.hypot(dx, dy) || 1;
+            lbStart = { dist, scale: lbScale, tx: lbTx, ty: lbTy };
+          }
+        };
+
+        const onMove = (e) => {
+          if (!lbPointers.has(e.pointerId)) return;
+          lbPointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+
+          // Pinch zoom
+          if (lbPointers.size === 2 && lbStart?.dist) {
+            const pts = Array.from(lbPointers.values());
+            const dx = pts[0].x - pts[1].x;
+            const dy = pts[0].y - pts[1].y;
+            const dist = Math.hypot(dx, dy) || 1;
+            const next = Math.max(1, Math.min(3.2, (lbStart.scale || 1) * (dist / lbStart.dist)));
+            lbScale = next;
+            applyLightboxTransform();
+            return;
+          }
+
+          if (!lbStart) return;
+          const dx = e.clientX - lbStart.x;
+          const dy = e.clientY - lbStart.y;
+
+          // Pan when zoomed
+          if (lbScale > 1.02) {
+            lbTx = (lbStart.tx || 0) + dx;
+            lbTy = (lbStart.ty || 0) + dy;
+            applyLightboxTransform();
+            return;
+          }
+
+          // Swipe down to close (when not zoomed)
+          if (dy > 80 && Math.abs(dy) > Math.abs(dx) * 1.2) {
+            lbStart = null;
+            lbPointers = new Map();
+            haptic(10);
+            closeDialog("dlgLightbox");
+            return;
+          }
+
+          // Swipe nav when not zoomed
+          if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.2) {
+            // lock so it doesn't fire multiple times
+            lbStart = null;
+            lbPointers = new Map();
+            moveLightbox(dx < 0 ? 1 : -1);
+          }
+        };
+
+        const onUp = (e) => {
+          lbPointers.delete(e.pointerId);
+          if (lbPointers.size === 0) lbStart = null;
+          if (lbScale < 1.01) resetLightboxTransform();
+        };
+
+        const onWheel = (e) => {
+          if (prefersReducedMotion()) return;
+          e.preventDefault?.();
+          const delta = e.deltaY || 0;
+          const next = Math.max(1, Math.min(3.2, lbScale + (delta > 0 ? -0.1 : 0.1)));
+          lbScale = next;
+          applyLightboxTransform();
+        };
+
+        const onDbl = () => {
+          lbScale = lbScale > 1.4 ? 1 : 2.2;
+          lbTx = 0;
+          lbTy = 0;
+          applyLightboxTransform();
+        };
+
+        stage.addEventListener("pointerdown", onDown);
+        stage.addEventListener("pointermove", onMove);
+        stage.addEventListener("pointerup", onUp);
+        stage.addEventListener("pointercancel", onUp);
+        stage.addEventListener("wheel", onWheel, { passive: false });
+        stage.addEventListener("dblclick", onDbl);
+      }
+
+      function imgExists(src) {
+        return new Promise((resolve) => {
+          const img = new Image();
+          img.onload = () => resolve(true);
+          img.onerror = () => resolve(false);
+          img.src = src + (src.includes("?") ? "&" : "?") + "v=" + encodeURIComponent(ASSET_CACHE_BUSTER);
+        });
+      }
+
+      function generateGalleryCandidates(maxIndex) {
+        const end = Number.isFinite(maxIndex) && maxIndex > 0 ? Math.floor(maxIndex) : 11;
+        const exts = ["jpg", "jpeg", "JPG", "JPEG"];
+        const dirs = ["assets/gallery/", ""];
+        const out = [];
+
+        for (let i = 1; i <= end; i++) {
+          const n1 = String(i).padStart(2, "0");
+          const n2 = String(i);
+          const names = [n1, n2];
+          for (const name of names) {
+            for (const ext of exts) {
+              for (const dir of dirs) {
+                out.push(`${dir}${name}.${ext}`);
+              }
+            }
+          }
+        }
+        return Array.from(new Set(out));
+      }
+
+      async function setHeroImage() {
+        const candidates = Array.isArray(WEDDING.heroImageCandidates) ? WEDDING.heroImageCandidates : ["assets/hero.jpg"];
+        for (const src of candidates) {
+          // eslint-disable-next-line no-await-in-loop
+          const ok = await imgExists(src);
+          if (ok) {
+            document.documentElement.style.setProperty("--hero-image", `url("${src}")`);
+            return src;
+          }
+        }
+        document.documentElement.style.removeProperty("--hero-image");
+        return "";
+      }
+
+      // ================== CALENDAR (.ics download) ==================
+      function downloadICS() {
+        const dt = WEDDING.dateISO;
+        if (!dt || !dt.includes("T")) {
+          toast(t("toast.needDateISO"));
+          return;
+        }
+        const start = toICS(dt);
+        const end = toICS(addMinutes(dt, 60));
+        const uid = `wedding-${Date.now()}@local`;
+        const title =
+          currentLang === "ko"
+            ? `${WEDDING.groomName} · ${WEDDING.brideName} 결혼식`
+            : `Casamento de ${WEDDING.groomName} & ${WEDDING.brideName}`;
+        const loc = `${WEDDING.placeText} (${WEDDING.addressText})`;
+        const baseUrl = location.href.split("?")[0];
+        const desc = currentLang === "ko" ? `청첩장 링크: ${baseUrl}` : `Link do convite: ${baseUrl}`;
+        const ics = `BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Wedding//Invitation//Web
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:${uid}
+DTSTAMP:${toICS(new Date().toISOString())}
+DTSTART:${start}
+DTEND:${end}
+SUMMARY:${escapeICS(title)}
+LOCATION:${escapeICS(loc)}
+DESCRIPTION:${escapeICS(desc)}
+END:VEVENT
+END:VCALENDAR`;
+
+        const blob = new Blob([ics], { type: "text/calendar;charset=utf-8" });
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "wedding.ics";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        toast(t("toast.downloaded"));
+      }
+
+      function escapeICS(s) {
+        return String(s || "").replace(/\\/g, "\\\\").replace(/\n/g, "\\n").replace(/,/g, "\\,").replace(/;/g, "\\;");
+      }
+
+      function toICS(isoLike) {
+        const d = typeof isoLike === "string" ? new Date(isoLike) : isoLike;
+        const pad = (n) => String(n).padStart(2, "0");
+        return (
+          d.getUTCFullYear() +
+          pad(d.getUTCMonth() + 1) +
+          pad(d.getUTCDate()) +
+          "T" +
+          pad(d.getUTCHours()) +
+          pad(d.getUTCMinutes()) +
+          pad(d.getUTCSeconds()) +
+          "Z"
+        );
+      }
+
+      function addMinutes(isoLike, minutes) {
+        const d = new Date(isoLike);
+        d.setMinutes(d.getMinutes() + minutes);
+        return d.toISOString();
+      }
+
+      // ================== INVITATION INTERACTIONS ==================
+      function bindUI() {
+        // Country / Language switch (BR=Português, KR=한국어)
+        $$(".lang-btn").forEach((btn) => {
+          btn.addEventListener("click", () => setCountry(btn.getAttribute("data-country")));
+        });
+
+        $("#btnCalendar")?.addEventListener("click", downloadICS);
+
+        $$("[data-close]").forEach((btn) => {
+          btn.addEventListener("click", () => closeDialog(btn.getAttribute("data-close")));
+        });
+
+        // Lightbox controls + gestures
+        $("#btnLightboxPrev")?.addEventListener("click", () => {
+          haptic(8);
+          moveLightbox(-1);
+        });
+        $("#btnLightboxNext")?.addEventListener("click", () => {
+          haptic(8);
+          moveLightbox(1);
+        });
+        bindLightboxGestures();
+        document.addEventListener("keydown", (e) => {
+          const dlg = $("#dlgLightbox");
+          const open = !!(dlg && (dlg.open || dlg.hasAttribute("open")));
+          if (!open) return;
+          if (e.key === "ArrowLeft") moveLightbox(-1);
+          if (e.key === "ArrowRight") moveLightbox(1);
+        });
+
+        $("#btnCopyAddr")?.addEventListener("click", () => {
+          haptic(8);
+          copyText(WEDDING.addressText);
+        });
+        $("#btnCopyMapLink")?.addEventListener("click", () => {
+          haptic(8);
+          copyText(WEDDING.naviLink || "");
+        });
+        $("#btnShareMap")?.addEventListener("click", async () => {
+          haptic(10);
+          const url = String(WEDDING.naviLink || "").trim();
+          if (!url) return;
+          const title = currentLang === "ko" ? "구글 지도" : "Google Maps";
+          const text = currentLang === "ko" ? "장소 링크를 공유합니다." : "Sharing the location link.";
+          if (navigator.share) {
+            try {
+              await navigator.share({ title, text, url });
+              return;
+            } catch {
+              // 사용자가 취소했거나 실패 → 복사로 폴백
+            }
+          }
+          await copyText(url);
+        });
+
+        // Bottom action bar (mobile)
+        $("#abMap")?.addEventListener("click", () => {
+          haptic(10);
+          const dest = encodeURIComponent(String(WEDDING.placeText || WEDDING.addressText || "").trim());
+          const url = dest ? `https://www.google.com/maps/dir/?api=1&destination=${dest}` : String(WEDDING.naviLink || "");
+          if (url) window.open(url, "_blank", "noreferrer");
+        });
+        $("#abWhatsapp")?.addEventListener("click", () => {
+          haptic(10);
+          openDialog("dlgQuickContact");
+        });
+        $("#abPix")?.addEventListener("click", () => {
+          haptic(10);
+          openDialog("dlgQuickPix");
+        });
+        $("#abLang")?.addEventListener("click", () => {
+          haptic(10);
+          const next = currentCountry === "KR" ? "BR" : "KR";
+          setCountry(next);
+          toast(next === "KR" ? t("toast.langKo") : t("toast.langPt"));
+        });
+        $("#abTheme")?.addEventListener("click", () => {
+          haptic(10);
+          toggleTheme();
+        });
+
+        $("#quickPixGroom")?.addEventListener("click", () => {
+          haptic(8);
+          copyText(String(WEDDING.gift.groomBank || ""));
+        });
+        $("#quickPixBride")?.addEventListener("click", () => {
+          haptic(8);
+          copyText(String(WEDDING.gift.brideBank || ""));
+        });
+
+        // Gallery show more
+        $("#btnGalleryMore")?.addEventListener("click", () => {
+          haptic(8);
+          galleryExpanded = !galleryExpanded;
+          renderGalleryGrid(galleryFilesResolved);
+          updateGalleryMoreUI();
+        });
+
+        $("#rsvpStatus")?.addEventListener("change", () => {
+          syncRsvpFormState();
+        });
+        $("#btnRsvpReset")?.addEventListener("click", () => {
+          haptic(8);
+          $("#rsvpStatus") && ($("#rsvpStatus").value = "attending");
+          $("#rsvpName") && ($("#rsvpName").value = "");
+          $("#rsvpGuests") && ($("#rsvpGuests").value = "0");
+          $("#rsvpMeal") && ($("#rsvpMeal").value = getRsvpMeals()[0]?.value || "");
+          $("#rsvpNote") && ($("#rsvpNote").value = "");
+          syncRsvpFormState();
+          toast(t("toast.cleared"));
+        });
+        $("#btnRsvpSubmit")?.addEventListener("click", async () => {
+          haptic(10);
+          const payload = normalizeRsvpRecord({
+            status: $("#rsvpStatus")?.value,
+            name: $("#rsvpName")?.value,
+            guests: $("#rsvpGuests")?.value,
+            meal: $("#rsvpMeal")?.value,
+            note: $("#rsvpNote")?.value,
+          });
+          if (!payload.name) return toast(t("toast.needRsvpName"));
+
+          const now = Date.now();
+          const lastTs = Number(localStorage.getItem(RSVP_LAST_TS_KEY) || "0");
+          const cooldownMs = 8_000;
+          if (now - lastTs < cooldownMs) {
+            const sec = Math.ceil((cooldownMs - (now - lastTs)) / 1000);
+            return toast(t("toast.cooldown", { sec }));
+          }
+
+          const hash = getRsvpHash(payload);
+          const lastHash = String(localStorage.getItem(RSVP_LAST_HASH_KEY) || "");
+          if (lastHash && lastHash === hash) return toast(t("toast.duplicateRsvp"));
+
+          const result = await rsvpApi.add(payload);
+          if (!result.ok) return toast(t("toast.checkInput"));
+
+          localStorage.setItem(RSVP_LAST_TS_KEY, String(now));
+          localStorage.setItem(RSVP_LAST_HASH_KEY, hash);
+          renderRsvpSummary();
+          watchRsvps();
+          toast(t("toast.rsvpSent"));
+        });
+
+        $$("[data-copy]").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            haptic(8);
+            const sel = btn.getAttribute("data-copy");
+            const el = sel ? document.querySelector(sel) : null;
+            const text = (el?.textContent || "").trim();
+            if (text) copyText(text);
+          });
+        });
+
+        // Guestbook
+        $("#btnGbSubmit")?.addEventListener("click", async () => {
+          haptic(10);
+          const name = $("#gbName").value;
+          const message = $("#gbMessage").value;
+          const msgNorm = normalizeMessage(message);
+          if (!msgNorm) return toast(t("toast.needMessage"));
+
+          const now = Date.now();
+          const lastTs = Number(localStorage.getItem(GB_LAST_TS_KEY) || "0");
+          const cooldownMs = 10_000;
+          if (now - lastTs < cooldownMs) {
+            const sec = Math.ceil((cooldownMs - (now - lastTs)) / 1000);
+            return toast(t("toast.cooldown", { sec }));
+          }
+          const lastMsg = String(localStorage.getItem(GB_LAST_MSG_KEY) || "");
+          if (lastMsg && lastMsg === msgNorm) return toast(t("toast.duplicate"));
+
+          const ok = await guestbookApi.add({ name, message });
+          if (!ok) return toast(t("toast.needMessage"));
+          $("#gbMessage").value = "";
+          localStorage.setItem(GB_LAST_TS_KEY, String(now));
+          localStorage.setItem(GB_LAST_MSG_KEY, msgNorm);
+          toast(t("toast.leftMessage"));
+          renderGuestbook();
+        });
+
+        $("#btnGuestbookMore")?.addEventListener("click", () => {
+          guestbookExpanded = !guestbookExpanded;
+          renderGuestbookList();
+        });
+
+        // (removed) Poll & Emotions UI
+      }
+
+      // ================== RENDER: Guestbook ==================
+      function renderGuestbook() {
+        guestbookApi.onList((list) => {
+          guestbookFullList = Array.isArray(list) ? list : [];
+          // 리스트가 갱신되면 기본은 접힌 상태로 유지 (원하면 이 줄 삭제)
+          // guestbookExpanded = false;
+          renderGuestbookList();
+        });
+      }
+
+      function renderGuestbookList() {
+        const root = $("#guestbookList");
+        if (!root) return;
+        root.innerHTML = "";
+
+        const full = guestbookFullList || [];
+        const initialCount = 3;
+        const visible = guestbookExpanded ? full : full.slice(0, initialCount);
+        const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+
+        const moreWrap = $("#guestbookMoreWrap");
+        const moreBtn = $("#btnGuestbookMore");
+        if (moreWrap && moreBtn) {
+          if (full.length > initialCount) {
+            moreWrap.style.display = "";
+            moreBtn.textContent = guestbookExpanded ? t("guestbook.less") : t("guestbook.more");
+          } else {
+            moreWrap.style.display = "none";
+          }
+        }
+
+        if (visible.length === 0) {
+          const empty = document.createElement("div");
+          empty.className = "muted";
+          empty.style.fontSize = "13px";
+          empty.textContent = t("guestbook.empty");
+          root.appendChild(empty);
+          return;
+        }
+
+        visible.forEach((it) => {
+          const card = document.createElement("div");
+          card.className = "card";
+          card.style.boxShadow = "none";
+          card.style.background = "rgba(255,255,255,.68)";
+          const when = new Date(it.time || Date.now());
+          const stamp = `${when.getFullYear()}.${String(when.getMonth() + 1).padStart(2, "0")}.${String(when.getDate()).padStart(2, "0")}`;
+          const id = guestbookItemId(it);
+          const liked = isGuestbookLiked(id);
+          const baseFill = isDark ? "rgba(255, 255, 255, 0.26)" : "rgba(16, 32, 36, 0.22)";
+          card.innerHTML = `
+            <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start">
+              <div style="min-width:0">
+                <strong style="font-size:14px">${escapeHtml(it.name || t("guestbook.anonymous"))}</strong>
+                <div class="muted" style="font-size:12px;margin-top:2px">${stamp}</div>
+              </div>
+              <button
+                class="icon-btn"
+                type="button"
+                data-like="${escapeHtml(id)}"
+                aria-label="${escapeHtml(t("aria.like"))}"
+                style="padding:8px 10px;min-height:40px;${liked ? "border-color: rgba(200, 164, 107, 0.55); box-shadow: 0 0 0 3px rgba(200, 164, 107, 0.16);" : ""}"
+              >
+                <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" style="display:block">
+                  <path
+                    d="M12 21s-7-4.6-9.3-9.1C1.3 8.7 3.2 6 6.2 6c1.7 0 3 .8 3.8 1.8C10.8 6.8 12.1 6 13.8 6c3 0 4.9 2.7 3.5 5.9C19 16.4 12 21 12 21z"
+                    fill="${liked ? "rgba(200, 164, 107, 0.92)" : baseFill}"
+                  />
+                </svg>
+              </button>
+            </div>
+            <div style="margin-top:8px;font-size:14px;line-height:1.7">${escapeHtml(it.message || "")}</div>
+          `;
+          root.appendChild(card);
+          card.querySelector("[data-like]")?.addEventListener("click", (e) => {
+            haptic(8);
+            toggleGuestbookLike(id);
+            try {
+              e.currentTarget?.animate?.([{ transform: "scale(1)" }, { transform: "scale(1.06)" }, { transform: "scale(1)" }], {
+                duration: 180,
+                easing: "ease-out",
+              });
+            } catch {
+              // ignore
+            }
+            renderGuestbookList();
+          });
+        });
+      }
+
+      // ================== BOOT ==================
+      initTheme(resolveInitialTheme());
+      initCountry(resolveInitialCountry());
+      initFirebaseIfEnabled();
+      setDataModeUI();
+      bindContent();
+      hydrateRsvpForm();
+      initHeroMotion();
+      bindUI();
+      watchRsvps();
+      renderGuestbook();
+      setHeroImage();
+      buildGallery();
+      initIntro();
+    </script>
+  </body>
+</html>
+
+
