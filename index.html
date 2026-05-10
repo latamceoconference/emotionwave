@@ -19,7 +19,7 @@
       rel="stylesheet"
     />
 
-    <!-- Optional: Firebase (Realtime Database) for shared RSVP / guestbook -->
+    <!-- Optional: Firebase (Realtime Database) for shared guestbook -->
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 
@@ -1244,20 +1244,6 @@
         font-size: 28px;
         margin: 0 0 4px;
       }
-      .rsvp-status {
-        display: grid;
-        gap: 10px;
-      }
-      .rsvp-status .status-box {
-        border: 1px solid rgba(16, 32, 36, 0.08);
-        border-radius: 18px;
-        padding: 14px;
-        background: rgba(255, 255, 255, 0.52);
-      }
-      :root[data-theme="dark"] .rsvp-status .status-box {
-        border-color: rgba(255, 255, 255, 0.1);
-        background: rgba(255, 255, 255, 0.03);
-      }
       .section-header-row {
         display: flex;
         justify-content: space-between;
@@ -1808,10 +1794,6 @@
               <span class="nav-full" data-i18n="nav.gallery">Galeria</span>
               <span class="nav-short" data-i18n="navShort.gallery">Fotos</span>
             </a>
-            <a href="#rsvp">
-              <span class="nav-full" data-i18n="nav.rsvp">RSVP</span>
-              <span class="nav-short" data-i18n="navShort.rsvp">RSVP</span>
-            </a>
             <a href="#gift">
               <span class="nav-full" data-i18n="nav.gift">Presentes</span>
               <span class="nav-short" data-i18n="navShort.gift">PIX</span>
@@ -1844,7 +1826,6 @@
                 <p class="personal" id="personalGreeting" aria-live="polite"></p>
                 <div class="cta-row">
                   <button class="btn" id="btnCalendar" type="button" data-i18n="hero.calendar">Adicionar ao calendário</button>
-                  <a class="btn ghost" href="#rsvp" data-i18n="hero.join">Participar</a>
                   <a class="btn ghost" href="#location" data-i18n="hero.directions">Rotas</a>
                 </div>
                 <div class="hero-quote" id="heroQuote"></div>
@@ -2097,70 +2078,12 @@
         </div>
       </section>
 
-      <section id="rsvp">
+      <section id="message">
         <div class="wrap">
-          <h2 class="section-title" data-i18n="section.rsvp.title">RSVP</h2>
-          <p class="section-sub" data-i18n="section.rsvp.sub">Confirme sua presença e nos ajude a preparar cada detalhe com carinho.</p>
+          <h2 class="section-title" data-i18n="guestbook.title">Mensagem</h2>
+          <p class="section-sub" data-i18n="section.message.sub">Deixe uma mensagem para tornar este dia ainda mais especial.</p>
 
-          <div class="grid2">
-            <div class="card">
-              <div class="row">
-                <div>
-                  <div class="label" data-i18n="rsvp.statusLabel">Resposta</div>
-                  <select id="rsvpStatus" class="select" aria-label="RSVP status">
-                    <option value="attending">Attending</option>
-                    <option value="not_attending">Not attending</option>
-                  </select>
-                </div>
-                <div class="row2">
-                  <div>
-                    <div class="label" data-i18n="rsvp.nameLabel">Nome</div>
-                    <input id="rsvpName" type="text" maxlength="24" placeholder="Seu nome completo" data-i18n-placeholder="rsvp.namePh" />
-                  </div>
-                  <div>
-                    <div class="label" data-i18n="rsvp.guestsLabel">Acompanhantes</div>
-                    <select id="rsvpGuests" class="select" aria-label="Acompanhantes">
-                      <option value="0">0</option>
-                      <option value="1">1</option>
-                      <option value="2">2</option>
-                      <option value="3">3</option>
-                      <option value="4">4</option>
-                    </select>
-                  </div>
-                </div>
-                <div>
-                  <div class="label" data-i18n="rsvp.mealLabel">Preferência de refeição</div>
-                  <select id="rsvpMeal" class="select" aria-label="Meal choice"></select>
-                </div>
-                <div>
-                  <div class="label" data-i18n="rsvp.noteLabel">Alergias ou pedidos</div>
-                  <textarea id="rsvpNote" maxlength="220" placeholder="Conte-nos se houver alguma restrição ou observação" data-i18n-placeholder="rsvp.notePh"></textarea>
-                </div>
-                <div class="cta-row">
-                  <button class="btn primary" id="btnRsvpSubmit" type="button" data-i18n="rsvp.submit">Enviar RSVP</button>
-                  <button class="btn ghost" id="btnRsvpReset" type="button" data-i18n="rsvp.reset">Limpar</button>
-                </div>
-                <div class="muted" style="font-size: 12px; line-height: 1.7" data-i18n="rsvp.helper">
-                  Caso seus planos mudem, você pode enviar novamente mais perto da data.
-                </div>
-              </div>
-            </div>
-
-            <div class="card">
-              <div class="kicker" data-i18n="rsvp.summaryKicker">EVENT OVERVIEW</div>
-              <div class="stat-grid" id="rsvpStats"></div>
-              <div class="hr"></div>
-              <div class="rsvp-status" id="rsvpLastSubmission"></div>
-            </div>
-          </div>
-
-          <div class="card" style="margin-top: 14px">
-            <div class="section-header-row">
-              <div>
-                <h3 class="section-title" style="font-size: 18px; margin-top: 0" data-i18n="guestbook.title">Mensagem</h3>
-                <p class="section-sub" style="margin-bottom: 0" data-i18n="section.message.sub">Depois do RSVP, deixe uma mensagem para tornar este dia ainda mais especial.</p>
-              </div>
-            </div>
+          <div class="card">
             <div class="row">
               <div>
                 <div class="label sr-only" data-i18n="guestbook.nameLabel">Nome</div>
@@ -2174,7 +2097,7 @@
                 <button class="btn primary" id="btnGbSubmit" type="button" data-i18n="guestbook.submit">Enviar</button>
               </div>
               <div class="hr"></div>
-              <div id="guestbookList" class="row" aria-label="방명록 목록"></div>
+              <div id="guestbookList" class="row" aria-label="Mensagens"></div>
               <div class="cta-row" id="guestbookMoreWrap" style="margin-top: 12px; display: none">
                 <button class="btn" id="btnGuestbookMore" type="button">Ver mais</button>
               </div>
@@ -2547,7 +2470,7 @@
             description: { pt: "Sabores reconfortantes para o jantar principal.", ko: "편안하게 즐기실 수 있는 메인 식사 구성입니다." },
             items: [
               { title: { pt: "Prato da casa", ko: "오늘의 메인 요리" }, note: { pt: "Servido quente no jantar", ko: "디너 타임에 제공됩니다" } },
-              { title: { pt: "Opção vegetariana", ko: "채식 옵션" }, note: { pt: "Disponível mediante RSVP", ko: "RSVP에서 선택 가능합니다" } },
+              { title: { pt: "Opção vegetariana", ko: "채식 옵션" }, note: { pt: "Disponível para quem preferir", ko: "원하시는 분들을 위해 준비합니다" } },
               { title: { pt: "Acompanhamentos", ko: "사이드 메뉴" }, note: { pt: "Saladas, pães e acompanhamentos leves", ko: "샐러드와 빵, 가벼운 곁들임 메뉴" } },
             ],
           },
@@ -2659,13 +2582,6 @@
             },
           ],
         },
-        rsvpSettings: {
-          meals: [
-            { value: "classic", label: { pt: "Menu principal", ko: "기본 식사" } },
-            { value: "vegetarian", label: { pt: "Menu vegetariano", ko: "채식 메뉴" } },
-            { value: "light", label: { pt: "Refeição leve", ko: "가벼운 식사" } },
-          ],
-        },
         faqItems: [
           {
             question: { pt: "Há dress code?", ko: "드레스 코드는 어떻게 되나요?" },
@@ -2673,15 +2589,11 @@
           },
           {
             question: { pt: "Posso levar crianças?", ko: "아이와 함께 참석해도 되나요?" },
-            answer: { pt: "Sim. Se vier com crianças, use o campo de observações no RSVP para nos avisar.", ko: "가능합니다. 함께 오시는 경우 RSVP 비고란에 남겨 주세요." },
+            answer: { pt: "Sim, ficamos felizes em receber as crianças.", ko: "물론입니다. 아이와 함께 오셔도 좋습니다." },
           },
           {
             question: { pt: "Como funciona o estacionamento?", ko: "주차는 어떻게 하나요?" },
             answer: { pt: "Há estacionamento no local. Ainda assim, recomendamos chegar com antecedência.", ko: "행사장 내 주차가 가능하며, 조금 여유 있게 도착하시면 더 편합니다." },
-          },
-          {
-            question: { pt: "Posso atualizar meu RSVP depois?", ko: "RSVP를 나중에 수정할 수 있나요?" },
-            answer: { pt: "Sim. Você pode enviar novamente caso seus planos mudem antes do evento.", ko: "네. 일정이 바뀌시면 예식 전까지 다시 제출해 주셔도 됩니다." },
           },
         ],
         essentialsNotice: {
@@ -2690,8 +2602,8 @@
             ko: "우아하지만 편안하게, 천천히 즐기실 수 있도록 준비한 하루입니다.",
           },
           copy: {
-            pt: "Como a cerimônia e parte da recepção acontecem em ambiente aberto, recomendamos sapatos confortáveis, chegada antecipada e atenção ao campo de RSVP para preferências alimentares.",
-            ko: "예식과 리셉션 일부가 야외에서 진행되므로 편한 신발을 추천드리며, 식사 관련 요청사항은 RSVP에 남겨 주시면 더 세심하게 준비하겠습니다.",
+            pt: "Como a cerimônia e parte da recepção acontecem em ambiente aberto, recomendamos sapatos confortáveis e chegada com tranquilidade.",
+            ko: "예식과 리셉션 일부가 야외에서 진행되므로 편한 신발을 추천드리며, 조금 여유 있게 도착하시면 좋습니다.",
           },
         },
         detailCards: [
@@ -2713,10 +2625,10 @@
           },
           {
             label: { pt: "Table service", ko: "식사 안내" },
-            title: { pt: "Informe restrições no RSVP", ko: "식사 요청은 RSVP에 남겨 주세요" },
+            title: { pt: "Menu preparado com cuidado", ko: "정성껏 준비한 식사" },
             copy: {
-              pt: "Teremos menu principal, opção vegetariana e observações para restrições alimentares informadas com antecedência.",
-              ko: "기본 식사와 채식 옵션을 준비하며, 알레르기나 요청사항은 RSVP를 통해 미리 알려 주시면 반영하겠습니다.",
+              pt: "Teremos menu principal e opções pensadas para que todos aproveitem a celebração com conforto.",
+              ko: "메인 메뉴와 함께 다양한 옵션을 준비하여 하객분들이 편안하게 즐기실 수 있도록 했습니다.",
             },
           },
         ],
@@ -2735,7 +2647,7 @@
           },
         ],
 
-        // Firebase (optional): enable for cloud-synced RSVP / guestbook
+        // Firebase (optional): enable for cloud-synced guestbook
         firebase: {
           enabled: true,
           config: {
@@ -2768,9 +2680,6 @@
       const GB_LAST_TS_KEY = "wedding.guestbook.lastTs.v1";
       const GB_LAST_MSG_KEY = "wedding.guestbook.lastMsg.v1";
       const GB_LIKES_KEY = "wedding.guestbook.likes.v1";
-      const RSVP_LAST_HASH_KEY = "wedding.rsvp.lastHash.v1";
-      const RSVP_LAST_TS_KEY = "wedding.rsvp.lastTs.v1";
-
       // ================== UTIL ==================
       const $ = (sel, root = document) => root.querySelector(sel);
       const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
@@ -2783,14 +2692,14 @@
         pt: {
           meta: {
             title: "Convite de Casamento",
-            description: "Confira a história do casal, o programa do dia, o menu e confirme sua presença no nosso casamento.",
+            description: "Confira a história do casal, o programa do dia e o menu do nosso casamento.",
             ogTitle: "Convite de Casamento",
-            ogDescription: "História, programa, menu e RSVP do nosso casamento",
+            ogDescription: "História, programa e menu do nosso casamento",
           },
           screen: { overlay: "Uma onda de felicitações, feita por todos" },
-          nav: { info: "Nossa história", program: "Programa", location: "Como chegar", gallery: "Galeria", rsvp: "RSVP", gift: "Presentes" },
-          navShort: { info: "Story", program: "Prog.", location: "Mapa", gallery: "Fotos", rsvp: "RSVP", gift: "PIX" },
-          hero: { kicker: "INVITATION", calendar: "Adicionar ao calendário", join: "Confirmar presença", directions: "Rotas" },
+          nav: { info: "Nossa história", program: "Programa", location: "Como chegar", gallery: "Galeria", gift: "Presentes" },
+          navShort: { info: "Story", program: "Prog.", location: "Mapa", gallery: "Fotos", gift: "PIX" },
+          hero: { kicker: "INVITATION", calendar: "Adicionar ao calendário", directions: "Rotas" },
           intro: { kicker: "WEDDING INVITATION", enter: "Entrar", skip: "Pular", scroll: "Role para continuar" },
           personal: { greeting: "{name}, que alegria ter você aqui." },
           story: { kicker: "OUR STORY", highlightsKicker: "HIGHLIGHTS" },
@@ -2834,8 +2743,7 @@
             essentials: { title: "Detalhes do evento", sub: "Tudo o que os convidados precisam saber, sem excesso e com clareza." },
             location: { title: "Como chegar", sub: "Por favor, consulte o local abaixo para participar do evento.", route: "Abrir rotas", copy: "Copiar endereço", transitTitle: "Transporte" },
             gallery: { title: "Galeria", sub: "Uma seleção de fotos para acompanhar a atmosfera do nosso dia." },
-            rsvp: { title: "RSVP", sub: "Confirme sua presença e nos ajude a preparar cada detalhe com carinho." },
-            message: { sub: "Depois do RSVP, deixe uma mensagem para tornar este dia ainda mais especial." },
+            message: { sub: "Deixe uma mensagem para tornar este dia ainda mais especial." },
             faq: { title: "Guia rápido", sub: "Alguns detalhes úteis para que todos possam aproveitar o dia com leveza." },
             gift: {
               title: "Presentes",
@@ -2881,29 +2789,6 @@
             votes: "{count} voto(s) · {pct}%",
             ariaVote: "Votar: {label}",
           },
-          rsvp: {
-            statusLabel: "Resposta",
-            statusAttending: "Estarei presente",
-            statusNotAttending: "Não poderei ir",
-            nameLabel: "Nome",
-            namePh: "Seu nome completo",
-            guestsLabel: "Acompanhantes",
-            mealLabel: "Preferência de refeição",
-            noteLabel: "Alergias ou pedidos",
-            notePh: "Conte-nos se houver alguma restrição ou observação",
-            submit: "Enviar RSVP",
-            reset: "Limpar",
-            helper: "Caso seus planos mudem, você pode enviar novamente mais perto da data.",
-            summaryKicker: "EVENT OVERVIEW",
-            statsResponses: "Respostas recebidas",
-            statsAttending: "Confirmações",
-            statsRegrets: "Ausências",
-            statsGuests: "Pessoas previstas",
-            savedTitle: "Sua resposta mais recente",
-            savedEmpty: "Ainda não há RSVP salvo neste dispositivo.",
-            savedAttending: "Presença confirmada para {name} · {guests} pessoa(s)",
-            savedRegret: "{name} informou que não poderá comparecer",
-          },
           guestbook: {
             title: "Mensagem de carinho",
             nameLabel: "Nome",
@@ -2936,15 +2821,12 @@
             needDateISO: "Calendário indisponível no momento.",
             downloaded: "Arquivo do calendário baixado",
             needMessage: "Digite uma mensagem",
-            needRsvpName: "Informe o seu nome para o RSVP",
             leftMessage: "Enviado",
-            rsvpSent: "RSVP enviado com sucesso",
             cleared: "Limpo",
             voted: "Votado",
             joined: "Participação enviada",
             cooldown: "Aguarde {sec}s e tente novamente",
             duplicate: "Mensagem repetida. Você pode escrever algo diferente.",
-            duplicateRsvp: "Esse RSVP já foi enviado recentemente. Atualize algum campo para reenviar.",
             themeLight: "Tema claro",
             themeDark: "Tema escuro",
             langPt: "Português",
@@ -2956,14 +2838,14 @@
         ko: {
           meta: {
             title: "결혼식에 초대합니다",
-            description: "두 사람의 이야기, 예식 프로그램, 식사 안내, RSVP까지 한 번에 확인하실 수 있습니다.",
+            description: "두 사람의 이야기, 예식 프로그램, 식사 안내를 한 번에 확인하실 수 있습니다.",
             ogTitle: "결혼식에 초대합니다",
-            ogDescription: "스토리, 프로그램, 메뉴, RSVP 안내",
+            ogDescription: "스토리, 프로그램, 메뉴 안내",
           },
           screen: { overlay: "함께 만드는 축하의 파도" },
-          nav: { info: "우리 이야기", program: "프로그램", location: "오시는 길", gallery: "갤러리", rsvp: "RSVP", gift: "마음 전하실 곳" },
-          navShort: { info: "스토리", program: "순서", location: "지도", gallery: "사진", rsvp: "RSVP", gift: "PIX" },
-          hero: { kicker: "INVITATION", calendar: "캘린더 추가", join: "참석 여부 남기기", directions: "길찾기" },
+          nav: { info: "우리 이야기", program: "프로그램", location: "오시는 길", gallery: "갤러리", gift: "마음 전하실 곳" },
+          navShort: { info: "스토리", program: "순서", location: "지도", gallery: "사진", gift: "PIX" },
+          hero: { kicker: "INVITATION", calendar: "캘린더 추가", directions: "길찾기" },
           intro: { kicker: "WEDDING INVITATION", enter: "입장하기", skip: "건너뛰기", scroll: "스크롤해서 계속" },
           personal: { greeting: "{name}님, 와주셔서 정말 감사해요." },
           story: { kicker: "OUR STORY", highlightsKicker: "HIGHLIGHTS" },
@@ -2999,15 +2881,14 @@
           section: {
             invite: {
               title: "우리 이야기",
-              text: "두 사람의 이야기, 예식 순서, 식사 안내, RSVP까지 한 번에 볼 수 있도록 정성껏 준비한 초대장입니다.",
+              text: "두 사람의 이야기, 예식 순서, 식사 안내까지 한 번에 볼 수 있도록 정성껏 준비한 초대장입니다.",
             },
             program: { title: "프로그램", sub: "노을이 지는 시간부터 저녁의 축하까지, 하루의 흐름을 차분하게 안내합니다." },
             menu: { title: "식사 안내", sub: "모두가 편안하게 즐기실 수 있도록 식사 구성을 준비했습니다." },
             essentials: { title: "행사 안내", sub: "하객분들이 가장 많이 궁금해하실 내용을 간결하게 정리했습니다." },
             location: { title: "오시는 길", sub: "아래 장소를 참고 해서 행사 참석 바랍니다.", route: "길찾기 링크", copy: "주소 복사", transitTitle: "교통 안내" },
             gallery: { title: "갤러리", sub: "이 날의 분위기를 미리 전하는 사진들입니다." },
-            rsvp: { title: "RSVP", sub: "참석 여부를 남겨 주시면 더 세심하게 준비할 수 있습니다." },
-            message: { sub: "RSVP를 남기신 뒤, 따뜻한 축하 메시지도 함께 전해 주세요." },
+            message: { sub: "따뜻한 축하 메시지를 남겨 주세요." },
             faq: { title: "안내", sub: "편하게 오실 수 있도록 자주 궁금해하실 내용을 정리했습니다." },
             gift: {
               title: "마음 전하실 곳",
@@ -3053,29 +2934,6 @@
             votes: "{count}표 · {pct}%",
             ariaVote: "{label} 투표",
           },
-          rsvp: {
-            statusLabel: "응답",
-            statusAttending: "참석합니다",
-            statusNotAttending: "참석이 어렵습니다",
-            nameLabel: "이름",
-            namePh: "성함을 입력해 주세요",
-            guestsLabel: "동행 인원",
-            mealLabel: "식사 선택",
-            noteLabel: "알레르기/요청사항",
-            notePh: "식사나 좌석 관련 요청이 있으면 남겨 주세요",
-            submit: "RSVP 보내기",
-            reset: "초기화",
-            helper: "일정이 바뀌면 예식 전까지 다시 제출하셔도 됩니다.",
-            summaryKicker: "EVENT OVERVIEW",
-            statsResponses: "응답 수",
-            statsAttending: "참석",
-            statsRegrets: "불참",
-            statsGuests: "예상 인원",
-            savedTitle: "최근 내 응답",
-            savedEmpty: "이 기기에는 아직 저장된 RSVP가 없습니다.",
-            savedAttending: "{name}님 참석 · 총 {guests}명 예정",
-            savedRegret: "{name}님은 참석이 어렵다고 응답하셨습니다",
-          },
           guestbook: {
             title: "축하 메시지",
             nameLabel: "이름",
@@ -3101,15 +2959,12 @@
             needDateISO: "캘린더 파일을 만들 수 없습니다.",
             downloaded: "캘린더 파일을 내려받았습니다",
             needMessage: "메시지를 입력해 주세요",
-            needRsvpName: "RSVP를 위해 성함을 입력해 주세요",
             leftMessage: "남겼습니다",
-            rsvpSent: "RSVP가 저장되었습니다",
             cleared: "초기화했습니다",
             voted: "투표했습니다",
             joined: "참여했습니다",
             cooldown: "{sec}초 후에 다시 시도해 주세요",
             duplicate: "같은 메시지는 연속으로 남길 수 없어요",
-            duplicateRsvp: "같은 RSVP가 방금 전송되었습니다. 변경 후 다시 제출해 주세요.",
             themeLight: "라이트 모드",
             themeDark: "다크 모드",
             langPt: "Português",
@@ -3375,8 +3230,6 @@
       // ================== DATA PROVIDER ==================
       const LS_KEYS = {
         guestbook: "wedding.guestbook.v1",
-        rsvps: "wedding.rsvps.v1",
-        lastRsvp: "wedding.rsvp.last.v1",
       };
 
       let db = null;
@@ -3470,91 +3323,9 @@
         return String(input || "").replace(/\s+/g, " ").trim().slice(0, limit);
       }
 
-      function getRsvpMeals() {
-        return Array.isArray(WEDDING.rsvpSettings?.meals) ? WEDDING.rsvpSettings.meals : [];
-      }
-
-      function normalizeRsvpRecord(data = {}) {
-        const name = sanitizeName(data.name);
-        const status = String(data.status || "attending") === "not_attending" ? "not_attending" : "attending";
-        const guests = status === "attending" ? Math.max(0, Math.min(4, Number(data.guests || 0))) : 0;
-        const meals = getRsvpMeals();
-        const fallbackMeal = meals[0]?.value || "";
-        const requestedMeal = String(data.meal || fallbackMeal);
-        const meal = status === "attending" && meals.some((item) => String(item.value) === requestedMeal) ? requestedMeal : fallbackMeal;
-        const note = sanitizeFreeText(data.note, 220);
-        return { status, name, guests, meal, note };
-      }
-
-      function getRsvpHash(record) {
-        const base = JSON.stringify({
-          status: record.status,
-          name: record.name,
-          guests: record.guests,
-          meal: record.meal,
-          note: record.note,
-        });
-        return hashShort(base);
-      }
-
-      function getMealLabel(mealValue) {
-        const item = getRsvpMeals().find((x) => String(x.value) === String(mealValue));
-        return item ? tl(item.label) : "-";
-      }
-
-      const rsvpApi = {
-        async add(input) {
-          // Production note:
-          // Mirror these constraints in Firebase Realtime Database rules as well:
-          // required name, bounded guests, bounded note length, and write scope limited to RSVP path.
-          const normalized = normalizeRsvpRecord(input);
-          if (!normalized.name) return { ok: false, reason: "name" };
-
-          const tmpId =
-            (window.crypto && typeof window.crypto.randomUUID === "function" && window.crypto.randomUUID()) ||
-            `${nowTs()}-${Math.random().toString(16).slice(2)}`;
-          const item = {
-            id: tmpId,
-            ...normalized,
-            time: nowTs(),
-          };
-
-          if (dataMode === "shared" && db) {
-            const ref = db.ref("wedding/rsvps").push();
-            const id = ref.key || tmpId;
-            await ref.set({ ...item, id });
-            lsSet(LS_KEYS.lastRsvp, { ...item, id });
-          } else {
-            const list = lsGet(LS_KEYS.rsvps, []);
-            list.unshift(item);
-            lsSet(LS_KEYS.rsvps, list.slice(0, 120));
-            lsSet(LS_KEYS.lastRsvp, item);
-          }
-          return { ok: true, item };
-        },
-        onList(cb) {
-          if (dataMode === "shared" && db) {
-            if (rsvpApi._ref && rsvpApi._handler) {
-              rsvpApi._ref.off("value", rsvpApi._handler);
-            }
-            rsvpApi._ref = db.ref("wedding/rsvps").limitToLast(200);
-            rsvpApi._handler = (snap) => {
-              const obj = snap.val() || {};
-              const arr = Object.values(obj);
-              arr.sort((a, b) => (b.time || 0) - (a.time || 0));
-              cb(arr);
-            };
-            rsvpApi._ref.on("value", rsvpApi._handler);
-          } else {
-            cb(lsGet(LS_KEYS.rsvps, []));
-          }
-        },
-      };
-
       // Guestbook view state
       let guestbookExpanded = false;
       let guestbookFullList = [];
-      let rsvpFullList = [];
 
       function getGuestbookLikes() {
         return lsGet(GB_LIKES_KEY, {});
@@ -3662,8 +3433,6 @@
         renderEssentials();
         renderFaq();
         renderLocationGuide();
-        fillRsvpSelects();
-        renderRsvpSummary();
       }
 
       function sanitizeName(input) {
@@ -3985,112 +3754,6 @@
             `
           )
           .join("");
-      }
-
-      function fillRsvpSelects() {
-        const status = $("#rsvpStatus");
-        if (status) {
-          const attending = status.querySelector('option[value="attending"]');
-          const regret = status.querySelector('option[value="not_attending"]');
-          if (attending) attending.textContent = t("rsvp.statusAttending");
-          if (regret) regret.textContent = t("rsvp.statusNotAttending");
-        }
-
-        const meal = $("#rsvpMeal");
-        if (meal) {
-          const current = String(meal.value || "");
-          const options = getRsvpMeals();
-          meal.innerHTML = options
-            .map((item) => `<option value="${escapeHtml(item.value)}">${escapeHtml(tl(item.label))}</option>`)
-            .join("");
-          if (options.some((item) => String(item.value) === current)) meal.value = current;
-        }
-        syncRsvpFormState();
-      }
-
-      function syncRsvpFormState() {
-        const status = $("#rsvpStatus");
-        const guests = $("#rsvpGuests");
-        const meal = $("#rsvpMeal");
-        const attending = String(status?.value || "attending") !== "not_attending";
-        if (guests) {
-          guests.disabled = !attending;
-          if (!attending) guests.value = "0";
-        }
-        if (meal) {
-          meal.disabled = !attending;
-        }
-      }
-
-      function renderRsvpSummary() {
-        const statsRoot = $("#rsvpStats");
-        const statusRoot = $("#rsvpLastSubmission");
-        if (statsRoot) {
-          const list = Array.isArray(rsvpFullList) ? rsvpFullList : [];
-          const attending = list.filter((item) => item?.status !== "not_attending");
-          const regrets = list.length - attending.length;
-          const guests = attending.reduce((sum, item) => sum + 1 + Math.max(0, Number(item?.guests || 0)), 0);
-          const stats = [
-            { value: list.length, label: t("rsvp.statsResponses") },
-            { value: attending.length, label: t("rsvp.statsAttending") },
-            { value: regrets, label: t("rsvp.statsRegrets") },
-            { value: guests, label: t("rsvp.statsGuests") },
-          ];
-          statsRoot.innerHTML = stats
-            .map(
-              (item) => `
-                <div class="stat-card">
-                  <div class="stat-value">${escapeHtml(item.value)}</div>
-                  <div class="stat-label">${escapeHtml(item.label)}</div>
-                </div>
-              `
-            )
-            .join("");
-        }
-
-        if (statusRoot) {
-          const last = lsGet(LS_KEYS.lastRsvp, null);
-          if (!last || !last.name) {
-            statusRoot.innerHTML = `<div class="status-box"><strong>${escapeHtml(t("rsvp.savedTitle"))}</strong><div class="muted" style="margin-top:6px;font-size:13px">${escapeHtml(t("rsvp.savedEmpty"))}</div></div>`;
-            return;
-          }
-
-          const submittedAt = new Date(last.time || Date.now());
-          const stamp = `${submittedAt.getFullYear()}.${String(submittedAt.getMonth() + 1).padStart(2, "0")}.${String(submittedAt.getDate()).padStart(2, "0")}`;
-          const detail =
-            last.status === "not_attending"
-              ? t("rsvp.savedRegret", { name: last.name })
-              : t("rsvp.savedAttending", { name: last.name, guests: 1 + Math.max(0, Number(last.guests || 0)) });
-          const mealLine = last.status === "not_attending" ? "" : `<div class="muted" style="font-size:13px">${escapeHtml(getMealLabel(last.meal))}</div>`;
-          const noteLine = last.note ? `<div class="muted" style="font-size:13px">${escapeHtml(last.note)}</div>` : "";
-          statusRoot.innerHTML = `
-            <div class="status-box">
-              <strong>${escapeHtml(t("rsvp.savedTitle"))}</strong>
-              <div style="margin-top:8px;font-size:14px;line-height:1.7">${escapeHtml(detail)}</div>
-              ${mealLine}
-              ${noteLine}
-              <div class="muted" style="margin-top:8px;font-size:12px">${stamp}</div>
-            </div>
-          `;
-        }
-      }
-
-      function hydrateRsvpForm() {
-        const last = lsGet(LS_KEYS.lastRsvp, null);
-        $("#rsvpStatus") && ($("#rsvpStatus").value = String(last?.status || "attending"));
-        $("#rsvpName") && ($("#rsvpName").value = String(last?.name || ""));
-        $("#rsvpGuests") && ($("#rsvpGuests").value = String(last?.guests ?? 0));
-        fillRsvpSelects();
-        $("#rsvpMeal") && ($("#rsvpMeal").value = String(last?.meal || getRsvpMeals()[0]?.value || ""));
-        $("#rsvpNote") && ($("#rsvpNote").value = String(last?.note || ""));
-        syncRsvpFormState();
-      }
-
-      function watchRsvps() {
-        rsvpApi.onList((list) => {
-          rsvpFullList = Array.isArray(list) ? list : [];
-          renderRsvpSummary();
-        });
       }
 
       // ================== GALLERY ==================
@@ -4554,52 +4217,6 @@ END:VCALENDAR`;
           updateGalleryMoreUI();
         });
 
-        $("#rsvpStatus")?.addEventListener("change", () => {
-          syncRsvpFormState();
-        });
-        $("#btnRsvpReset")?.addEventListener("click", () => {
-          haptic(8);
-          $("#rsvpStatus") && ($("#rsvpStatus").value = "attending");
-          $("#rsvpName") && ($("#rsvpName").value = "");
-          $("#rsvpGuests") && ($("#rsvpGuests").value = "0");
-          $("#rsvpMeal") && ($("#rsvpMeal").value = getRsvpMeals()[0]?.value || "");
-          $("#rsvpNote") && ($("#rsvpNote").value = "");
-          syncRsvpFormState();
-          toast(t("toast.cleared"));
-        });
-        $("#btnRsvpSubmit")?.addEventListener("click", async () => {
-          haptic(10);
-          const payload = normalizeRsvpRecord({
-            status: $("#rsvpStatus")?.value,
-            name: $("#rsvpName")?.value,
-            guests: $("#rsvpGuests")?.value,
-            meal: $("#rsvpMeal")?.value,
-            note: $("#rsvpNote")?.value,
-          });
-          if (!payload.name) return toast(t("toast.needRsvpName"));
-
-          const now = Date.now();
-          const lastTs = Number(localStorage.getItem(RSVP_LAST_TS_KEY) || "0");
-          const cooldownMs = 8_000;
-          if (now - lastTs < cooldownMs) {
-            const sec = Math.ceil((cooldownMs - (now - lastTs)) / 1000);
-            return toast(t("toast.cooldown", { sec }));
-          }
-
-          const hash = getRsvpHash(payload);
-          const lastHash = String(localStorage.getItem(RSVP_LAST_HASH_KEY) || "");
-          if (lastHash && lastHash === hash) return toast(t("toast.duplicateRsvp"));
-
-          const result = await rsvpApi.add(payload);
-          if (!result.ok) return toast(t("toast.checkInput"));
-
-          localStorage.setItem(RSVP_LAST_TS_KEY, String(now));
-          localStorage.setItem(RSVP_LAST_HASH_KEY, hash);
-          renderRsvpSummary();
-          watchRsvps();
-          toast(t("toast.rsvpSent"));
-        });
-
         $$("[data-copy]").forEach((btn) => {
           btn.addEventListener("click", () => {
             haptic(8);
@@ -4741,10 +4358,8 @@ END:VCALENDAR`;
       initFirebaseIfEnabled();
       setDataModeUI();
       bindContent();
-      hydrateRsvpForm();
       initHeroMotion();
       bindUI();
-      watchRsvps();
       renderGuestbook();
       setHeroImage();
       buildGallery();
