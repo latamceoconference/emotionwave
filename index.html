@@ -883,6 +883,121 @@
       .menu-grid {
         grid-template-columns: repeat(3, minmax(0, 1fr));
       }
+      .menu-showcase {
+        display: grid;
+        grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+        gap: 18px;
+        margin-top: 18px;
+        align-items: stretch;
+      }
+      .menu-showcase-media {
+        position: relative;
+        overflow: hidden;
+        border-radius: 20px;
+        min-height: 280px;
+        border: 1px solid rgba(16, 32, 36, 0.08);
+        background: linear-gradient(135deg, rgba(200, 164, 107, 0.16), rgba(125, 184, 196, 0.1));
+      }
+      .menu-showcase-media img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      .menu-showcase-copy {
+        display: grid;
+        gap: 14px;
+        align-content: center;
+      }
+      .menu-showcase-title {
+        margin: 0;
+        font-family: "Playfair Display", serif;
+        font-size: 28px;
+        line-height: 1.35;
+      }
+      .menu-showcase-sub {
+        margin: 0;
+        color: var(--sub);
+        font-size: 14px;
+        line-height: 1.8;
+      }
+      .menu-showcase-ko {
+        margin: 0;
+        padding: 14px 16px;
+        border-radius: 18px;
+        border: 1px solid rgba(16, 32, 36, 0.08);
+        background: rgba(255, 255, 255, 0.58);
+        font-size: 14px;
+        line-height: 1.85;
+        color: var(--ink);
+      }
+      :root[data-theme="dark"] .menu-showcase-ko {
+        border-color: rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.04);
+      }
+      #dlgMenuBrochure {
+        width: min(1120px, calc(100% - 24px));
+      }
+      .menu-brochure {
+        display: grid;
+        gap: 18px;
+      }
+      .menu-brochure-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+        gap: 18px;
+        align-items: start;
+      }
+      .menu-brochure-image {
+        border-radius: 18px;
+        overflow: hidden;
+        border: 1px solid rgba(16, 32, 36, 0.08);
+        background: linear-gradient(135deg, rgba(200, 164, 107, 0.16), rgba(125, 184, 196, 0.1));
+        min-height: 320px;
+      }
+      .menu-brochure-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      .menu-brochure-sections {
+        display: grid;
+        gap: 12px;
+      }
+      .menu-brochure-section {
+        border: 1px solid rgba(16, 32, 36, 0.08);
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.58);
+        padding: 14px 16px;
+      }
+      :root[data-theme="dark"] .menu-brochure-section,
+      :root[data-theme="dark"] .menu-brochure-image {
+        border-color: rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.04);
+      }
+      .menu-brochure-section h4 {
+        margin: 0 0 10px;
+        font-size: 16px;
+        line-height: 1.5;
+      }
+      .menu-brochure-list {
+        display: grid;
+        gap: 10px;
+      }
+      .menu-brochure-item {
+        display: grid;
+        gap: 4px;
+      }
+      .menu-brochure-item strong {
+        font-size: 14px;
+        line-height: 1.6;
+      }
+      .menu-brochure-item span {
+        color: var(--sub);
+        font-size: 13px;
+        line-height: 1.75;
+      }
       .menu-list {
         display: grid;
         gap: 8px;
@@ -1048,6 +1163,10 @@
           grid-template-columns: repeat(2, minmax(0, 1fr));
         }
         .menu-grid {
+          grid-template-columns: 1fr;
+        }
+        .menu-showcase,
+        .menu-brochure-grid {
           grid-template-columns: 1fr;
         }
       }
@@ -1775,6 +1894,22 @@
           <h2 class="section-title" data-i18n="section.menu.title">Menu</h2>
           <p class="section-sub" data-i18n="section.menu.sub">Preparamos uma mesa acolhedora para que todos celebrem com conforto.</p>
           <div class="menu-grid" id="menuGrid"></div>
+          <div class="card menu-showcase">
+            <div class="menu-showcase-media">
+              <img id="menuShowcaseImg" src="Menu1.png" alt="Wedding menu preview" />
+            </div>
+            <div class="menu-showcase-copy">
+              <div class="kicker" data-i18n="menuShowcase.kicker">WEDDING MENU</div>
+              <h3 class="menu-showcase-title" data-i18n="menuShowcase.title">Menu Guide</h3>
+              <p class="menu-showcase-sub" data-i18n="menuShowcase.sub">
+                Veja a composição completa do jantar e confira a explicação em coreano para cada etapa do menu.
+              </p>
+              <p class="menu-showcase-ko" id="menuShowcaseKo"></p>
+              <div class="cta-row">
+                <button class="btn primary" id="btnMenuBrochure" type="button" data-i18n="menuShowcase.button">Ver menu completo</button>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -2132,6 +2267,30 @@
       </div>
     </dialog>
 
+    <dialog id="dlgMenuBrochure" aria-label="Wedding menu">
+      <div class="dlg-head">
+        <div class="dlg-head-left">
+          <h3 data-i18n="dlg.menu.title">웨딩 메뉴 안내</h3>
+          <span class="dlg-sub" data-i18n="dlg.menu.sub">이미지와 함께 한국어로 자세히 안내드립니다.</span>
+        </div>
+        <div class="dlg-head-right">
+          <button class="icon-btn" type="button" data-close="dlgMenuBrochure" data-i18n="common.close" data-i18n-aria="aria.close" aria-label="Fechar">
+            Fechar
+          </button>
+        </div>
+      </div>
+      <div class="dlg-body">
+        <div class="menu-brochure">
+          <div class="menu-brochure-grid">
+            <div class="menu-brochure-image">
+              <img id="menuBrochureImg" src="Menu1.png" alt="Wedding menu card" />
+            </div>
+            <div class="menu-brochure-sections" id="menuBrochureSections"></div>
+          </div>
+        </div>
+      </div>
+    </dialog>
+
     <script>
       // ================== CONFIG (여기만 수정하면 됩니다) ==================
       const WEDDING = {
@@ -2154,8 +2313,8 @@
           brideBank: "32346800864",
         },
         heroQuote: {
-          pt: "Queremos que este site seja tão acolhedor quanto o dia que estamos preparando para receber você.",
-          ko: "이 초대장이, 저희가 준비한 하루처럼 따뜻하고 편안하게 느껴지길 바랍니다.",
+          pt: "A todos que vem de longe para celebrar o nosso casamento, deixamos a nossa sincera gratidao.",
+          ko: "멀리서 우리의 결혼을 축하하기 위해 와주시는 모든 분들께 진심으로 감사드립니다.",
         },
         heroMediaNote: {
           pt: "Uma celebração íntima ao pôr do sol, com atmosfera leve, mesa preparada com carinho e informações organizadas para todos os convidados.",
@@ -2251,6 +2410,47 @@
             ],
           },
         ],
+        menuBrochure: {
+          image: "Menu1.png",
+          teaserKo:
+            "식사 메뉴 버튼을 누르면 실제 메뉴 이미지와 함께 한국어 설명을 한눈에 확인하실 수 있도록 준비했습니다. 브라질 메뉴가 익숙하지 않은 하객분들도 부담 없이 보실 수 있게 구성한 안내입니다.",
+          sections: [
+            {
+              heading: "에피타이저 (Entradas)",
+              items: [
+                {
+                  title: "모듬 콜드 컷 보드 (Tabua de frios)",
+                  desc: "다양한 종류의 햄, 살라미, 치즈, 올리브 등을 함께 담은 접시입니다.",
+                },
+                { title: "모듬 치즈 (Mix de queijos)", desc: "가볍게 곁들이기 좋은 여러 종류의 치즈 구성입니다." },
+                { title: "모듬 빵 바구니 (Cesta de paes)", desc: "식전부터 편안하게 즐길 수 있는 여러 종류의 빵을 담았습니다." },
+                { title: "세비체 (Ceviche)", desc: "해산물을 새콤달콤한 소스에 버무린 페루식 요리입니다." },
+                { title: "잼을 곁들인 크림치즈 (Cream cheese com geleia)", desc: "부드러운 크림치즈에 달콤한 잼을 곁들인 메뉴입니다." },
+                { title: "토마토 콘피 (Tomate confit)", desc: "토마토를 오일에 천천히 익혀 풍미를 살린 요리입니다." },
+                { title: "미니 스낵 (Mini salgadinhos)", desc: "브라질식 미니 튀김이나 한입 크기 스낵으로 가볍게 즐기실 수 있습니다." },
+              ],
+            },
+            {
+              heading: "메인 요리 (Pratos principais)",
+              items: [
+                { title: "마데이라 소스를 곁들인 안심 스테이크", desc: "Filé mignon ao molho madeira로, 깊고 부드러운 풍미가 특징입니다." },
+                { title: "치킨 프리카세 (Fricasse de frango)", desc: "부드러운 소스로 조리한 닭고기 요리입니다." },
+                { title: "바보 지 까마랑 (Bobo de camarao)", desc: "코코넛 밀크와 카사바 페이스트를 기본으로 한 브라질식 새우 스튜입니다." },
+                { title: "론델리 (Rondelli)", desc: "치즈나 햄 등을 말아 오븐에 구운 파스타 요리입니다." },
+                { title: "흰밥 (Arroz branco)", desc: "메인 요리와 함께 곁들이는 기본 사이드입니다." },
+              ],
+            },
+            {
+              heading: "샐러드와 디저트",
+              items: [
+                { title: "카프레제 샐러드 (Salada caprese)", desc: "토마토, 모짜렐라 치즈, 바질이 어우러진 샐러드입니다." },
+                { title: "시저 샐러드 (Salada caesar)", desc: "가볍고 익숙하게 즐길 수 있는 클래식 샐러드입니다." },
+                { title: "도스 지 레이치 미니 치즈케이크", desc: "브라질식 캐러멜 잼과 견과류를 올린 미니 치즈케이크입니다." },
+                { title: "딸기 머랭 (Merengue de morango)", desc: "상큼한 딸기와 머랭이 어우러진 디저트입니다." },
+              ],
+            },
+          ],
+        },
         rsvpSettings: {
           meals: [
             { value: "classic", label: { pt: "Menu principal", ko: "기본 식사" } },
@@ -2387,6 +2587,12 @@
           personal: { greeting: "{name}, que alegria ter você aqui." },
           story: { kicker: "OUR STORY", highlightsKicker: "HIGHLIGHTS" },
           essentials: { noticeKicker: "EVENT NOTES" },
+          menuShowcase: {
+            kicker: "WEDDING MENU",
+            title: "Menu Guide",
+            sub: "Veja a composição completa do jantar e confira a explicação em coreano para cada etapa do menu.",
+            button: "Ver menu completo",
+          },
           quick: {
             map: "Mapa",
             whatsapp: "WhatsApp",
@@ -2506,6 +2712,10 @@
               hint: "Deslize para mudar · Pinça para zoom · Duplo toque para ajustar · Deslize para baixo para fechar",
               alt: "Imagem ampliada",
             },
+            menu: {
+              title: "Guia do menu do casamento",
+              sub: "Imagem do cardápio com explicação detalhada em coreano.",
+            },
           },
           gift: { groomSide: "Lado do noivo", brideSide: "Lado da noiva", holder: "Titular", account: "Conta" },
           common: { copy: "Copiar", close: "Fechar", save: "Salvar" },
@@ -2548,6 +2758,12 @@
           personal: { greeting: "{name}님, 와주셔서 정말 감사해요." },
           story: { kicker: "OUR STORY", highlightsKicker: "HIGHLIGHTS" },
           essentials: { noticeKicker: "EVENT NOTES" },
+          menuShowcase: {
+            kicker: "WEDDING MENU",
+            title: "식사 메뉴 안내",
+            sub: "실제 메뉴 이미지와 함께, 하객분들이 이해하기 쉽게 한국어 설명을 준비했습니다.",
+            button: "전체 메뉴 보기",
+          },
           quick: {
             map: "지도",
             whatsapp: "왓츠앱",
@@ -2662,6 +2878,7 @@
           },
           dlg: {
             photo: { title: "사진", hint: "스와이프로 넘기기 · 핀치로 확대 · 더블탭으로 맞춤 · 아래로 스와이프 닫기", alt: "확대 이미지" },
+            menu: { title: "웨딩 메뉴 안내", sub: "메뉴 이미지와 한국어 설명을 함께 확인하실 수 있습니다." },
           },
           gift: { groomSide: "신랑 측", brideSide: "신부 측", holder: "예금주", account: "계좌" },
           common: { copy: "복사", close: "닫기", save: "저장" },
@@ -3226,6 +3443,7 @@
         renderHostHighlights();
         renderProgram();
         renderMenu();
+        renderMenuBrochure();
         renderHeroFacts();
         renderEssentials();
         renderFaq();
@@ -3444,6 +3662,44 @@
                     .join("")}
                 </ul>
               </article>
+            `;
+          })
+          .join("");
+      }
+
+      function renderMenuBrochure() {
+        const data = WEDDING.menuBrochure || {};
+        const teaser = $("#menuShowcaseKo");
+        const showcaseImg = $("#menuShowcaseImg");
+        const modalImg = $("#menuBrochureImg");
+        const sectionsRoot = $("#menuBrochureSections");
+        const imageSrc = String(data.image || "Menu1.png").trim() || "Menu1.png";
+
+        if (teaser) teaser.textContent = String(data.teaserKo || "").trim();
+        if (showcaseImg) showcaseImg.setAttribute("src", imageSrc);
+        if (modalImg) modalImg.setAttribute("src", imageSrc);
+        if (!sectionsRoot) return;
+
+        const sections = Array.isArray(data.sections) ? data.sections : [];
+        sectionsRoot.innerHTML = sections
+          .map((section) => {
+            const items = Array.isArray(section.items) ? section.items : [];
+            return `
+              <section class="menu-brochure-section">
+                <h4>${escapeHtml(section.heading || "")}</h4>
+                <div class="menu-brochure-list">
+                  ${items
+                    .map(
+                      (item) => `
+                        <div class="menu-brochure-item">
+                          <strong>${escapeHtml(item.title || "")}</strong>
+                          <span>${escapeHtml(item.desc || "")}</span>
+                        </div>
+                      `
+                    )
+                    .join("")}
+                </div>
+              </section>
             `;
           })
           .join("");
@@ -4045,6 +4301,11 @@ END:VCALENDAR`;
         $("#quickPixBride")?.addEventListener("click", () => {
           haptic(8);
           copyText(String(WEDDING.gift.brideBank || ""));
+        });
+
+        $("#btnMenuBrochure")?.addEventListener("click", () => {
+          haptic(10);
+          openDialog("dlgMenuBrochure");
         });
 
         // Gallery show more
