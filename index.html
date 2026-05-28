@@ -2587,13 +2587,13 @@
         ceremonyVideo: {
           // 나중에 40초 히스토리 영상 YouTube 링크를 여기에 넣으면 카드에서 바로 재생/열기가 활성화됩니다.
           youtubeUrl: "https://youtu.be/B7O6ljdXapU",
-          title: { pt: "Nossa história em 40 segundos", ko: "40초로 보는 우리의 이야기" },
+          title: { pt: "Nossa história em 1 minuto", ko: "1분으로 보는 우리의 이야기" },
           copy: {
-            pt: "Preparamos um vídeo curto para apresentar nossa história. Se a chuva dificultar o uso do monitor externo, acompanhe pelo celular.",
-            ko: "두 사람의 히스토리를 짧게 소개하는 영상을 준비합니다. 비로 인해 외부 모니터 연결이 어려울 수 있어, 휴대폰으로 편하게 보실 수 있도록 할게요.",
+            pt: "Este é um vídeo da nossa história. Convidamos vocês a assistirem durante a declaração de casamento.",
+            ko: "저희의 스토리를 담은 영상입니다. 성혼선언 때 함께 감상 부탁드립니다.",
           },
           button: { pt: "Abrir no YouTube", ko: "YouTube에서 크게 보기" },
-          pending: { pt: "Link do YouTube em preparação.", ko: "YouTube 링크 준비 중입니다." },
+          hint: { pt: "Para ver melhor no celular, vire a tela na horizontal.", ko: "휴대폰을 가로로 돌리시면 더 크게 보실 수 있습니다." },
         },
         menuLayout2: {
           image: "layout2.png",
@@ -3800,14 +3800,15 @@
             ${
               embedUrl
                 ? `<iframe src="${escapeHtml(embedUrl)}" title="${escapeHtml(tl(data.title))}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>`
-                : `<div class="ceremony-video-placeholder">${escapeHtml(tl(data.pending))}</div>`
+                : `<div class="ceremony-video-placeholder">${escapeHtml(tl(data.hint))}</div>`
             }
           </div>
+          <p class="ceremony-video-note">${escapeHtml(tl(data.hint))}</p>
           <div class="cta-row">
             ${
               url
                 ? `<a class="btn primary" href="${escapeHtml(url)}" target="_blank" rel="noreferrer">${escapeHtml(tl(data.button))}</a>`
-                : `<span class="ceremony-video-note">${escapeHtml(tl(data.pending))}</span>`
+                : ""
             }
           </div>
         `;
