@@ -1872,6 +1872,7 @@
                 <p class="personal" id="personalGreeting" aria-live="polite"></p>
                 <div class="cta-row">
                   <button class="btn" id="btnCalendar" type="button" data-i18n="hero.calendar">Adicionar ao calendário</button>
+                  <button class="btn" id="btnHeroVideo" type="button" data-i18n="hero.video">우리 영상 보기</button>
                   <button class="btn" id="btnHeroSchedule" type="button" data-i18n="hero.schedule">식순 보기</button>
                   <a class="btn ghost" href="#location" data-i18n="hero.directions">Rotas</a>
                 </div>
@@ -2538,10 +2539,7 @@
           {
             time: "16:52",
             title: { pt: "Palavras um para o Outro", ko: "서로에게 전하는 말" },
-            text: {
-              pt: "Os noivos compartilham promessas e sentimentos sinceros. Um vídeo também estará disponível para acompanhar este momento pelo celular.",
-              ko: "두 사람이 서로에게 진심 어린 마음과 약속을 전합니다. 이 순간을 휴대폰으로 함께 보실 수 있도록 영상도 준비할 예정입니다.",
-            },
+            text: { pt: "Os noivos compartilham promessas e sentimentos sinceros.", ko: "두 사람이 서로에게 진심 어린 마음과 약속을 전합니다." },
           },
           {
             time: "16:59 - 17:07",
@@ -2587,12 +2585,12 @@
           koImage: "https://raw.githubusercontent.com/haseungsong/CCCB/main/%EC%8B%9D%EC%88%9C%20%ED%95%9C%EA%B8%80.png",
         },
         ceremonyVideo: {
-          // 나중에 YouTube 링크를 여기에 넣으면 카드에서 바로 재생/열기가 활성화됩니다.
+          // 나중에 40초 히스토리 영상 YouTube 링크를 여기에 넣으면 카드에서 바로 재생/열기가 활성화됩니다.
           youtubeUrl: "",
-          title: { pt: "Vídeo para o momento das palavras", ko: "서로에게 전하는 말 영상" },
+          title: { pt: "Nossa história em 40 segundos", ko: "40초로 보는 우리의 이야기" },
           copy: {
-            pt: "Se a chuva dificultar o uso do monitor externo, acompanhe este momento pelo seu celular.",
-            ko: "비로 인해 외부 모니터 연결이 어려울 수 있어, 휴대폰으로 편하게 보실 수 있도록 영상을 준비합니다.",
+            pt: "Preparamos um vídeo curto para apresentar nossa história. Se a chuva dificultar o uso do monitor externo, acompanhe pelo celular.",
+            ko: "두 사람의 히스토리를 짧게 소개하는 영상을 준비합니다. 비로 인해 외부 모니터 연결이 어려울 수 있어, 휴대폰으로 편하게 보실 수 있도록 할게요.",
           },
           button: { pt: "Abrir no YouTube", ko: "YouTube에서 크게 보기" },
           pending: { pt: "Link do YouTube em preparação.", ko: "YouTube 링크 준비 중입니다." },
@@ -2834,7 +2832,7 @@
           screen: { overlay: "Uma onda de felicitações, feita por todos" },
           nav: { info: "Nossa história", program: "Programa", location: "Como chegar", gallery: "Galeria", gift: "Presentes" },
           navShort: { info: "Story", program: "Prog.", location: "Mapa", gallery: "Fotos", gift: "PIX" },
-          hero: { kicker: "INVITATION", calendar: "Adicionar ao calendário", schedule: "Ver ordem da cerimônia", directions: "Rotas" },
+          hero: { kicker: "INVITATION", calendar: "Adicionar ao calendário", video: "Ver nosso vídeo", schedule: "Ver ordem da cerimônia", directions: "Rotas" },
           intro: { kicker: "WEDDING INVITATION", enter: "Entrar", skip: "Pular", scroll: "Role para continuar" },
           personal: { greeting: "{name}, que alegria ter você aqui." },
           story: { kicker: "OUR STORY", highlightsKicker: "HIGHLIGHTS" },
@@ -2987,7 +2985,7 @@
           screen: { overlay: "함께 만드는 축하의 파도" },
           nav: { info: "우리 이야기", program: "프로그램", location: "오시는 길", gallery: "갤러리", gift: "마음 전하실 곳" },
           navShort: { info: "스토리", program: "순서", location: "지도", gallery: "사진", gift: "PIX" },
-          hero: { kicker: "INVITATION", calendar: "캘린더 추가", schedule: "식순 보기", directions: "길찾기" },
+          hero: { kicker: "INVITATION", calendar: "캘린더 추가", video: "우리 영상 보기", schedule: "식순 보기", directions: "길찾기" },
           intro: { kicker: "WEDDING INVITATION", enter: "입장하기", skip: "건너뛰기", scroll: "스크롤해서 계속" },
           personal: { greeting: "{name}님, 와주셔서 정말 감사해요." },
           story: { kicker: "OUR STORY", highlightsKicker: "HIGHLIGHTS" },
@@ -4401,6 +4399,11 @@ END:VCALENDAR`;
         $("#btnProgramSchedule")?.addEventListener("click", () => {
           haptic(10);
           openDialog("dlgCeremonySchedule");
+        });
+
+        $("#btnHeroVideo")?.addEventListener("click", () => {
+          haptic(10);
+          document.getElementById("ceremonyVideoCard")?.scrollIntoView({ behavior: "smooth", block: "center" });
         });
 
         $("#btnMenuBrochure")?.addEventListener("click", () => {
