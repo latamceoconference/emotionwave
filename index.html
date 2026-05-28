@@ -941,6 +941,59 @@
         display: flex;
         justify-content: center;
       }
+      .ceremony-video-card {
+        display: grid;
+        gap: 14px;
+        margin-top: 18px;
+        padding: 16px;
+      }
+      .ceremony-video-head {
+        display: grid;
+        gap: 8px;
+      }
+      .ceremony-video-title {
+        margin: 0;
+        font-family: var(--font-display);
+        font-size: 24px;
+        line-height: 1.35;
+      }
+      .ceremony-video-copy,
+      .ceremony-video-note {
+        margin: 0;
+        color: var(--sub);
+        font-size: 14px;
+        line-height: 1.8;
+      }
+      .ceremony-video-frame {
+        position: relative;
+        overflow: hidden;
+        border-radius: 18px;
+        border: 1px solid rgba(16, 32, 36, 0.08);
+        background: linear-gradient(135deg, rgba(200, 164, 107, 0.16), rgba(125, 184, 196, 0.1));
+        aspect-ratio: 16 / 9;
+      }
+      :root[data-theme="dark"] .ceremony-video-frame {
+        border-color: rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.04);
+      }
+      .ceremony-video-frame iframe,
+      .ceremony-video-placeholder {
+        width: 100%;
+        height: 100%;
+      }
+      .ceremony-video-frame iframe {
+        display: block;
+        border: 0;
+      }
+      .ceremony-video-placeholder {
+        display: grid;
+        place-items: center;
+        padding: 24px;
+        text-align: center;
+        color: var(--sub);
+        font-size: 14px;
+        line-height: 1.8;
+      }
       .dlg-head--tools-only {
         justify-content: flex-end;
       }
@@ -1979,6 +2032,7 @@
             <button class="btn primary" id="btnProgramSchedule" type="button" data-i18n="programSchedule.button">식순 전체 보기</button>
             <button class="btn primary" id="btnProgramLayout" type="button" data-i18n="programLayout.button">Layout</button>
           </div>
+          <article class="card ceremony-video-card" id="ceremonyVideoCard"></article>
         </div>
       </section>
 
@@ -2484,7 +2538,10 @@
           {
             time: "16:52",
             title: { pt: "Palavras um para o Outro", ko: "서로에게 전하는 말" },
-            text: { pt: "Os noivos compartilham promessas e sentimentos sinceros.", ko: "두 사람이 서로에게 진심 어린 마음과 약속을 전합니다." },
+            text: {
+              pt: "Os noivos compartilham promessas e sentimentos sinceros. Um vídeo também estará disponível para acompanhar este momento pelo celular.",
+              ko: "두 사람이 서로에게 진심 어린 마음과 약속을 전합니다. 이 순간을 휴대폰으로 함께 보실 수 있도록 영상도 준비할 예정입니다.",
+            },
           },
           {
             time: "16:59 - 17:07",
@@ -2528,6 +2585,17 @@
         ceremonySchedule: {
           ptImage: "https://raw.githubusercontent.com/haseungsong/CCCB/main/%EC%8B%9D%EC%88%9C%20%ED%8F%AC%EC%96%B4.png",
           koImage: "https://raw.githubusercontent.com/haseungsong/CCCB/main/%EC%8B%9D%EC%88%9C%20%ED%95%9C%EA%B8%80.png",
+        },
+        ceremonyVideo: {
+          // 나중에 YouTube 링크를 여기에 넣으면 카드에서 바로 재생/열기가 활성화됩니다.
+          youtubeUrl: "",
+          title: { pt: "Vídeo para o momento das palavras", ko: "서로에게 전하는 말 영상" },
+          copy: {
+            pt: "Se a chuva dificultar o uso do monitor externo, acompanhe este momento pelo seu celular.",
+            ko: "비로 인해 외부 모니터 연결이 어려울 수 있어, 휴대폰으로 편하게 보실 수 있도록 영상을 준비합니다.",
+          },
+          button: { pt: "Abrir no YouTube", ko: "YouTube에서 크게 보기" },
+          pending: { pt: "Link do YouTube em preparação.", ko: "YouTube 링크 준비 중입니다." },
         },
         menuLayout2: {
           image: "layout2.png",
@@ -3505,6 +3573,7 @@
         renderProgram();
         renderProgramLayout();
         renderCeremonySchedule();
+        renderCeremonyVideo();
         renderMenuLayout2();
         renderMenu();
         renderMenuBrochure();
@@ -3715,6 +3784,54 @@
         if (!dialogImg) return;
         dialogImg.setAttribute("src", imageSrc);
         dialogImg.setAttribute("alt", t("dlg.schedule.title"));
+      }
+
+      function renderCeremonyVideo() {
+        const root = $("#ceremonyVideoCard");
+        if (!root) return;
+        const data = WEDDING.ceremonyVideo || {};
+        const url = String(data.youtubeUrl || "").trim();
+        const embedUrl = getYoutubeEmbedUrl(url);
+        root.innerHTML = `
+          <div class="ceremony-video-head">
+            <div class="kicker">CEREMONY VIDEO</div>
+            <h3 class="ceremony-video-title">${escapeHtml(tl(data.title))}</h3>
+            <p class="ceremony-video-copy">${escapeHtml(tl(data.copy))}</p>
+          </div>
+          <div class="ceremony-video-frame">
+            ${
+              embedUrl
+                ? `<iframe src="${escapeHtml(embedUrl)}" title="${escapeHtml(tl(data.title))}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>`
+                : `<div class="ceremony-video-placeholder">${escapeHtml(tl(data.pending))}</div>`
+            }
+          </div>
+          <div class="cta-row">
+            ${
+              url
+                ? `<a class="btn primary" href="${escapeHtml(url)}" target="_blank" rel="noreferrer">${escapeHtml(tl(data.button))}</a>`
+                : `<span class="ceremony-video-note">${escapeHtml(tl(data.pending))}</span>`
+            }
+          </div>
+        `;
+      }
+
+      function getYoutubeEmbedUrl(url) {
+        const raw = String(url || "").trim();
+        if (!raw) return "";
+        try {
+          const u = new URL(raw);
+          const host = u.hostname.replace(/^www\./, "");
+          let id = "";
+          if (host === "youtu.be") id = u.pathname.split("/").filter(Boolean)[0] || "";
+          else if (host.endsWith("youtube.com")) {
+            if (u.pathname.startsWith("/embed/")) id = u.pathname.split("/").filter(Boolean)[1] || "";
+            else if (u.pathname.startsWith("/shorts/")) id = u.pathname.split("/").filter(Boolean)[1] || "";
+            else id = u.searchParams.get("v") || "";
+          }
+          return id ? `https://www.youtube.com/embed/${encodeURIComponent(id)}?rel=0&playsinline=1` : "";
+        } catch {
+          return "";
+        }
       }
 
       function renderMenuLayout2() {
