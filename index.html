@@ -15,7 +15,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&family=Noto+Sans+KR:wght@300;400;500;600;700&family=Noto+Serif+KR:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Gowun+Batang:wght@400;700&family=Inter:wght@400;500;600;700&family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
 
@@ -28,6 +28,7 @@
         /* Brand */
         --pantone-628c: #7db8c4; /* PANTONE 628 C (web approximation) */
         --accent: #c8a46b; /* warm highlight */
+        --accent-soft: rgba(200, 164, 107, 0.2);
 
         /* Surfaces */
         --bg0: #f7fcfd;
@@ -36,21 +37,24 @@
         --ink: #102024;
         --sub: rgba(16, 32, 36, 0.72);
         --line: rgba(16, 32, 36, 0.12);
-        --card: rgba(255, 255, 255, 0.78);
-        --card-strong: rgba(255, 255, 255, 0.9);
+        --card: rgba(255, 255, 255, 0.82);
+        --card-strong: rgba(255, 255, 255, 0.94);
 
         /* Effects */
-        --shadow: 0 18px 50px rgba(16, 32, 36, 0.12);
-        --shadow2: 0 12px 28px rgba(16, 32, 36, 0.1);
+        --shadow: 0 22px 60px rgba(16, 32, 36, 0.11);
+        --shadow2: 0 14px 34px rgba(16, 32, 36, 0.1);
         --focus: rgba(125, 184, 196, 0.42);
         --radius: 20px;
         --max: 980px;
-        --font-body: "Noto Sans KR", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-        --font-display: "Playfair Display", serif;
+        --font-body: "Inter", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+        --font-display: "Cormorant Garamond", Georgia, serif;
       }
       html[lang="ko"] {
-        --font-body: "IBM Plex Sans KR", "Noto Sans KR", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-        --font-display: "Noto Serif KR", serif;
+        --font-body: "Noto Sans KR", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+        --font-display: "Gowun Batang", "Noto Serif KR", serif;
+      }
+      html[lang="ko"] body {
+        letter-spacing: -0.015em;
       }
 
       /* ====== Theme (Light/Dark) ====== */
@@ -136,7 +140,7 @@
         top: 0;
         z-index: 50;
         backdrop-filter: blur(14px);
-        background: rgba(247, 252, 253, 0.78);
+        background: rgba(247, 252, 253, 0.82);
         border-bottom: 1px solid rgba(16, 32, 36, 0.08);
       }
       :root[data-theme="dark"] .topbar {
@@ -159,7 +163,7 @@
       }
       .brand .title {
         font-family: var(--font-display);
-        letter-spacing: 0.02em;
+        letter-spacing: 0.015em;
         font-size: 18px;
         min-width: 0;
         overflow: hidden;
@@ -260,8 +264,8 @@
         }
       }
       .hero-card {
-        background: var(--card);
-        border: 1px solid rgba(16, 32, 36, 0.1);
+        background: linear-gradient(180deg, var(--card-strong), var(--card));
+        border: 1px solid rgba(16, 32, 36, 0.085);
         border-radius: var(--radius);
         box-shadow: var(--shadow);
         overflow: hidden;
@@ -296,10 +300,15 @@
         font-family: var(--font-display);
         font-weight: 500;
         font-size: clamp(30px, 4.4vw, 44px);
-        line-height: 1.12;
-        letter-spacing: 0.02em;
+        line-height: 1.08;
+        letter-spacing: 0.015em;
         overflow-wrap: anywhere;
         word-break: break-word;
+      }
+      html[lang="ko"] .names {
+        font-weight: 700;
+        line-height: 1.18;
+        letter-spacing: -0.04em;
       }
       .names .and {
         display: inline-block;
@@ -321,6 +330,23 @@
         display: flex;
         gap: 10px;
         flex-wrap: wrap;
+      }
+      .hero-actions-primary {
+        margin-top: 4px;
+      }
+      .hero-actions-secondary {
+        margin-top: 8px;
+        gap: 8px;
+      }
+      .hero-actions-primary .btn {
+        min-height: 48px;
+        flex: 1 1 0;
+        box-shadow: 0 12px 28px rgba(125, 184, 196, 0.16);
+      }
+      .hero-actions-secondary .btn {
+        padding: 9px 11px;
+        font-size: 12.5px;
+        color: rgba(16, 32, 36, 0.74);
       }
       .btn {
         appearance: none;
@@ -347,11 +373,11 @@
         transform: scale(0.98);
       }
       .btn.primary {
-        border-color: rgba(125, 184, 196, 0.6);
-        background: linear-gradient(180deg, rgba(125, 184, 196, 0.32), rgba(255, 255, 255, 0.88));
+        border-color: rgba(125, 184, 196, 0.5);
+        background: linear-gradient(135deg, rgba(125, 184, 196, 0.38), rgba(255, 255, 255, 0.92) 55%, rgba(200, 164, 107, 0.16));
       }
       .btn.ghost {
-        background: transparent;
+        background: rgba(255, 255, 255, 0.48);
       }
       .btn:hover {
         box-shadow: var(--shadow2);
@@ -369,6 +395,9 @@
       :root[data-theme="dark"] .btn.primary {
         border-color: rgba(125, 184, 196, 0.55);
         background: linear-gradient(180deg, rgba(125, 184, 196, 0.22), rgba(10, 26, 30, 0.82));
+      }
+      :root[data-theme="dark"] .hero-actions-secondary .btn {
+        color: rgba(255, 255, 255, 0.74);
       }
       .btn:focus-visible,
       .lang-btn:focus-visible,
@@ -555,12 +584,24 @@
       }
 
       .card {
-        background: var(--card);
-        border: 1px solid rgba(16, 32, 36, 0.1);
+        background: linear-gradient(180deg, var(--card-strong), var(--card));
+        border: 1px solid rgba(16, 32, 36, 0.085);
         border-radius: var(--radius);
         box-shadow: var(--shadow);
         padding: 18px 16px;
         backdrop-filter: blur(14px);
+      }
+      .card,
+      .hero-card,
+      .timeline-item,
+      .menu-card,
+      .notice-card,
+      .guide-card,
+      .detail-card,
+      .stat-card,
+      .story-moment,
+      .highlight-chip {
+        position: relative;
       }
       :root[data-theme="dark"] .card {
         border-color: rgba(255, 255, 255, 0.12);
@@ -1668,11 +1709,11 @@
         right: 0;
         bottom: 0;
         z-index: 60;
-        padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
-        background: rgba(247, 252, 253, 0.82);
+        padding: 9px 12px calc(9px + env(safe-area-inset-bottom));
+        background: rgba(247, 252, 253, 0.88);
         border-top: 1px solid rgba(16, 32, 36, 0.1);
-        backdrop-filter: blur(18px);
-        box-shadow: 0 -18px 50px rgba(16, 32, 36, 0.08);
+        backdrop-filter: blur(22px);
+        box-shadow: 0 -18px 50px rgba(16, 32, 36, 0.1);
       }
       :root[data-theme="dark"] .actionbar {
         background: rgba(5, 19, 24, 0.78);
@@ -1697,14 +1738,15 @@
         gap: 4px;
         place-items: center;
         flex: 0 0 64px;
-        border-radius: 16px;
-        border: 1px solid rgba(16, 32, 36, 0.12);
-        background: rgba(255, 255, 255, 0.7);
+        border-radius: 18px;
+        border: 1px solid rgba(16, 32, 36, 0.095);
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.84), rgba(255, 255, 255, 0.62));
         min-height: 52px;
         cursor: pointer;
         padding: 8px 6px;
         color: var(--ink);
         text-decoration: none;
+        box-shadow: 0 10px 22px rgba(16, 32, 36, 0.07);
       }
       .ab-btn:active {
         transform: scale(0.98);
@@ -1892,6 +1934,14 @@
           min-width: calc(50% - 4px);
           justify-content: center;
         }
+        .hero-actions-primary .btn:first-child {
+          flex-basis: 100%;
+          min-width: 100%;
+        }
+        .hero-actions-secondary .btn {
+          flex: 1 1 calc(33.333% - 6px);
+          min-width: 0;
+        }
         .pill {
           padding: 9px 10px;
         }
@@ -2023,12 +2073,15 @@
                   Rancho do Celso
                 </p>
                 <p class="personal" id="personalGreeting" aria-live="polite"></p>
-                <div class="cta-row">
-                  <button class="btn" id="btnCalendar" type="button" data-i18n="hero.calendar">Adicionar ao calendário</button>
-                  <button class="btn" id="btnHeroVideo" type="button" data-i18n="hero.video">우리 영상 보기</button>
-                  <button class="btn" id="btnHeroSchedule" type="button" data-i18n="hero.schedule">식순 보기</button>
-                  <button class="btn" id="btnHeroHostScript" type="button" data-i18n="hostScript.button">사회자 대본</button>
-                  <a class="btn ghost" href="#location" data-i18n="hero.directions">Rotas</a>
+                <div class="cta-row hero-actions-primary">
+                  <a class="btn primary" href="#location" data-i18n="hero.directions">Rotas</a>
+                  <button class="btn primary" id="btnHeroSchedule" type="button" data-i18n="hero.schedule">식순 보기</button>
+                  <a class="btn primary" href="#gallery" data-i18n="hero.upload">사진/영상 업로드</a>
+                </div>
+                <div class="cta-row hero-actions-secondary">
+                  <button class="btn ghost" id="btnCalendar" type="button" data-i18n="hero.calendar">Adicionar ao calendário</button>
+                  <button class="btn ghost" id="btnHeroVideo" type="button" data-i18n="hero.video">우리 영상 보기</button>
+                  <button class="btn ghost" id="btnHeroHostScript" type="button" data-i18n="hostScript.button">사회자 대본</button>
                 </div>
                 <div class="hero-quote" id="heroQuote"></div>
                 <div class="hero-facts" id="heroFacts"></div>
@@ -3307,7 +3360,14 @@
           screen: { overlay: "Uma onda de felicitações, feita por todos" },
           nav: { info: "Nossa história", program: "Programa", location: "Como chegar", gallery: "Galeria", gift: "Presentes" },
           navShort: { info: "Story", program: "Prog.", location: "Mapa", gallery: "Fotos", gift: "PIX" },
-          hero: { kicker: "INVITATION", calendar: "Adicionar ao calendário", video: "Ver nosso vídeo", schedule: "Ver ordem da cerimônia", directions: "Rotas" },
+          hero: {
+            kicker: "INVITATION",
+            calendar: "Adicionar ao calendário",
+            video: "Ver nosso vídeo",
+            schedule: "Ordem da cerimônia",
+            directions: "Como chegar",
+            upload: "Enviar fotos e vídeos",
+          },
           intro: { kicker: "WEDDING INVITATION", enter: "Entrar", skip: "Pular", scroll: "Role para continuar" },
           personal: { greeting: "{name}, que alegria ter você aqui." },
           story: { kicker: "OUR STORY", highlightsKicker: "HIGHLIGHTS" },
@@ -3333,7 +3393,7 @@
           guestUpload: {
             kicker: "SHARE YOUR MOMENTS",
             title: "Compartilhe suas fotos e vídeos",
-            copy: "Se você registrar momentos do nosso dia, envie suas fotos e vídeos para a pasta compartilhada.",
+            copy: "Se você registrar momentos especiais da celebração, ficaremos felizes em recebê-los na pasta compartilhada.",
             step1: "Toque no botão abaixo para abrir a pasta no Google Drive.",
             step2: "No celular, toque em + ou Enviar e escolha fotos/vídeos.",
             step3: "Se o Drive pedir login, entre com sua conta Google para concluir o envio.",
@@ -3362,12 +3422,12 @@
             invite: {
               title: "Nossa história",
               text:
-                "Com alegria, preparamos este convite para compartilhar com voce os detalhes do nosso casamento.",
+                "Preparamos este convite com carinho para reunir, em um só lugar, os detalhes mais importantes da nossa celebração.",
             },
             program: { title: "Programa do dia", sub: "Uma jornada suave do pôr do sol até a celebração da noite." },
             menu: { title: "Menu", sub: "Preparamos uma mesa acolhedora para que todos celebrem com conforto." },
-            essentials: { title: "Detalhes do evento", sub: "Tudo o que os convidados precisam saber, sem excesso e com clareza." },
-            location: { title: "Como chegar", sub: "Por favor, consulte o local abaixo para participar do evento.", route: "Abrir rotas", copy: "Copiar endereço", transitTitle: "Transporte" },
+            essentials: { title: "Detalhes do evento", sub: "Informações essenciais para que sua chegada e permanência sejam tranquilas." },
+            location: { title: "Como chegar", sub: "Confira o endereço e abra a rota pelo Google Maps.", route: "Abrir rotas", copy: "Copiar endereço", transitTitle: "Transporte" },
             gallery: { title: "Galeria", sub: "Uma seleção de fotos para acompanhar a atmosfera do nosso dia." },
             message: { sub: "Deixe uma mensagem para tornar este dia ainda mais especial." },
             gift: {
@@ -3478,7 +3538,7 @@
           screen: { overlay: "함께 만드는 축하의 파도" },
           nav: { info: "우리 이야기", program: "프로그램", location: "오시는 길", gallery: "갤러리", gift: "마음 전하실 곳" },
           navShort: { info: "스토리", program: "순서", location: "지도", gallery: "사진", gift: "PIX" },
-          hero: { kicker: "INVITATION", calendar: "캘린더 추가", video: "우리 영상 보기", schedule: "식순 보기", directions: "길찾기" },
+          hero: { kicker: "INVITATION", calendar: "캘린더 추가", video: "우리 영상 보기", schedule: "식순 보기", directions: "길찾기", upload: "사진/영상 업로드" },
           intro: { kicker: "WEDDING INVITATION", enter: "입장하기", skip: "건너뛰기", scroll: "스크롤해서 계속" },
           personal: { greeting: "{name}님, 와주셔서 정말 감사해요." },
           story: { kicker: "OUR STORY", highlightsKicker: "HIGHLIGHTS" },
@@ -3504,7 +3564,7 @@
           guestUpload: {
             kicker: "PHOTO & VIDEO",
             title: "사진과 영상을 공유해 주세요",
-            copy: "결혼식에서 찍어주신 사진이나 영상이 있다면 공유 폴더에 올려 주세요. 두 사람에게 큰 선물이 됩니다.",
+            copy: "예식의 소중한 순간을 담아주셨다면 공유 폴더에 올려 주세요. 두 사람에게 오래 간직할 선물이 됩니다.",
             step1: "아래 버튼을 눌러 Google Drive 공유 폴더를 엽니다.",
             step2: "휴대폰에서 + 또는 업로드를 누르고 사진/영상을 선택합니다.",
             step3: "Google Drive가 로그인을 요청하면 Google 계정으로 로그인 후 업로드해 주세요.",
@@ -3532,12 +3592,12 @@
           section: {
             invite: {
               title: "우리 이야기",
-              text: "두 사람의 이야기, 예식 순서, 식사 안내까지 한 번에 볼 수 있도록 정성껏 준비한 초대장입니다.",
+              text: "두 사람의 이야기와 예식 안내, 식사 정보까지 한곳에서 편안하게 보실 수 있도록 준비했습니다.",
             },
             program: { title: "프로그램", sub: "노을이 지는 시간부터 저녁의 축하까지, 하루의 흐름을 차분하게 안내합니다." },
             menu: { title: "식사 안내", sub: "모두가 편안하게 즐기실 수 있도록 식사 구성을 준비했습니다." },
-            essentials: { title: "행사 안내", sub: "하객분들이 가장 많이 궁금해하실 내용을 간결하게 정리했습니다." },
-            location: { title: "오시는 길", sub: "아래 장소를 참고 해서 행사 참석 바랍니다.", route: "길찾기 링크", copy: "주소 복사", transitTitle: "교통 안내" },
+            essentials: { title: "행사 안내", sub: "하객분들이 편안하게 오실 수 있도록 필요한 내용을 정리했습니다." },
+            location: { title: "오시는 길", sub: "아래 주소와 지도를 참고해 편안히 와 주세요.", route: "길찾기 링크", copy: "주소 복사", transitTitle: "교통 안내" },
             gallery: { title: "갤러리", sub: "이 날의 분위기를 미리 전하는 사진들입니다." },
             message: { sub: "따뜻한 축하 메시지를 남겨 주세요." },
             gift: {
