@@ -336,8 +336,12 @@
         transition: transform 0.06s ease, box-shadow 0.2s ease, background 0.2s ease, border-color 0.2s ease;
         display: inline-flex;
         align-items: center;
+        justify-content: center;
         gap: 8px;
         text-decoration: none;
+        text-align: center;
+        white-space: normal;
+        word-break: keep-all;
       }
       .btn:active {
         transform: scale(0.98);
@@ -692,6 +696,35 @@
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         gap: 10px;
+      }
+      .guest-upload-card {
+        display: grid;
+        gap: 14px;
+        margin-bottom: 14px;
+        padding: 16px;
+      }
+      .guest-upload-title {
+        margin: 0;
+        font-family: var(--font-display);
+        font-size: 24px;
+        line-height: 1.35;
+      }
+      .guest-upload-copy,
+      .guest-upload-note {
+        margin: 0;
+        color: var(--sub);
+        font-size: 14px;
+        line-height: 1.8;
+      }
+      .guest-upload-steps {
+        margin: 0;
+        padding-left: 18px;
+        color: var(--sub);
+        font-size: 13px;
+        line-height: 1.75;
+      }
+      .guest-upload-steps li + li {
+        margin-top: 4px;
       }
       @media (max-width: 860px) {
         .gallery {
@@ -1195,6 +1228,12 @@
       }
       #dlgMenuBrochure {
         width: min(1120px, calc(100% - 24px));
+        max-height: calc(100vh - 16px);
+      }
+      #dlgMenuBrochure .dlg-body {
+        max-height: min(78vh, calc(100vh - 88px));
+        overflow: auto;
+        -webkit-overflow-scrolling: touch;
       }
       .menu-brochure {
         display: grid;
@@ -1643,14 +1682,21 @@
       .actionbar-inner {
         max-width: var(--max);
         margin: 0 auto;
-        display: grid;
-        grid-template-columns: repeat(5, minmax(0, 1fr));
+        display: flex;
         gap: 8px;
+        overflow-x: auto;
+        overscroll-behavior-x: contain;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+      }
+      .actionbar-inner::-webkit-scrollbar {
+        display: none;
       }
       .ab-btn {
         display: grid;
         gap: 4px;
         place-items: center;
+        flex: 0 0 64px;
         border-radius: 16px;
         border: 1px solid rgba(16, 32, 36, 0.12);
         background: rgba(255, 255, 255, 0.7);
@@ -1690,7 +1736,7 @@
       }
       @media (max-width: 860px) {
         body {
-          padding-bottom: 86px;
+          padding-bottom: 78px;
         }
       }
 
@@ -1842,7 +1888,8 @@
           justify-content: flex-start;
         }
         .cta-row .btn {
-          flex: 1;
+          flex: 1 1 calc(50% - 4px);
+          min-width: calc(50% - 4px);
           justify-content: center;
         }
         .pill {
@@ -2227,6 +2274,25 @@
           <h2 class="section-title" data-i18n="section.gallery.title">Galeria</h2>
           <p class="section-sub" data-i18n="section.gallery.sub">Uma seleção de fotos para acompanhar a atmosfera do nosso dia.</p>
 
+          <article class="card guest-upload-card">
+            <div class="kicker" data-i18n="guestUpload.kicker">SHARE YOUR MOMENTS</div>
+            <h3 class="guest-upload-title" data-i18n="guestUpload.title">Compartilhe suas fotos e vídeos</h3>
+            <p class="guest-upload-copy" data-i18n="guestUpload.copy">
+              Se você registrar momentos do nosso dia, envie suas fotos e vídeos para a pasta compartilhada.
+            </p>
+            <ol class="guest-upload-steps">
+              <li data-i18n="guestUpload.step1">Toque no botão abaixo para abrir a pasta no Google Drive.</li>
+              <li data-i18n="guestUpload.step2">No celular, toque em + ou Enviar e escolha fotos/vídeos.</li>
+              <li data-i18n="guestUpload.step3">Se o Drive pedir login, entre com sua conta Google para concluir o envio.</li>
+            </ol>
+            <div class="cta-row">
+              <a class="btn primary" id="btnGuestUpload" href="#" target="_blank" rel="noreferrer" data-i18n="guestUpload.button">Enviar fotos e vídeos</a>
+            </div>
+            <p class="guest-upload-note" data-i18n="guestUpload.note">
+              Dica: em iPhone e Android, o link abre melhor pelo app Google Drive quando ele estiver instalado.
+            </p>
+          </article>
+
           <div class="card">
             <div class="gallery" id="galleryGrid" aria-label="Galeria"></div>
             <div class="cta-row" id="galleryMoreWrap" style="margin-top: 12px; display: none">
@@ -2584,6 +2650,7 @@
         placeShort: "Rancho do Celso - Rifaina/SP",
         addressText: "Rancho do Celso - Rifaina/SP",
         naviLink: "https://goo.gl/maps/Eir3bNDdSjEec3YJA?g_st=aw",
+        guestUploadUrl: "https://drive.google.com/drive/folders/1S7A13-vsSBf-7_vn-BcQZM94AX3YHopl?usp=sharing",
         mapEmbedUrl:
           "https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3747.480863602356!2d-47.428118924769045!3d-20.07217598134847!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMjDCsDA0JzE5LjgiUyA0N8KwMjUnMzIuMCJX!5e0!3m2!1sko!2sbr!4v1770246189302!5m2!1sko!2sbr", // 구글 지도 퍼가기(Embed) iframe의 src
         // 연락처(브라질): WhatsApp/전화 링크가 잘 되려면 국가코드 포함 추천 (+55 ...)
@@ -2906,7 +2973,7 @@
             },
             {
               no: "13",
-              title: { pt: "안내 — 축가 공연", ko: "축가 공연 안내" },
+              title: { pt: "Apresentação musical — aviso", ko: "축가 공연 안내" },
               pt: "A música sempre foi uma forma de expressar sentimentos que às vezes as palavras não conseguem alcançar.\nNeste momento, preparamos uma apresentação especial para celebrar o amor e a nova jornada deste casal.\nRecebam este momento com carinho.",
               ko: "때로는 말보다 음악이 마음을 더 깊이 전해주기도 합니다.\n이제 두 사람의 새로운 시작을 축복하는 특별한 무대를 준비했습니다.\n따뜻한 마음으로 함께해 주시기 바랍니다.",
             },
@@ -2919,59 +2986,59 @@
             },
             {
               no: "14",
-              title: { pt: "축가 공연 (외부 축가)", ko: "축가 공연 (외부 축가)" },
+              title: { pt: "Apresentação musical convidada", ko: "축가 공연 (외부 축가)" },
               pt: "Convidamos agora uma apresentação especial preparada com muito carinho para este momento tão importante.",
               ko: "이제 두 사람을 위한 특별한 축가가 이어지겠습니다.",
             },
             {
               no: "15",
-              title: { pt: "신랑 축가 안내", ko: "신랑 축가 안내" },
+              title: { pt: "Canção do noivo — aviso", ko: "신랑 축가 안내" },
               pt: "E agora, talvez um dos momentos mais sinceros desta cerimônia.\nO noivo preparou uma canção especial para a mulher que escolheu amar e caminhar ao lado por toda a vida.",
               ko: "이제 오늘 가장 진심 어린 순간 중 하나가 이어집니다.\n신랑이 평생 함께하고 싶은 사람을 위해 직접 준비한 노래를 들려드리겠습니다.",
             },
             {
               no: "16",
-              title: { pt: "신랑 축가", ko: "신랑 축가" },
+              title: { pt: "Canção do noivo", ko: "신랑 축가" },
               pt: "(축가 진행)",
               ko: "(축가 진행)",
             },
             {
               no: "17",
-              title: { pt: "부모님 & 하객 인사 안내", ko: "부모님 & 하객 인사 안내" },
+              title: { pt: "Cumprimentos — aviso", ko: "부모님 & 하객 인사 안내" },
               pt: "Antes de encerrarem esta cerimônia,\nos noivos gostariam de agradecer às famílias e a todos que estiveram presentes neste momento tão especial.",
               ko: "이제 두 사람은 오늘 이 자리를 함께해 주신 가족과 하객 여러분께 감사의 마음을 전하고자 합니다.",
             },
             {
               no: "18",
-              title: { pt: "부모님 & 하객 인사", ko: "부모님 & 하객 인사" },
+              title: { pt: "Cumprimentos aos pais e convidados", ko: "부모님 & 하객 인사" },
               pt: "Antes de encerrarem esta cerimônia,\nos noivos gostariam de agradecer às famílias e a todos que estiveram presentes neste momento tão especial.\nPrimeiramente, pedimos que os noivos sigam até os pais da noiva para cumprimentá-los.\n(Pausa)\nAgora, pedimos que os noivos sigam até os pais do noivo para cumprimentá-los.\n(Pausa)\nE por fim, pedimos que retornem ao centro e se voltem para todos os convidados.\nNeste momento, os noivos agradecem sinceramente a presença de cada um de vocês.\nO amor também nasce do cuidado recebido das famílias que acompanharam esta trajetória até aqui.\nHoje, os noivos agradecem não apenas pela presença,\nmas por todo carinho, apoio e amor que os trouxeram até este momento.",
               ko: "이제 두 사람은 오늘 이 자리를 함께해 주신 가족과 하객 여러분께 감사의 마음을 전하고자 합니다.\n먼저 신랑 신부는 신부 측 부모님께 이동하여 인사를 드리겠습니다.\n(잠시 멈춤)\n이어서 신랑 측 부모님께 이동하여 인사를 드리겠습니다.\n(잠시 멈춤)\n그리고 마지막으로 중앙으로 돌아와 하객 여러분을 바라봐 주시기 바랍니다.\n이 순간, 두 사람은 오늘 함께해 주신 모든 하객 여러분께 진심으로 감사의 인사를 전합니다.\n오늘의 이 순간은 두 사람뿐 아니라,\n지금까지 사랑과 응원으로 함께해 준 가족들이 있었기에 가능했습니다.\n두 사람은 진심 어린 마음으로 감사의 인사를 전합니다.",
               note: { pt: "Order: parents of bride -> parents of groom -> guests. Wait for each bow/hug before continuing.", ko: "순서: 신부 부모님 -> 신랑 부모님 -> 하객. 각 인사/포옹이 끝난 뒤 다음 멘트." },
             },
             {
               no: "19",
-              title: { pt: "퇴장 멘트", ko: "퇴장 멘트" },
+              title: { pt: "Mensagem antes da saída", ko: "퇴장 멘트" },
               pt: "E assim, inicia-se um novo capítulo nesta história.\nHoje, diante de todos que amam vocês,\nduas vidas passam a caminhar lado a lado como família.\nQue o amor, o respeito e a parceria continuem guiando cada passo desta nova jornada.\nRecebam este momento com uma grande salva de palmas.",
               ko: "이제 두 사람은 서로의 가장 든든한 동반자로서 새로운 이야기를 함께 시작하게 됩니다.\n오늘 이 자리에서,\n두 사람은 사랑하는 가족과 친구들의 축복 속에 하나의 가족이 되었습니다.\n앞으로의 모든 순간에도 사랑과 존중,\n그리고 따뜻한 마음이 함께하기를 바랍니다.\n두 사람의 새로운 출발을 큰 박수로 축복해 주시기 바랍니다.",
               note: { pt: "Before exit: 2-3 seconds pause, couple looks at each other, holds hands, music rises. Walk 15% slower.", ko: "퇴장 전 2~3초 여백, 서로 보기, 손 잡기, 음악 업. 15% 느리게 퇴장." },
             },
             {
               no: "20",
-              title: { pt: "퇴장", ko: "퇴장" },
+              title: { pt: "Saída do casal", ko: "퇴장" },
               pt: "Com muita alegria,\nrecebemos pela primeira vez:\nHaseung e Larissa como marido e mulher.\nPedimos que os noivos se olhem por um instante, deem as mãos e caminhem com calma pelo corredor.\nConvidamos todos a celebrar este novo começo com muitos aplausos.",
               ko: "이제 부부가 된 송하승 군과 라리사 양의 아름다운 앞날을 다시 한 번 큰 박수로 축복해 주시기 바랍니다.\n신랑 신부는 잠시 서로를 바라본 뒤 손을 잡고 천천히 버진로드를 걸어 퇴장해 주시겠습니다.\n하객 여러분께서는 두 사람의 새로운 시작을 큰 박수로 축하해 주시기 바랍니다.",
               note: { pt: "Couple should not rush out. Smile, look back if natural, use photo zone.", ko: "바로 나가지 말고 여유 있게. 미소, 자연스러운 뒤돌아보기, 포토존 활용." },
             },
             {
               no: "21",
-              title: { pt: "단체사진 안내", ko: "단체사진 안내" },
+              title: { pt: "Fotos em grupo — aviso", ko: "단체사진 안내" },
               pt: "Pedimos agora que os familiares e amigos permaneçam para as fotos em grupo.\nPrimeiro, chamaremos a família do noivo para se aproximar dos noivos.\nDepois, faremos as fotos com a família da noiva.\nEm seguida, convidaremos os amigos para a foto com o casal, incluindo o momento com o buquê.\nPedimos que aguardem a chamada da equipe e se aproximem com calma para que todos possam ser registrados.",
               ko: "이어서 가족 및 친구분들과 함께 단체 사진 촬영이 진행될 예정입니다.\n먼저 신랑 가족분들께서 신랑 신부 가까이로 이동해 촬영하겠습니다.\n이후 신부 가족분들과 촬영을 진행하겠습니다.\n마지막으로 친구분들과 부케를 활용한 사진 촬영이 이어집니다.\n스태프의 안내에 따라 차례대로 이동해 주시면 모두를 빠짐없이 촬영할 수 있습니다.",
               note: { pt: "Photo order: groom family -> bride family -> friends with bouquet.", ko: "촬영 순서: 신랑 가족 -> 신부 가족 -> 친구들(부케 활용)." },
             },
             {
               no: "22",
-              title: { pt: "식사 안내", ko: "식사 안내" },
+              title: { pt: "Aviso do jantar", ko: "식사 안내" },
               pt: "A cerimônia chega ao fim,\nmas a celebração continua.\nEm instantes, o jantar será servido. Pedimos que os pais e familiares mais próximos sejam acomodados primeiro e, em seguida, todos os convidados poderão se dirigir às mesas.\nAs bebidas e o jantar estarão disponíveis nos espaços indicados pela equipe.\nDesejamos que todos aproveitem este momento com alegria, boa conversa e muito carinho.\nMuito obrigado pela presença de todos.",
               ko: "이제 예식은 마무리되지만,\n두 사람의 새로운 시작을 축하하는 시간은 계속됩니다.\n잠시 후 식사가 시작됩니다. 먼저 양가 부모님과 가까운 가족분들이 이동하신 뒤, 하객 여러분께서 안내에 따라 테이블로 이동해 주시면 감사하겠습니다.\n식사와 음료는 스태프가 안내드리는 공간에서 이용하실 수 있습니다.\n맛있는 식사와 함께 편안하고 행복한 시간 보내시기 바랍니다.\n오늘 함께해 주신 모든 분들께 진심으로 감사드립니다.",
               note: { pt: "Mention parents first, table direction, food/drink location. Keep guests moving calmly.", ko: "부모님 먼저, 테이블 위치, 식사/음료 위치 안내. 하객 동선 차분히 유도." },
@@ -3263,6 +3330,16 @@
           menuLayout2: {
             button: "Salão",
           },
+          guestUpload: {
+            kicker: "SHARE YOUR MOMENTS",
+            title: "Compartilhe suas fotos e vídeos",
+            copy: "Se você registrar momentos do nosso dia, envie suas fotos e vídeos para a pasta compartilhada.",
+            step1: "Toque no botão abaixo para abrir a pasta no Google Drive.",
+            step2: "No celular, toque em + ou Enviar e escolha fotos/vídeos.",
+            step3: "Se o Drive pedir login, entre com sua conta Google para concluir o envio.",
+            button: "Enviar fotos e vídeos",
+            note: "Dica: em iPhone e Android, o link abre melhor pelo app Google Drive quando ele estiver instalado.",
+          },
           quick: {
             map: "Mapa",
             whatsapp: "WhatsApp",
@@ -3423,6 +3500,16 @@
           },
           menuLayout2: {
             button: "연회장",
+          },
+          guestUpload: {
+            kicker: "PHOTO & VIDEO",
+            title: "사진과 영상을 공유해 주세요",
+            copy: "결혼식에서 찍어주신 사진이나 영상이 있다면 공유 폴더에 올려 주세요. 두 사람에게 큰 선물이 됩니다.",
+            step1: "아래 버튼을 눌러 Google Drive 공유 폴더를 엽니다.",
+            step2: "휴대폰에서 + 또는 업로드를 누르고 사진/영상을 선택합니다.",
+            step3: "Google Drive가 로그인을 요청하면 Google 계정으로 로그인 후 업로드해 주세요.",
+            button: "사진/영상 업로드",
+            note: "아이폰과 안드로이드에서는 Google Drive 앱이 설치되어 있으면 더 편하게 열립니다.",
           },
           quick: {
             map: "지도",
@@ -3970,6 +4057,7 @@
         setHref("#quickWhatsappBride", toWhatsappLink(WEDDING.phone.bride, currentCountry, waText));
 
         setHref("#btnNavi", WEDDING.naviLink);
+        setHref("#btnGuestUpload", WEDDING.guestUploadUrl);
         const mapLink = String(WEDDING.naviLink || "").trim();
         const embed = resolveMapEmbedUrl(mapLink, String(WEDDING.mapEmbedUrl || "").trim(), WEDDING.placeText, WEDDING.addressText);
         const mapFrame = $("#mapFrame");
