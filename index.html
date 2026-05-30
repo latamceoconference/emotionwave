@@ -962,6 +962,29 @@
         display: grid;
         gap: 12px;
       }
+      .host-ops-list {
+        display: grid;
+        gap: 10px;
+      }
+      .host-ops-card {
+        border: 1px solid rgba(16, 32, 36, 0.08);
+        border-radius: 18px;
+        background: rgba(200, 164, 107, 0.1);
+        padding: 13px 15px;
+      }
+      .host-ops-title {
+        margin: 0 0 6px;
+        font-size: 14px;
+        font-weight: 800;
+        line-height: 1.5;
+      }
+      .host-ops-copy {
+        margin: 0;
+        color: var(--sub);
+        font-size: 13px;
+        line-height: 1.75;
+        white-space: pre-line;
+      }
       .host-script-card {
         border: 1px solid rgba(16, 32, 36, 0.08);
         border-radius: 18px;
@@ -1018,6 +1041,7 @@
         line-height: 1.7;
       }
       :root[data-theme="dark"] .host-script-note,
+      :root[data-theme="dark"] .host-ops-card,
       :root[data-theme="dark"] .host-script-card,
       :root[data-theme="dark"] .host-script-lang {
         border-color: rgba(255, 255, 255, 0.1);
@@ -2526,6 +2550,7 @@
       <div class="dlg-body dlg-body--program-layout">
         <div class="host-script">
           <p class="host-script-note" id="hostScriptIntro"></p>
+          <div class="host-ops-list" id="hostOpsList"></div>
           <div class="host-script-list" id="hostScriptList"></div>
         </div>
       </div>
@@ -2700,36 +2725,109 @@
             pt: "Roteiro final do mestre de cerimônias. Os textos em português e coreano aparecem juntos para facilitar a condução no celular.",
             ko: "사회자 최종 대본입니다. 휴대폰에서 바로 진행할 수 있도록 포르투갈어와 한국어 원문을 함께 정리했습니다.",
           },
+          ops: [
+            {
+              title: { pt: "Ritmo geral", ko: "전체 진행 속도" },
+              text: {
+                pt: "Falar cerca de 20% mais devagar do que o normal. Antes da entrada da noiva, antes da declaração e antes do beijo, criar silêncio absoluto por 1 a 3 segundos.",
+                ko: "평소보다 약 20% 느리게 말합니다. 신부 입장 직전, 성혼 선언 직전, 키스 직전에는 1~3초의 완전한 정적을 만듭니다.",
+              },
+            },
+            {
+              title: { pt: "Antes da cerimônia", ko: "식전 최종 체크" },
+              text: {
+                pt: "Confirmar assentos, corredor livre, pais prontos, noivo/noiva em espera, alianças, velas, isqueiros, microfones, som, vídeo, água e lenços. Se houver atraso, usar a fala de espera abaixo.",
+                ko: "하객 착석, 버진로드 정리, 부모님 준비, 신랑/신부 대기, 반지, 초, 라이터, 마이크, 음향, 영상, 물/휴지를 확인합니다. 지연 시 아래 대기 멘트를 사용합니다.",
+              },
+            },
+            {
+              title: { pt: "Sinais para equipe", ko: "스태프 신호" },
+              text: {
+                pt: "Após a última frase de cada entrada, esperar 0,5 a 1 segundo e só então dar o GO para música/entrada. Na entrada da noiva, esperar 3 segundos em silêncio antes da música.",
+                ko: "입장 멘트 마지막 문장 후 0.5~1초 뒤 음악/입장 GO 신호를 줍니다. 신부 입장은 멘트 후 3초 정적 뒤 음악을 시작합니다.",
+              },
+            },
+            {
+              title: { pt: "Plano B", ko: "비상 상황 대응" },
+              text: {
+                pt: "Se houver falha no microfone, usar o microfone JBL. Se houver falha na música, manter BGM baixo e preencher com fala curta. Evitar silêncio constrangedor.",
+                ko: "마이크 오류 시 JBL 마이크를 사용합니다. 음악 오류 시 BGM을 낮게 유지하고 짧은 연결 멘트로 공백을 메웁니다. 어색한 침묵을 피합니다.",
+              },
+            },
+          ],
           items: [
+            {
+              no: "0",
+              title: { pt: "Aviso 5 minutos antes", ko: "식전 5분 안내" },
+              pt: "Senhoras e senhores, dentro de alguns minutos daremos início à cerimônia de casamento de Haseung e Larissa.\nPedimos, por gentileza, que ocupem seus lugares, mantenham o corredor livre e coloquem os celulares no modo silencioso.\nAgradecemos a presença de todos e pedimos que vivam este momento com carinho e atenção.",
+              ko: "잠시 후 송하승 군과 라리사 양의 결혼식이 시작됩니다.\n하객 여러분께서는 자리에 착석해 주시고, 버진로드 통로는 비워주시기 바랍니다.\n휴대전화는 무음으로 설정해 주시면 감사하겠습니다.\n소중한 순간을 함께 따뜻하게 지켜봐 주시기 바랍니다.",
+              note: {
+                pt: "BGM 20%. Confirmar VIPs, pais, equipe de foto/vídeo e corredor livre.",
+                ko: "BGM 20%. VIP/부모님 착석, 사진·영상팀 위치, 통로 정리 확인.",
+              },
+            },
             {
               no: "1",
               title: { pt: "Abertura", ko: "오프닝" },
               pt: "Boa tarde a todos.\nHoje não celebramos apenas um casamento.\nCelebramos o encontro de duas histórias que nasceram em lugares diferentes do mundo, mas que encontraram uma na outra um lugar de pertencimento, cuidado e amor.\nEntre culturas, idiomas, costumes e distâncias, vocês construíram algo muito maior do que coincidências.\nConstruíram parceria, acolhimento e a decisão diária de permanecer.\nE talvez essa seja uma das formas mais bonitas do amor:\ntransformar diferenças em encontro e fazer do outro um lar.\nPedimos gentilmente que todos coloquem os celulares no modo silencioso e vivam este momento junto aos noivos com carinho e presença.\n(Pausa breve)\nCom muita alegria, damos início à cerimônia de casamento de Haseung e Larissa.",
               ko: "여러분, 안녕하십니까.\n오늘 우리는 단순히 한 번의 결혼식을 축하하기 위해 이 자리에 모인 것이 아닙니다.\n서로 다른 곳에서 시작된 두 사람이 서로에게 안식처가 되고, 사랑과 배려로 하나의 길을 만들어 온 이야기를 함께 축복하기 위해 모였습니다.\n문화와 언어, 생활 방식과 거리의 차이를 넘어,\n두 사람은 우연 이상의 것을 만들어냈습니다.\n서로를 이해하고, 존중하며,\n매일 함께하기로 선택해 온 것입니다.\n어쩌면 사랑의 가장 아름다운 모습은,\n다름 속에서 서로를 만나고 서로에게 ‘집’이 되어주는 것일지도 모릅니다.\n예식이 진행되는 동안 휴대전화는 무음으로 부탁드리며,\n두 사람의 소중한 순간에 함께 집중해 주시면 감사하겠습니다.\n(잠시 멈춤)\n이제 송하승 군과 라리사 양의 결혼식을 시작하겠습니다.",
+              note: { pt: "Falar devagar. Após a última frase, pausar 3 segundos e elevar a música suavemente.", ko: "천천히 낭독. 마지막 문장 후 3초 정적, 음악 자연스럽게 업." },
             },
             {
               no: "2",
               title: { pt: "Entrada das mães", ko: "양가 어머니 입장" },
               pt: "Neste momento, recebemos as mães dos noivos.\nNa tradição coreana, a presença das mães representa bênção, cuidado e continuidade familiar.\nHoje, elas simbolizam não apenas o amor que acompanhou os noivos até aqui, mas também o acolhimento de duas famílias que passam a caminhar juntas.\nRecebamos este momento com carinho e uma calorosa salva de palmas.",
               ko: "이제 양가 어머니를 모시겠습니다.\n한국의 전통에서 부모님의 존재는 축복과 사랑,\n그리고 가족의 이어짐을 의미합니다.\n오늘 두 분은 자녀들을 향한 사랑뿐만 아니라,\n이제 하나가 되어 함께 걸어갈 두 가족의 따뜻한 마음을 상징합니다.\n따뜻한 박수로 맞이해 주시기 바랍니다.",
+              note: { pt: "Música: River flows in you. Duas velas e dois isqueiros prontos. Volume inicia 20%, entrada 60%.", ko: "음악 River flows in you. 초 2개/라이터 2개 준비. 시작 볼륨 20%, 입장 시 60%." },
+            },
+            {
+              no: "2-1",
+              title: { pt: "Durante o acendimento das velas", ko: "화촉점화 중간 안내" },
+              pt: "As mães seguem agora até a mesa central.\nA mãe do noivo ficará ao lado esquerdo, e a mãe da noiva ao lado direito, voltadas para as velas.\nAs mães acendem agora as velas, simbolizando luz, bênção e o início de uma nova família.\n(Pausa para o acendimento)\nPedimos uma salva de palmas para este momento.\nAgora, pedimos que as mães deem alguns passos até o espaço central em frente à mesa e se cumprimentem com respeito e carinho.\nEm seguida, voltem-se aos convidados para receber o carinho de todos.\nMuito obrigado. As mães podem retornar aos seus lugares.",
+              ko: "양가 어머님께서는 중앙 테이블 앞으로 이동해 주시겠습니다.\n신랑 측 어머님은 왼쪽, 신부 측 어머님은 오른쪽에 서서 초를 바라봐 주시기 바랍니다.\n이제 양가 어머님께서 두 사람의 앞날을 밝히는 화촉을 점화하시겠습니다.\n(점화 시간)\n따뜻한 박수 부탁드립니다.\n이어서 어머님들께서는 테이블 앞 중앙 공간으로 이동하셔서 서로를 향해 인사하시겠습니다.\n이제 하객 여러분을 향해 인사드리겠습니다.\n감사합니다. 어머님들께서는 자리로 돌아가 주시기 바랍니다.",
+              note: { pt: "Guiar: esquerda noivo/direita noiva -> acender velas -> espaço central -> cumprimentar uma à outra -> cumprimentar convidados -> assentos.", ko: "신랑 측 왼쪽/신부 측 오른쪽 -> 점화 -> 중앙 이동 -> 어머님끼리 인사 -> 하객 인사 -> 자리 복귀." },
             },
             {
               no: "3",
               title: { pt: "Entrada do noivo", ko: "신랑 입장" },
-              pt: "Recebemos agora o noivo,\nque traz consigo sua história, sua cultura\ne o coração aberto para construir uma nova vida ao lado da mulher que ama.\nQue este momento seja recebido com muito carinho.",
-              ko: "이제 자신의 이야기와 문화,\n그리고 사랑하는 사람과 새로운 삶을 만들어가고자 하는 마음을 품고 있는 신랑을 맞이하겠습니다.\n따뜻한 박수 부탁드립니다.",
+              pt: "Há alguém que esperou por este momento com o coração cheio de emoção.\nRecebemos agora o noivo,\nque traz consigo sua história, sua cultura\ne o coração aberto para construir uma nova vida ao lado da mulher que ama.\nQue este momento seja recebido com muito carinho e uma calorosa salva de palmas.",
+              ko: "오늘 가장 떨리고 설레는 순간을 기다려온 한 사람이 있습니다.\n이제 자신의 이야기와 문화,\n그리고 사랑하는 사람과 새로운 삶을 만들어가고자 하는 마음을 품고 있는 신랑을 맞이하겠습니다.\n따뜻한 박수로 신랑을 맞이해 주시기 바랍니다.",
+              note: { pt: "Após dizer o nome/entrada, aguardar 0,5 a 1 segundo. Música: I was born to love you. Volume 30% -> 60%. Noivo entra 10% mais devagar.", ko: "멘트 후 0.5~1초 뒤 GO. 음악 I was born to love you. 볼륨 30% -> 60%. 신랑은 10% 느리게 입장." },
+            },
+            {
+              no: "3-1",
+              title: { pt: "Posição do noivo", ko: "신랑 위치 안내" },
+              pt: "Pedimos ao noivo que caminhe com calma pelo corredor, cumprimente os convidados com o olhar e siga até o ponto central.\nAo chegar, por gentileza, permaneça voltado para a entrada da noiva.",
+              ko: "신랑은 천천히 버진로드를 따라 입장하시고, 하객 여러분께 가볍게 인사하며 중앙 위치까지 이동해 주시기 바랍니다.\n중앙에 도착하신 뒤에는 신부가 입장할 방향을 바라보고 기다려 주시겠습니다.",
+              note: { pt: "Noivo passa pelo corredor, olha pais/convidados, fica no centro olhando para a noiva.", ko: "신랑 버진로드 입장 -> 부모님/하객 가볍게 보기 -> 중앙에서 신부 방향 대기." },
             },
             {
               no: "4",
               title: { pt: "Entrada da noiva", ko: "신부 입장" },
               pt: "E neste momento, recebemos a noiva.\n(Pausa breve)\nHoje ela caminha em direção não apenas ao homem que escolheu amar,\nmas também à vida que decidiram construir juntos.\nQue possamos guardar este instante com o coração.",
               ko: "이제 아름다운 신부를 맞이하겠습니다.\n(잠시 멈춤)\n오늘 신부는 단지 사랑하는 사람에게로 걸어가는 것이 아니라,\n서로를 존중하고 의지하며 함께 만들어갈 새로운 삶을 향해 걸어가고 있습니다.\n이 아름다운 순간을 함께 축복해 주시기 바랍니다.",
+              note: { pt: "Silêncio absoluto por 3 segundos antes da música. Equipe parada, corredor livre, rádio/ruído zero. Música: Marcha nupcial.", ko: "멘트 후 3초 완전 정적. 스태프 이동 금지, 통로 정리, 무전 소리 주의. 음악 Marcha nupcial." },
+            },
+            {
+              no: "4-1",
+              title: { pt: "Encontro da noiva com o noivo", ko: "신부 중앙 도착 및 인계" },
+              pt: "Pedimos que a noiva e seu pai caminhem com calma até o centro.\nAo chegarem, vamos guardar alguns segundos em silêncio para este encontro.\nNoivo, por gentileza, dê um passo à frente para receber a noiva.\nNeste momento, o noivo cumprimenta o pai da noiva com um abraço ou aperto de mãos.\nEm seguida, o pai da noiva pode seguir pelo corredor lateral até seu lugar.\nOs noivos, agora juntos, podem se olhar por um instante, sorrir, dar as mãos e seguir até a mesa central.",
+              ko: "신부와 신부 아버님께서는 천천히 중앙까지 이동해 주시겠습니다.\n중앙에 도착하면 이 순간을 위해 잠시 정적을 갖겠습니다.\n신랑은 한 걸음 앞으로 나와 신부를 맞이해 주시기 바랍니다.\n이어서 신랑은 신부 아버님께 악수 또는 포옹으로 인사드리겠습니다.\n신부 아버님께서는 측면 통로를 이용해 자리로 이동해 주시면 됩니다.\n신랑 신부는 잠시 서로를 바라보고 미소 지은 뒤, 손을 잡고 중앙 테이블 앞으로 이동해 주시겠습니다.",
+              note: { pt: "Noiva aparece e espera 1-2s. No centro: 3s silêncio, noivo avança, cumprimenta pai, pai sai pela lateral, casal dá mãos e vai à mesa.", ko: "신부 등장 후 1~2초 정지. 중앙 3초 정적, 신랑 한 걸음, 아버님 인사, 아버님 측면 이동, 신랑 신부 손잡고 테이블 이동." },
+            },
+            {
+              no: "4-2",
+              title: { pt: "Posição na mesa central", ko: "중앙 테이블 위치 안내" },
+              pt: "Pedimos que os noivos fiquem diante da mesa central: o noivo à esquerda e a noiva à direita.\nQuando estiverem prontos, seguiremos para a reverência tradicional coreana.",
+              ko: "신랑 신부는 중앙 테이블을 바라보고 서 주시겠습니다.\n신랑은 왼쪽, 신부는 오른쪽에 자리해 주시기 바랍니다.\n준비가 되면 한국 전통 예절인 맞절 순서로 이어가겠습니다.",
+              note: { pt: "Mesa central: noivo esquerda, noiva direita.", ko: "중앙 테이블 기준 신랑 왼쪽, 신부 오른쪽." },
             },
             {
               no: "5",
               title: { pt: "Matjeol — Reverência Coreana", ko: "맞절" },
               pt: "Na tradição coreana, existe um momento chamado “Matjeol”.\nA reverência simboliza respeito, gratidão e o compromisso de caminharem juntos como parceiros ao longo da vida.",
               ko: "한국 전통 예절인 맞절은\n서로에 대한 존중과 감사,\n그리고 앞으로 함께 걸어갈 약속을 의미합니다.",
+              note: { pt: "Antes de começar, organizar casal no centro e baixar a música. Volume aproximado 40%.", ko: "시작 전 신랑 신부 중앙 정렬, 음악 다운. 볼륨 약 40%." },
             },
             {
               no: "6",
@@ -2742,6 +2840,7 @@
               title: { pt: "Momento dos votos", ko: "서약의 시간" },
               pt: "Os votos não são apenas palavras.\nSão escolhas conscientes sobre quem vocês desejam ser um para o outro ao longo da vida.\nÉ o momento de transformar sentimento em promessa.",
               ko: "서약은 단순한 말이 아니라,\n앞으로 서로에게 어떤 사람이 되어줄 것인지에 대한 진심 어린 약속입니다.\n이제 두 분의 마음을 직접 들어보겠습니다.",
+              note: { pt: "Entregar microfone. Noiva primeiro, depois noivo. BGM baixo, cerca de 20%.", ko: "마이크 전달. 신부 먼저, 이후 신랑. BGM 낮게 약 20%." },
             },
             {
               no: "8",
@@ -2760,24 +2859,41 @@
               title: { pt: "Entrada do pajem e alianças", ko: "화동 입장 및 반지 전달" },
               pt: "E agora, recebemos o pajem,\nsobrinho da noiva Larissa,\ntrazendo as alianças,\nsímbolo do compromisso e da continuidade desta união.\nHoje, este momento carrega também um significado muito especial para a família da noiva.\nAs alianças serão trazidas dentro do chapéu que pertenceu ao avô da Larissa,\ncomo uma forma de manter sua presença, seu amor e sua memória junto deste momento tão importante.\nRecebamos este instante com muito carinho.",
               ko: "이제 신부 라리사 양의 조카인 화동이,\n두 사람의 소중한 약속을 담은 반지를 들고 입장하겠습니다.\n오늘 이 순간은 신부 가족에게 더욱 특별한 의미를 담고 있습니다.\n반지는 라리사 양의 돌아가신 할아버지께서 생전에 사용하시던 모자에 담겨 전달될 예정입니다.\n소중한 가족의 사랑과 기억이 오늘 이 자리에도 함께하기를 바라는 마음을 담아 준비한 순간입니다.\n따뜻한 마음으로 함께해 주시기 바랍니다.",
+              note: { pt: "Volume 60% durante a entrada do pajem. Casal recebe junto. Chapéu vai para trás da mesa, caixa das alianças à frente.", ko: "화동 입장 시 볼륨 60%. 신랑 신부가 함께 받음. 모자는 테이블 뒤, 반지 케이스는 앞쪽." },
+            },
+            {
+              no: "10-1",
+              title: { pt: "Recebimento das alianças", ko: "반지 전달 동선 안내" },
+              pt: "Pedimos que os noivos recebam juntos as alianças.\nO chapéu será colocado atrás da mesa, e a caixa das alianças ficará à frente, no centro.\nObrigado. O pajem pode retornar com calma.",
+              ko: "신랑 신부는 함께 반지를 받아주시기 바랍니다.\n모자는 테이블 뒤쪽에 두고, 반지 케이스는 가운데 앞쪽에 올려두겠습니다.\n감사합니다. 화동은 천천히 자리로 돌아가 주시면 됩니다.",
+              note: { pt: "Casal recebe junto. Chapéu atrás da mesa, caixa no centro à frente. Pajem retorna.", ko: "신랑 신부 함께 받기. 모자는 테이블 뒤, 케이스는 중앙 앞. 화동 복귀." },
             },
             {
               no: "11",
               title: { pt: "Troca de alianças", ko: "반지 교환" },
               pt: "As alianças representam continuidade.\nNão possuem começo nem fim,\nporque simbolizam um amor que se renova diariamente através do cuidado, do respeito e da permanência.\n“Noivo, coloque a aliança na mão de sua noiva.”\n(Pausa)\n“Noiva, coloque a aliança na mão de seu noivo.”\n(Pausa)\n“Que estas alianças simbolizem a união, o compromisso e a escolha diária de caminharem lado a lado, respeitando os sonhos e a individualidade um do outro.”",
               ko: "반지는 끝과 시작이 없는 원의 형태처럼,\n매일의 배려와 존중 속에서 이어질 영원한 사랑을 의미합니다.\n“신랑님, 신부님의 손에 반지를 끼워주시기 바랍니다.”\n(잠시 멈춤)\n“신부님, 신랑님의 손에 반지를 끼워주시기 바랍니다.”\n(잠시 멈춤)\n“이 반지가 두 사람의 사랑과 약속,\n그리고 앞으로도 서로의 꿈과 삶을 존중하며 함께 걸어갈 마음을 상징하기를 바랍니다.”",
+              note: { pt: "Depois de cada aliança, deixar o casal olhar as mãos por 2 segundos. Ao final, induzir aplausos. Volume 30%.", ko: "각 반지 착용 후 손을 보며 2초 유지. 완료 후 박수 유도. 볼륨 30%." },
             },
             {
               no: "12",
               title: { pt: "Declaração da união", ko: "성혼 선언" },
               pt: "“Haseung, você aceita Larissa como sua legítima esposa,\nprometendo amá-la, respeitá-la e permanecer ao lado dela em todos os momentos da vida?”\n(Noivo responde)\n“Larissa, você aceita Haseung como seu legítimo esposo,\nprometendo amá-lo, respeitá-lo e permanecer ao lado dele em todos os momentos da vida?”\n(Noiva responde)\n(Pausa breve)\n“Diante das famílias, dos amigos e do amor que os trouxe até aqui,\neu os declaro marido e mulher.”\n(Pausa)\n“Você pode beijar a noiva.”",
               ko: "“송하승 군은 라리사 양을 평생의 아내로 맞아,\n기쁠 때나 어려울 때나 사랑하고 존중하며 함께할 것을 약속합니까?”\n(신랑 대답)\n“라리사 양은 송하승 군을 평생의 남편으로 맞아,\n기쁠 때나 어려울 때나 사랑하고 존중하며 함께할 것을 약속합니까?”\n(신부 대답)\n(잠시 멈춤)\n“가족과 친구들,\n그리고 오늘 이 자리를 채운 사랑 앞에서\n두 분이 이제 부부가 되었음을 선언합니다.”\n(잠시 멈춤)\n“이제 신랑은 신부에게 입맞춤해 주시기 바랍니다.”",
+              note: { pt: "Ler curto, lento e com certeza. Antes da declaração e antes do beijo: silêncio absoluto. Música: Turning Page, 30%; no beijo, subir e induzir aplausos.", ko: "짧고 천천히 확신 있게. 선언 직전/키스 직전 완전 정적. 음악 Turning Page 30%, 키스 순간 볼륨 업 및 박수 유도." },
             },
             {
               no: "13",
               title: { pt: "안내 — 축가 공연", ko: "축가 공연 안내" },
               pt: "A música sempre foi uma forma de expressar sentimentos que às vezes as palavras não conseguem alcançar.\nNeste momento, preparamos uma apresentação especial para celebrar o amor e a nova jornada deste casal.\nRecebam este momento com carinho.",
               ko: "때로는 말보다 음악이 마음을 더 깊이 전해주기도 합니다.\n이제 두 사람의 새로운 시작을 축복하는 특별한 무대를 준비했습니다.\n따뜻한 마음으로 함께해 주시기 바랍니다.",
+            },
+            {
+              no: "13-1",
+              title: { pt: "Transição entre músicas", ko: "축가 사이 연결 멘트" },
+              pt: "Obrigado por esta apresentação tão especial.\nVamos manter por alguns instantes este sentimento de carinho e celebração enquanto preparamos o próximo momento.",
+              ko: "소중한 축가에 감사드립니다.\n이 따뜻한 마음을 잠시 이어가며, 다음 순서를 준비하겠습니다.",
+              note: { pt: "Use if there is setup time between songs. Keep it short and calm.", ko: "축가 사이 준비 시간이 필요할 때 사용. 짧고 차분하게." },
             },
             {
               no: "14",
@@ -2806,32 +2922,51 @@
             {
               no: "18",
               title: { pt: "부모님 & 하객 인사", ko: "부모님 & 하객 인사" },
-              pt: "Antes de encerrarem esta cerimônia,\nos noivos gostariam de agradecer às famílias e a todos que estiveram presentes neste momento tão especial.\nPrimeiramente, os noivos irão cumprimentar os pais da noiva.\n(잠시 멈춤)\nAgora, os noivos irão cumprimentar os pais do noivo.\n(잠시 멈춤)\nE por fim, retornam ao centro para agradecer sinceramente a todos os convidados que vieram celebrar esta união.\nO amor também nasce do cuidado recebido das famílias que acompanharam esta trajetória até aqui.\nHoje, os noivos agradecem não apenas pela presença,\nmas por todo carinho, apoio e amor que os trouxeram até este momento.",
-              ko: "이제 두 사람은 오늘 이 자리를 함께해 주신 가족과 하객 여러분께 감사의 마음을 전하고자 합니다.\n먼저 신부 측 부모님께 인사를 드리겠습니다.\n(잠시 멈춤)\n이어서 신랑 측 부모님께 인사를 드리겠습니다.\n(잠시 멈춤)\n그리고 마지막으로 중앙으로 이동하여,\n오늘 함께해 주신 모든 하객 여러분께 감사의 인사를 전하겠습니다.\n오늘의 이 순간은 두 사람뿐 아니라,\n지금까지 사랑과 응원으로 함께해 준 가족들이 있었기에 가능했습니다.\n두 사람은 진심 어린 마음으로 감사의 인사를 전합니다.",
+              pt: "Antes de encerrarem esta cerimônia,\nos noivos gostariam de agradecer às famílias e a todos que estiveram presentes neste momento tão especial.\nPrimeiramente, pedimos que os noivos sigam até os pais da noiva para cumprimentá-los.\n(Pausa)\nAgora, pedimos que os noivos sigam até os pais do noivo para cumprimentá-los.\n(Pausa)\nE por fim, pedimos que retornem ao centro e se voltem para todos os convidados.\nNeste momento, os noivos agradecem sinceramente a presença de cada um de vocês.\nO amor também nasce do cuidado recebido das famílias que acompanharam esta trajetória até aqui.\nHoje, os noivos agradecem não apenas pela presença,\nmas por todo carinho, apoio e amor que os trouxeram até este momento.",
+              ko: "이제 두 사람은 오늘 이 자리를 함께해 주신 가족과 하객 여러분께 감사의 마음을 전하고자 합니다.\n먼저 신랑 신부는 신부 측 부모님께 이동하여 인사를 드리겠습니다.\n(잠시 멈춤)\n이어서 신랑 측 부모님께 이동하여 인사를 드리겠습니다.\n(잠시 멈춤)\n그리고 마지막으로 중앙으로 돌아와 하객 여러분을 바라봐 주시기 바랍니다.\n이 순간, 두 사람은 오늘 함께해 주신 모든 하객 여러분께 진심으로 감사의 인사를 전합니다.\n오늘의 이 순간은 두 사람뿐 아니라,\n지금까지 사랑과 응원으로 함께해 준 가족들이 있었기에 가능했습니다.\n두 사람은 진심 어린 마음으로 감사의 인사를 전합니다.",
+              note: { pt: "Order: parents of bride -> parents of groom -> guests. Wait for each bow/hug before continuing.", ko: "순서: 신부 부모님 -> 신랑 부모님 -> 하객. 각 인사/포옹이 끝난 뒤 다음 멘트." },
             },
             {
               no: "19",
               title: { pt: "퇴장 멘트", ko: "퇴장 멘트" },
               pt: "E assim, inicia-se um novo capítulo nesta história.\nHoje, diante de todos que amam vocês,\nduas vidas passam a caminhar lado a lado como família.\nQue o amor, o respeito e a parceria continuem guiando cada passo desta nova jornada.\nRecebam este momento com uma grande salva de palmas.",
               ko: "이제 두 사람은 서로의 가장 든든한 동반자로서 새로운 이야기를 함께 시작하게 됩니다.\n오늘 이 자리에서,\n두 사람은 사랑하는 가족과 친구들의 축복 속에 하나의 가족이 되었습니다.\n앞으로의 모든 순간에도 사랑과 존중,\n그리고 따뜻한 마음이 함께하기를 바랍니다.\n두 사람의 새로운 출발을 큰 박수로 축복해 주시기 바랍니다.",
+              note: { pt: "Before exit: 2-3 seconds pause, couple looks at each other, holds hands, music rises. Walk 15% slower.", ko: "퇴장 전 2~3초 여백, 서로 보기, 손 잡기, 음악 업. 15% 느리게 퇴장." },
             },
             {
               no: "20",
               title: { pt: "퇴장", ko: "퇴장" },
-              pt: "Com muita alegria,\nrecebemos pela primeira vez:\nHaseung e Larissa como marido e mulher.",
-              ko: "이제 부부가 된 송하승 군과 라리사 양의 아름다운 앞날을 다시 한 번 큰 박수로 축복해 주시기 바랍니다.",
+              pt: "Com muita alegria,\nrecebemos pela primeira vez:\nHaseung e Larissa como marido e mulher.\nPedimos que os noivos se olhem por um instante, deem as mãos e caminhem com calma pelo corredor.\nConvidamos todos a celebrar este novo começo com muitos aplausos.",
+              ko: "이제 부부가 된 송하승 군과 라리사 양의 아름다운 앞날을 다시 한 번 큰 박수로 축복해 주시기 바랍니다.\n신랑 신부는 잠시 서로를 바라본 뒤 손을 잡고 천천히 버진로드를 걸어 퇴장해 주시겠습니다.\n하객 여러분께서는 두 사람의 새로운 시작을 큰 박수로 축하해 주시기 바랍니다.",
+              note: { pt: "Couple should not rush out. Smile, look back if natural, use photo zone.", ko: "바로 나가지 말고 여유 있게. 미소, 자연스러운 뒤돌아보기, 포토존 활용." },
             },
             {
               no: "21",
               title: { pt: "단체사진 안내", ko: "단체사진 안내" },
-              pt: "Pedimos agora que os familiares e amigos permaneçam para as fotos em grupo.",
-              ko: "이어서 가족 및 친구분들과 함께 단체 사진 촬영이 진행될 예정입니다.\n잠시 자리에 함께해 주시기 바랍니다.",
+              pt: "Pedimos agora que os familiares e amigos permaneçam para as fotos em grupo.\nPrimeiro, chamaremos a família do noivo para se aproximar dos noivos.\nDepois, faremos as fotos com a família da noiva.\nEm seguida, convidaremos os amigos para a foto com o casal, incluindo o momento com o buquê.\nPedimos que aguardem a chamada da equipe e se aproximem com calma para que todos possam ser registrados.",
+              ko: "이어서 가족 및 친구분들과 함께 단체 사진 촬영이 진행될 예정입니다.\n먼저 신랑 가족분들께서 신랑 신부 가까이로 이동해 촬영하겠습니다.\n이후 신부 가족분들과 촬영을 진행하겠습니다.\n마지막으로 친구분들과 부케를 활용한 사진 촬영이 이어집니다.\n스태프의 안내에 따라 차례대로 이동해 주시면 모두를 빠짐없이 촬영할 수 있습니다.",
+              note: { pt: "Photo order: groom family -> bride family -> friends with bouquet.", ko: "촬영 순서: 신랑 가족 -> 신부 가족 -> 친구들(부케 활용)." },
             },
             {
               no: "22",
               title: { pt: "식사 안내", ko: "식사 안내" },
-              pt: "A cerimônia chega ao fim,\nmas a celebração continua.\nDesejamos que todos aproveitem este momento com alegria, boa conversa e muito carinho.\nMuito obrigado pela presença de todos.",
-              ko: "이제 예식은 마무리되지만,\n두 사람의 새로운 시작을 축하하는 시간은 계속됩니다.\n맛있는 식사와 함께 편안하고 행복한 시간 보내시기 바랍니다.\n오늘 함께해 주신 모든 분들께 진심으로 감사드립니다.",
+              pt: "A cerimônia chega ao fim,\nmas a celebração continua.\nEm instantes, o jantar será servido. Pedimos que os pais e familiares mais próximos sejam acomodados primeiro e, em seguida, todos os convidados poderão se dirigir às mesas.\nAs bebidas e o jantar estarão disponíveis nos espaços indicados pela equipe.\nDesejamos que todos aproveitem este momento com alegria, boa conversa e muito carinho.\nMuito obrigado pela presença de todos.",
+              ko: "이제 예식은 마무리되지만,\n두 사람의 새로운 시작을 축하하는 시간은 계속됩니다.\n잠시 후 식사가 시작됩니다. 먼저 양가 부모님과 가까운 가족분들이 이동하신 뒤, 하객 여러분께서 안내에 따라 테이블로 이동해 주시면 감사하겠습니다.\n식사와 음료는 스태프가 안내드리는 공간에서 이용하실 수 있습니다.\n맛있는 식사와 함께 편안하고 행복한 시간 보내시기 바랍니다.\n오늘 함께해 주신 모든 분들께 진심으로 감사드립니다.",
+              note: { pt: "Mention parents first, table direction, food/drink location. Keep guests moving calmly.", ko: "부모님 먼저, 테이블 위치, 식사/음료 위치 안내. 하객 동선 차분히 유도." },
+            },
+            {
+              no: "23",
+              title: { pt: "Fala para atraso ou espera", ko: "지연/대기 연결 멘트" },
+              pt: "Pedimos apenas mais alguns instantes para preparar o próximo momento com todo o cuidado que ele merece.\nEnquanto isso, agradecemos a paciência de todos e convidamos vocês a permanecerem confortáveis em seus lugares.",
+              ko: "다음 순서를 더 잘 준비하기 위해 잠시만 기다려 주시면 감사하겠습니다.\n하객 여러분께서는 편안히 자리에 계셔 주시고, 곧 이어서 진행하겠습니다.",
+              note: { pt: "Use for delay, setup, camera/mic adjustment, or awkward empty time.", ko: "지연, 세팅, 카메라/마이크 조정, 어색한 공백 시 사용." },
+            },
+            {
+              no: "24",
+              title: { pt: "Fala para falha técnica", ko: "음향/마이크 오류 멘트" },
+              pt: "Tivemos um pequeno ajuste técnico, mas já estamos organizando tudo para seguir com tranquilidade.\nObrigado pela compreensão e carinho de todos.",
+              ko: "잠시 기술적인 확인이 필요해 준비 중입니다.\n하객 여러분의 양해에 감사드리며, 곧 차분히 이어가겠습니다.",
+              note: { pt: "Switch to JBL microphone if needed. Keep BGM low, avoid overexplaining.", ko: "필요 시 JBL 마이크 전환. BGM 낮게, 과도한 설명은 피하기." },
             },
           ],
         },
@@ -4052,8 +4187,22 @@
       function renderHostScript() {
         const data = WEDDING.hostScript || {};
         const intro = $("#hostScriptIntro");
+        const opsRoot = $("#hostOpsList");
         const root = $("#hostScriptList");
         if (intro) intro.textContent = tl(data.intro);
+        if (opsRoot) {
+          const ops = Array.isArray(data.ops) ? data.ops : [];
+          opsRoot.innerHTML = ops
+            .map(
+              (item) => `
+                <article class="host-ops-card">
+                  <h4 class="host-ops-title">${escapeHtml(tl(item.title))}</h4>
+                  <p class="host-ops-copy">${escapeHtml(tl(item.text))}</p>
+                </article>
+              `
+            )
+            .join("");
+        }
         if (!root) return;
 
         const items = Array.isArray(data.items) ? data.items : [];
@@ -4069,6 +4218,7 @@
                 <p class="host-script-say">${escapeHtml(item.pt || "")}</p>
                 <span class="host-script-lang">KR</span>
                 <p class="host-script-say">${escapeHtml(item.ko || "")}</p>
+                ${item.note ? `<p class="host-script-cue">${escapeHtml(tl(item.note))}</p>` : ""}
               </article>
             `
           )
