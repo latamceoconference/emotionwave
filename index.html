@@ -932,6 +932,7 @@
       }
       #dlgProgramLayout,
       #dlgCeremonySchedule,
+      #dlgHostScript,
       #dlgMenuLayout2 {
         width: min(1120px, calc(100% - 24px));
         max-height: calc(100vh - 16px);
@@ -939,7 +940,88 @@
       .program-layout-row {
         margin-top: 20px;
         display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
         justify-content: center;
+      }
+      .host-script {
+        display: grid;
+        gap: 12px;
+      }
+      .host-script-note {
+        margin: 0;
+        padding: 14px 16px;
+        border-radius: 18px;
+        border: 1px solid rgba(16, 32, 36, 0.08);
+        background: rgba(255, 255, 255, 0.58);
+        color: var(--sub);
+        font-size: 14px;
+        line-height: 1.8;
+      }
+      .host-script-list {
+        display: grid;
+        gap: 12px;
+      }
+      .host-script-card {
+        border: 1px solid rgba(16, 32, 36, 0.08);
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.66);
+        padding: 14px 16px;
+      }
+      .host-script-meta {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 8px;
+      }
+      .host-script-time {
+        display: inline-flex;
+        align-items: center;
+        min-height: 28px;
+        padding: 5px 10px;
+        border-radius: 999px;
+        background: rgba(82, 111, 75, 0.94);
+        color: #fff;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+      }
+      .host-script-title {
+        font-size: 16px;
+        font-weight: 800;
+        line-height: 1.5;
+      }
+      .host-script-say {
+        margin: 0;
+        color: var(--ink);
+        font-size: 15px;
+        line-height: 1.85;
+        white-space: pre-line;
+      }
+      .host-script-lang {
+        display: inline-flex;
+        align-items: center;
+        margin: 12px 0 6px;
+        padding: 4px 9px;
+        border-radius: 999px;
+        border: 1px solid rgba(16, 32, 36, 0.08);
+        background: rgba(200, 164, 107, 0.12);
+        color: var(--ink);
+        font-size: 12px;
+        font-weight: 800;
+      }
+      .host-script-cue {
+        margin: 10px 0 0;
+        color: var(--sub);
+        font-size: 13px;
+        line-height: 1.7;
+      }
+      :root[data-theme="dark"] .host-script-note,
+      :root[data-theme="dark"] .host-script-card,
+      :root[data-theme="dark"] .host-script-lang {
+        border-color: rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.04);
       }
       .ceremony-video-card {
         display: grid;
@@ -1874,6 +1956,7 @@
                   <button class="btn" id="btnCalendar" type="button" data-i18n="hero.calendar">Adicionar ao calendário</button>
                   <button class="btn" id="btnHeroVideo" type="button" data-i18n="hero.video">우리 영상 보기</button>
                   <button class="btn" id="btnHeroSchedule" type="button" data-i18n="hero.schedule">식순 보기</button>
+                  <button class="btn" id="btnHeroHostScript" type="button" data-i18n="hostScript.button">사회자 대본</button>
                   <a class="btn ghost" href="#location" data-i18n="hero.directions">Rotas</a>
                 </div>
                 <div class="hero-quote" id="heroQuote"></div>
@@ -2031,6 +2114,7 @@
           <div class="timeline" id="programGrid"></div>
           <div class="program-layout-row">
             <button class="btn primary" id="btnProgramSchedule" type="button" data-i18n="programSchedule.button">식순 전체 보기</button>
+            <button class="btn primary" id="btnHostScript" type="button" data-i18n="hostScript.button">사회자 대본</button>
             <button class="btn primary" id="btnProgramLayout" type="button" data-i18n="programLayout.button">Layout</button>
           </div>
           <article class="card ceremony-video-card" id="ceremonyVideoCard"></article>
@@ -2303,6 +2387,13 @@
           <span class="ab-txt" data-i18n="quick.schedule">식순</span>
         </button>
 
+        <button class="ab-btn" id="abHostScript" type="button">
+          <svg class="ab-ico" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M8 5h8M8 9h8M8 13h5M6 3h12a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          <span class="ab-txt" data-i18n="quick.hostScript">대본</span>
+        </button>
+
         <button class="ab-btn" id="abLang" type="button">
           <svg class="ab-ico" viewBox="0 0 24 24" aria-hidden="true">
             <path d="M4 5h8M8 5v14M6 9h4M14 19l6-14M14 12h6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
@@ -2416,6 +2507,26 @@
           <div class="program-layout-image">
             <img id="ceremonyScheduleDialogImg" src="식순 포어.png" alt="Ceremony schedule" />
           </div>
+        </div>
+      </div>
+    </dialog>
+
+    <dialog id="dlgHostScript" aria-label="Host script">
+      <div class="dlg-head">
+        <div class="dlg-head-left">
+          <h3 data-i18n="dlg.hostScript.title">사회자 대본</h3>
+          <span class="dlg-sub" data-i18n="dlg.hostScript.sub">휴대폰에서 바로 읽기 쉽도록 순서별로 정리했습니다.</span>
+        </div>
+        <div class="dlg-head-right">
+          <button class="icon-btn" type="button" data-close="dlgHostScript" data-i18n="common.close" data-i18n-aria="aria.close" aria-label="Fechar">
+            Fechar
+          </button>
+        </div>
+      </div>
+      <div class="dlg-body dlg-body--program-layout">
+        <div class="host-script">
+          <p class="host-script-note" id="hostScriptIntro"></p>
+          <div class="host-script-list" id="hostScriptList"></div>
         </div>
       </div>
     </dialog>
@@ -2583,6 +2694,146 @@
         ceremonySchedule: {
           ptImage: "https://raw.githubusercontent.com/haseungsong/CCCB/main/%EC%8B%9D%EC%88%9C%20%ED%8F%AC%EC%96%B4.png",
           koImage: "https://raw.githubusercontent.com/haseungsong/CCCB/main/%EC%8B%9D%EC%88%9C%20%ED%95%9C%EA%B8%80.png",
+        },
+        hostScript: {
+          intro: {
+            pt: "Roteiro final do mestre de cerimônias. Os textos em português e coreano aparecem juntos para facilitar a condução no celular.",
+            ko: "사회자 최종 대본입니다. 휴대폰에서 바로 진행할 수 있도록 포르투갈어와 한국어 원문을 함께 정리했습니다.",
+          },
+          items: [
+            {
+              no: "1",
+              title: { pt: "Abertura", ko: "오프닝" },
+              pt: "Boa tarde a todos.\nHoje não celebramos apenas um casamento.\nCelebramos o encontro de duas histórias que nasceram em lugares diferentes do mundo, mas que encontraram uma na outra um lugar de pertencimento, cuidado e amor.\nEntre culturas, idiomas, costumes e distâncias, vocês construíram algo muito maior do que coincidências.\nConstruíram parceria, acolhimento e a decisão diária de permanecer.\nE talvez essa seja uma das formas mais bonitas do amor:\ntransformar diferenças em encontro e fazer do outro um lar.\nPedimos gentilmente que todos coloquem os celulares no modo silencioso e vivam este momento junto aos noivos com carinho e presença.\n(Pausa breve)\nCom muita alegria, damos início à cerimônia de casamento de Haseung e Larissa.",
+              ko: "여러분, 안녕하십니까.\n오늘 우리는 단순히 한 번의 결혼식을 축하하기 위해 이 자리에 모인 것이 아닙니다.\n서로 다른 곳에서 시작된 두 사람이 서로에게 안식처가 되고, 사랑과 배려로 하나의 길을 만들어 온 이야기를 함께 축복하기 위해 모였습니다.\n문화와 언어, 생활 방식과 거리의 차이를 넘어,\n두 사람은 우연 이상의 것을 만들어냈습니다.\n서로를 이해하고, 존중하며,\n매일 함께하기로 선택해 온 것입니다.\n어쩌면 사랑의 가장 아름다운 모습은,\n다름 속에서 서로를 만나고 서로에게 ‘집’이 되어주는 것일지도 모릅니다.\n예식이 진행되는 동안 휴대전화는 무음으로 부탁드리며,\n두 사람의 소중한 순간에 함께 집중해 주시면 감사하겠습니다.\n(잠시 멈춤)\n이제 송하승 군과 라리사 양의 결혼식을 시작하겠습니다.",
+            },
+            {
+              no: "2",
+              title: { pt: "Entrada das mães", ko: "양가 어머니 입장" },
+              pt: "Neste momento, recebemos as mães dos noivos.\nNa tradição coreana, a presença das mães representa bênção, cuidado e continuidade familiar.\nHoje, elas simbolizam não apenas o amor que acompanhou os noivos até aqui, mas também o acolhimento de duas famílias que passam a caminhar juntas.\nRecebamos este momento com carinho e uma calorosa salva de palmas.",
+              ko: "이제 양가 어머니를 모시겠습니다.\n한국의 전통에서 부모님의 존재는 축복과 사랑,\n그리고 가족의 이어짐을 의미합니다.\n오늘 두 분은 자녀들을 향한 사랑뿐만 아니라,\n이제 하나가 되어 함께 걸어갈 두 가족의 따뜻한 마음을 상징합니다.\n따뜻한 박수로 맞이해 주시기 바랍니다.",
+            },
+            {
+              no: "3",
+              title: { pt: "Entrada do noivo", ko: "신랑 입장" },
+              pt: "Recebemos agora o noivo,\nque traz consigo sua história, sua cultura\ne o coração aberto para construir uma nova vida ao lado da mulher que ama.\nQue este momento seja recebido com muito carinho.",
+              ko: "이제 자신의 이야기와 문화,\n그리고 사랑하는 사람과 새로운 삶을 만들어가고자 하는 마음을 품고 있는 신랑을 맞이하겠습니다.\n따뜻한 박수 부탁드립니다.",
+            },
+            {
+              no: "4",
+              title: { pt: "Entrada da noiva", ko: "신부 입장" },
+              pt: "E neste momento, recebemos a noiva.\n(Pausa breve)\nHoje ela caminha em direção não apenas ao homem que escolheu amar,\nmas também à vida que decidiram construir juntos.\nQue possamos guardar este instante com o coração.",
+              ko: "이제 아름다운 신부를 맞이하겠습니다.\n(잠시 멈춤)\n오늘 신부는 단지 사랑하는 사람에게로 걸어가는 것이 아니라,\n서로를 존중하고 의지하며 함께 만들어갈 새로운 삶을 향해 걸어가고 있습니다.\n이 아름다운 순간을 함께 축복해 주시기 바랍니다.",
+            },
+            {
+              no: "5",
+              title: { pt: "Matjeol — Reverência Coreana", ko: "맞절" },
+              pt: "Na tradição coreana, existe um momento chamado “Matjeol”.\nA reverência simboliza respeito, gratidão e o compromisso de caminharem juntos como parceiros ao longo da vida.",
+              ko: "한국 전통 예절인 맞절은\n서로에 대한 존중과 감사,\n그리고 앞으로 함께 걸어갈 약속을 의미합니다.",
+            },
+            {
+              no: "6",
+              title: { pt: "História do casal", ko: "두 사람의 이야기" },
+              pt: "O casamento não acontece apenas hoje.\nEle começou nos pequenos gestos do cotidiano.\nNas conversas demoradas, nas despedidas difíceis, nas viagens, na saudade, nos planos compartilhados e na escolha constante de permanecer.\nO amor de vocês foi construído aos poucos —\ne justamente por isso possui raízes tão fortes.\nHoje, não vemos apenas a união de duas pessoas,\nmas também o encontro de duas culturas, duas famílias e dois mundos que escolheram caminhar juntos.",
+              ko: "결혼은 오늘 하루만으로 완성되는 것이 아닙니다.\n두 사람의 결혼은 이미 오래전부터 시작되었습니다.\n길었던 대화 속에서,\n아쉬운 작별 속에서,\n여행과 그리움 속에서,\n그리고 함께 미래를 꿈꾸며 서로의 곁에 머물기로 선택했던 순간들 속에서 말입니다.\n천천히 쌓아 올린 사랑이기에,\n오늘의 이 사랑은 더욱 깊고 단단합니다.\n오늘 우리는 두 사람의 사랑뿐 아니라,\n두 문화와 두 가족이 하나가 되는 순간을 함께하고 있습니다.",
+            },
+            {
+              no: "7",
+              title: { pt: "Momento dos votos", ko: "서약의 시간" },
+              pt: "Os votos não são apenas palavras.\nSão escolhas conscientes sobre quem vocês desejam ser um para o outro ao longo da vida.\nÉ o momento de transformar sentimento em promessa.",
+              ko: "서약은 단순한 말이 아니라,\n앞으로 서로에게 어떤 사람이 되어줄 것인지에 대한 진심 어린 약속입니다.\n이제 두 분의 마음을 직접 들어보겠습니다.",
+            },
+            {
+              no: "8",
+              title: { pt: "Votos da noiva", ko: "신부 서약" },
+              pt: "Convido agora a noiva para compartilhar seus votos.",
+              ko: "먼저 신부님의 서약이 있겠습니다.",
+            },
+            {
+              no: "9",
+              title: { pt: "Votos do noivo", ko: "신랑 서약" },
+              pt: "Agora, convido o noivo para compartilhar seus votos.",
+              ko: "이어서 신랑님의 서약이 있겠습니다.",
+            },
+            {
+              no: "10",
+              title: { pt: "Entrada do pajem e alianças", ko: "화동 입장 및 반지 전달" },
+              pt: "E agora, recebemos o pajem,\nsobrinho da noiva Larissa,\ntrazendo as alianças,\nsímbolo do compromisso e da continuidade desta união.\nHoje, este momento carrega também um significado muito especial para a família da noiva.\nAs alianças serão trazidas dentro do chapéu que pertenceu ao avô da Larissa,\ncomo uma forma de manter sua presença, seu amor e sua memória junto deste momento tão importante.\nRecebamos este instante com muito carinho.",
+              ko: "이제 신부 라리사 양의 조카인 화동이,\n두 사람의 소중한 약속을 담은 반지를 들고 입장하겠습니다.\n오늘 이 순간은 신부 가족에게 더욱 특별한 의미를 담고 있습니다.\n반지는 라리사 양의 돌아가신 할아버지께서 생전에 사용하시던 모자에 담겨 전달될 예정입니다.\n소중한 가족의 사랑과 기억이 오늘 이 자리에도 함께하기를 바라는 마음을 담아 준비한 순간입니다.\n따뜻한 마음으로 함께해 주시기 바랍니다.",
+            },
+            {
+              no: "11",
+              title: { pt: "Troca de alianças", ko: "반지 교환" },
+              pt: "As alianças representam continuidade.\nNão possuem começo nem fim,\nporque simbolizam um amor que se renova diariamente através do cuidado, do respeito e da permanência.\n“Noivo, coloque a aliança na mão de sua noiva.”\n(Pausa)\n“Noiva, coloque a aliança na mão de seu noivo.”\n(Pausa)\n“Que estas alianças simbolizem a união, o compromisso e a escolha diária de caminharem lado a lado, respeitando os sonhos e a individualidade um do outro.”",
+              ko: "반지는 끝과 시작이 없는 원의 형태처럼,\n매일의 배려와 존중 속에서 이어질 영원한 사랑을 의미합니다.\n“신랑님, 신부님의 손에 반지를 끼워주시기 바랍니다.”\n(잠시 멈춤)\n“신부님, 신랑님의 손에 반지를 끼워주시기 바랍니다.”\n(잠시 멈춤)\n“이 반지가 두 사람의 사랑과 약속,\n그리고 앞으로도 서로의 꿈과 삶을 존중하며 함께 걸어갈 마음을 상징하기를 바랍니다.”",
+            },
+            {
+              no: "12",
+              title: { pt: "Declaração da união", ko: "성혼 선언" },
+              pt: "“Haseung, você aceita Larissa como sua legítima esposa,\nprometendo amá-la, respeitá-la e permanecer ao lado dela em todos os momentos da vida?”\n(Noivo responde)\n“Larissa, você aceita Haseung como seu legítimo esposo,\nprometendo amá-lo, respeitá-lo e permanecer ao lado dele em todos os momentos da vida?”\n(Noiva responde)\n(Pausa breve)\n“Diante das famílias, dos amigos e do amor que os trouxe até aqui,\neu os declaro marido e mulher.”\n(Pausa)\n“Você pode beijar a noiva.”",
+              ko: "“송하승 군은 라리사 양을 평생의 아내로 맞아,\n기쁠 때나 어려울 때나 사랑하고 존중하며 함께할 것을 약속합니까?”\n(신랑 대답)\n“라리사 양은 송하승 군을 평생의 남편으로 맞아,\n기쁠 때나 어려울 때나 사랑하고 존중하며 함께할 것을 약속합니까?”\n(신부 대답)\n(잠시 멈춤)\n“가족과 친구들,\n그리고 오늘 이 자리를 채운 사랑 앞에서\n두 분이 이제 부부가 되었음을 선언합니다.”\n(잠시 멈춤)\n“이제 신랑은 신부에게 입맞춤해 주시기 바랍니다.”",
+            },
+            {
+              no: "13",
+              title: { pt: "안내 — 축가 공연", ko: "축가 공연 안내" },
+              pt: "A música sempre foi uma forma de expressar sentimentos que às vezes as palavras não conseguem alcançar.\nNeste momento, preparamos uma apresentação especial para celebrar o amor e a nova jornada deste casal.\nRecebam este momento com carinho.",
+              ko: "때로는 말보다 음악이 마음을 더 깊이 전해주기도 합니다.\n이제 두 사람의 새로운 시작을 축복하는 특별한 무대를 준비했습니다.\n따뜻한 마음으로 함께해 주시기 바랍니다.",
+            },
+            {
+              no: "14",
+              title: { pt: "축가 공연 (외부 축가)", ko: "축가 공연 (외부 축가)" },
+              pt: "Convidamos agora uma apresentação especial preparada com muito carinho para este momento tão importante.",
+              ko: "이제 두 사람을 위한 특별한 축가가 이어지겠습니다.",
+            },
+            {
+              no: "15",
+              title: { pt: "신랑 축가 안내", ko: "신랑 축가 안내" },
+              pt: "E agora, talvez um dos momentos mais sinceros desta cerimônia.\nO noivo preparou uma canção especial para a mulher que escolheu amar e caminhar ao lado por toda a vida.",
+              ko: "이제 오늘 가장 진심 어린 순간 중 하나가 이어집니다.\n신랑이 평생 함께하고 싶은 사람을 위해 직접 준비한 노래를 들려드리겠습니다.",
+            },
+            {
+              no: "16",
+              title: { pt: "신랑 축가", ko: "신랑 축가" },
+              pt: "(축가 진행)",
+              ko: "(축가 진행)",
+            },
+            {
+              no: "17",
+              title: { pt: "부모님 & 하객 인사 안내", ko: "부모님 & 하객 인사 안내" },
+              pt: "Antes de encerrarem esta cerimônia,\nos noivos gostariam de agradecer às famílias e a todos que estiveram presentes neste momento tão especial.",
+              ko: "이제 두 사람은 오늘 이 자리를 함께해 주신 가족과 하객 여러분께 감사의 마음을 전하고자 합니다.",
+            },
+            {
+              no: "18",
+              title: { pt: "부모님 & 하객 인사", ko: "부모님 & 하객 인사" },
+              pt: "Antes de encerrarem esta cerimônia,\nos noivos gostariam de agradecer às famílias e a todos que estiveram presentes neste momento tão especial.\nPrimeiramente, os noivos irão cumprimentar os pais da noiva.\n(잠시 멈춤)\nAgora, os noivos irão cumprimentar os pais do noivo.\n(잠시 멈춤)\nE por fim, retornam ao centro para agradecer sinceramente a todos os convidados que vieram celebrar esta união.\nO amor também nasce do cuidado recebido das famílias que acompanharam esta trajetória até aqui.\nHoje, os noivos agradecem não apenas pela presença,\nmas por todo carinho, apoio e amor que os trouxeram até este momento.",
+              ko: "이제 두 사람은 오늘 이 자리를 함께해 주신 가족과 하객 여러분께 감사의 마음을 전하고자 합니다.\n먼저 신부 측 부모님께 인사를 드리겠습니다.\n(잠시 멈춤)\n이어서 신랑 측 부모님께 인사를 드리겠습니다.\n(잠시 멈춤)\n그리고 마지막으로 중앙으로 이동하여,\n오늘 함께해 주신 모든 하객 여러분께 감사의 인사를 전하겠습니다.\n오늘의 이 순간은 두 사람뿐 아니라,\n지금까지 사랑과 응원으로 함께해 준 가족들이 있었기에 가능했습니다.\n두 사람은 진심 어린 마음으로 감사의 인사를 전합니다.",
+            },
+            {
+              no: "19",
+              title: { pt: "퇴장 멘트", ko: "퇴장 멘트" },
+              pt: "E assim, inicia-se um novo capítulo nesta história.\nHoje, diante de todos que amam vocês,\nduas vidas passam a caminhar lado a lado como família.\nQue o amor, o respeito e a parceria continuem guiando cada passo desta nova jornada.\nRecebam este momento com uma grande salva de palmas.",
+              ko: "이제 두 사람은 서로의 가장 든든한 동반자로서 새로운 이야기를 함께 시작하게 됩니다.\n오늘 이 자리에서,\n두 사람은 사랑하는 가족과 친구들의 축복 속에 하나의 가족이 되었습니다.\n앞으로의 모든 순간에도 사랑과 존중,\n그리고 따뜻한 마음이 함께하기를 바랍니다.\n두 사람의 새로운 출발을 큰 박수로 축복해 주시기 바랍니다.",
+            },
+            {
+              no: "20",
+              title: { pt: "퇴장", ko: "퇴장" },
+              pt: "Com muita alegria,\nrecebemos pela primeira vez:\nHaseung e Larissa como marido e mulher.",
+              ko: "이제 부부가 된 송하승 군과 라리사 양의 아름다운 앞날을 다시 한 번 큰 박수로 축복해 주시기 바랍니다.",
+            },
+            {
+              no: "21",
+              title: { pt: "단체사진 안내", ko: "단체사진 안내" },
+              pt: "Pedimos agora que os familiares e amigos permaneçam para as fotos em grupo.",
+              ko: "이어서 가족 및 친구분들과 함께 단체 사진 촬영이 진행될 예정입니다.\n잠시 자리에 함께해 주시기 바랍니다.",
+            },
+            {
+              no: "22",
+              title: { pt: "식사 안내", ko: "식사 안내" },
+              pt: "A cerimônia chega ao fim,\nmas a celebração continua.\nDesejamos que todos aproveitem este momento com alegria, boa conversa e muito carinho.\nMuito obrigado pela presença de todos.",
+              ko: "이제 예식은 마무리되지만,\n두 사람의 새로운 시작을 축하하는 시간은 계속됩니다.\n맛있는 식사와 함께 편안하고 행복한 시간 보내시기 바랍니다.\n오늘 함께해 주신 모든 분들께 진심으로 감사드립니다.",
+            },
+          ],
         },
         ceremonyVideo: {
           // 나중에 40초 히스토리 영상 YouTube 링크를 여기에 넣으면 카드에서 바로 재생/열기가 활성화됩니다.
@@ -2843,6 +3094,9 @@
           programSchedule: {
             button: "Ver ordem completa",
           },
+          hostScript: {
+            button: "Roteiro do cerimonial",
+          },
           menuShowcase: {
             kicker: "WEDDING MENU",
             title: "Menu Guide",
@@ -2857,6 +3111,7 @@
             whatsapp: "WhatsApp",
             pix: "PIX",
             schedule: "Ordem",
+            hostScript: "Roteiro",
             lang: "Idioma",
             theme: "Tema",
             contactTitle: "WhatsApp",
@@ -2951,6 +3206,10 @@
               title: "Ordem da cerimônia",
               sub: "Guia visual para acompanhar cada momento do dia.",
             },
+            hostScript: {
+              title: "Roteiro do cerimonial",
+              sub: "Texto organizado por etapas para leitura no celular.",
+            },
           },
           gift: { groomSide: "Lado do noivo", brideSide: "Lado da noiva", holder: "Titular", account: "Conta" },
           common: { copy: "Copiar", close: "Fechar", save: "Salvar" },
@@ -2996,6 +3255,9 @@
           programSchedule: {
             button: "식순 전체 보기",
           },
+          hostScript: {
+            button: "사회자 대본",
+          },
           menuShowcase: {
             kicker: "WEDDING MENU",
             title: "식사 메뉴 안내",
@@ -3010,6 +3272,7 @@
             whatsapp: "왓츠앱",
             pix: "PIX",
             schedule: "식순",
+            hostScript: "대본",
             lang: "언어",
             theme: "테마",
             contactTitle: "WhatsApp",
@@ -3093,6 +3356,7 @@
             photo: { title: "사진", hint: "스와이프로 넘기기 · 핀치로 확대 · 더블탭으로 맞춤 · 아래로 스와이프 닫기", alt: "확대 이미지" },
             menu: { title: "웨딩 메뉴 안내", sub: "메뉴 이미지와 안내를 함께 확인하실 수 있습니다." },
             schedule: { title: "결혼식 식순 안내", sub: "행사 흐름을 한 번에 보실 수 있도록 준비했습니다." },
+            hostScript: { title: "사회자 대본", sub: "휴대폰에서 바로 읽기 쉽도록 순서별로 정리했습니다." },
           },
           gift: { groomSide: "신랑 측", brideSide: "신부 측", holder: "예금주", account: "계좌" },
           common: { copy: "복사", close: "닫기", save: "저장" },
@@ -3571,6 +3835,7 @@
         renderProgram();
         renderProgramLayout();
         renderCeremonySchedule();
+        renderHostScript();
         renderCeremonyVideo();
         renderMenuLayout2();
         renderMenu();
@@ -3782,6 +4047,32 @@
         if (!dialogImg) return;
         dialogImg.setAttribute("src", imageSrc);
         dialogImg.setAttribute("alt", t("dlg.schedule.title"));
+      }
+
+      function renderHostScript() {
+        const data = WEDDING.hostScript || {};
+        const intro = $("#hostScriptIntro");
+        const root = $("#hostScriptList");
+        if (intro) intro.textContent = tl(data.intro);
+        if (!root) return;
+
+        const items = Array.isArray(data.items) ? data.items : [];
+        root.innerHTML = items
+          .map(
+            (item) => `
+              <article class="host-script-card">
+                <div class="host-script-meta">
+                  <span class="host-script-time">${escapeHtml(item.no ? `${item.no}.` : "-")}</span>
+                  <strong class="host-script-title">${escapeHtml(tl(item.title))}</strong>
+                </div>
+                <span class="host-script-lang">PT</span>
+                <p class="host-script-say">${escapeHtml(item.pt || "")}</p>
+                <span class="host-script-lang">KR</span>
+                <p class="host-script-say">${escapeHtml(item.ko || "")}</p>
+              </article>
+            `
+          )
+          .join("");
       }
 
       function renderCeremonyVideo() {
@@ -4367,6 +4658,10 @@ END:VCALENDAR`;
           haptic(10);
           openDialog("dlgCeremonySchedule");
         });
+        $("#abHostScript")?.addEventListener("click", () => {
+          haptic(10);
+          openDialog("dlgHostScript");
+        });
         $("#abLang")?.addEventListener("click", () => {
           haptic(10);
           const next = currentCountry === "KR" ? "BR" : "KR";
@@ -4397,9 +4692,19 @@ END:VCALENDAR`;
           openDialog("dlgCeremonySchedule");
         });
 
+        $("#btnHeroHostScript")?.addEventListener("click", () => {
+          haptic(10);
+          openDialog("dlgHostScript");
+        });
+
         $("#btnProgramSchedule")?.addEventListener("click", () => {
           haptic(10);
           openDialog("dlgCeremonySchedule");
+        });
+
+        $("#btnHostScript")?.addEventListener("click", () => {
+          haptic(10);
+          openDialog("dlgHostScript");
         });
 
         $("#btnHeroVideo")?.addEventListener("click", () => {
